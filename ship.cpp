@@ -72,8 +72,9 @@ void Ship::update(float frameTime)
 		spriteData.angle += frameTime + 0.1 * shipNS::ROTATION_RATE;  // rotate the ship
 	}
 
-    
-    //spriteData.x += frameTime * velocity.x;         // move ship along X 
+	spriteData.y += frameTime * velocity.y;         // move ship along X 
+
+    spriteData.x += frameTime * velocity.x;         // move ship along X 
    
 
     // Bounce off walls

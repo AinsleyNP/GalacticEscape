@@ -10,7 +10,7 @@
 #include "game.h"
 #include "textureManager.h"
 #include "image.h"
-#include "planet.h"
+//#include "planet.h"
 #include "ship.h"
 
 //=============================================================================
@@ -22,8 +22,7 @@ private:
     // game items
     TextureManager nebulaTexture;   // nebula texture
     TextureManager gameTextures;    // game texture
-    Ship    ship1, ship2;           // spaceships
-    Planet  planet;         // the planet
+	Ship    ship1;    // spaceships
     Image   nebula;         // backdrop image
 
 public:
