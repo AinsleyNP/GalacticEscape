@@ -46,7 +46,7 @@ const float MASS_PLANET = 1.0e14f;
 const float MASS_SHIP = 5.0f;
 
 // graphic images
-const char NEBULA_IMAGE[] =   "pictures\\orion.jpg";     // photo source NASA/courtesy of nasaimages.org 
+const char BACKGROUND_IMAGE[] =   "pictures\\galaxy2.jpg";     // Background Image
 const char TEXTURES_IMAGE[] = "pictures\\textures.png";  // game textures
 
 // key mappings
