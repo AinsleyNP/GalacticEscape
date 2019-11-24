@@ -55,6 +55,7 @@ const char TEXTURES_IMAGE[] = "pictures\\textures.png";  // game textures
 const UCHAR ESC_KEY      = VK_ESCAPE;       // escape key
 const UCHAR ALT_KEY      = VK_MENU;         // Alt key
 const UCHAR ENTER_KEY    = VK_RETURN;       // Enter key
+const UCHAR A_Key = VK_LEFT;
 
 
 // weapon types
