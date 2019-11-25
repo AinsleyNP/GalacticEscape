@@ -1,6 +1,3 @@
-// Programming 2D Games
-// Copyright (c) 2011 by: 
-// Charles Kelly
 // textureManager.h v1.0
 
 #ifndef _TEXTUREMANAGER_H       // Prevent multiple definitions if this 

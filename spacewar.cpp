@@ -99,7 +99,7 @@ void Spacewar::render()
 {
     graphics->spriteBegin();                // begin drawing sprites
 
-    background.draw();                          // add the orion nebula to the scene
+    background.draw();                          // add the to the scene
     //planet.draw();                          // add the planet to the scene
     ship1.draw();                           // add the spaceship to the scene
     enemy.draw();                           // add the spaceship to the scene

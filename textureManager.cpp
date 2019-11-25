@@ -1,7 +1,3 @@
-// Programming 2D Games
-// Copyright (c) 2011 by: 
-// Charles Kelly
-// textureManager.cpp v1.0
 // A TextureManager object loads and maintains one texture file. 
 // Create a TextureManager object for each texture file in the game.
 
