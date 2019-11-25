@@ -61,12 +61,12 @@ void Ship::update(float frameTime)
     Entity::update(frameTime);
 
 	// ROTATION OF SHIP
-	if (input->isKeyDown(VK_LEFT)) // Rotate Counter-Clockwise
+	if (input->isKeyDown(VK_LEFT)) // Move left
 	{
 		spriteData.x -= frameTime * 2 * velocity.x;         // move ship along y
 	}
 	
-	if (input->isKeyDown(VK_RIGHT)) // Rotate Clockwise
+	if (input->isKeyDown(VK_RIGHT)) // Move right
 	{
 		spriteData.x += frameTime * 2 * velocity.x;         // move ship along y
 

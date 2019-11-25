@@ -55,6 +55,14 @@ void Spacewar::initialize(HWND hwnd)
 	enemy.setY(GAME_HEIGHT / 4);
 	enemy.setVelocity(VECTOR2(-shipNS::SPEED, -shipNS::SPEED)); // VECTOR2(X, Y)
 
+	// laser
+	if (!laser.initialize(this, LaserNS::WIDTH, LaserNS::HEIGHT, LaserNS::TEXTURE_COLS, &gameTextures))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing laser"));
+	laser.setFrames(LaserNS::Laser_START_FRAME, LaserNS::Laser_END_FRAME);
+	laser.setCurrentFrame(LaserNS::Laser_START_FRAME);
+	laser.setX(GAME_WIDTH/4);
+	laser.setY(GAME_HEIGHT/4);
+
     return;
 }
 
@@ -65,6 +73,7 @@ void Spacewar::update()
 {
     ship1.update(frameTime);
 	enemy.update(frameTime);
+	laser.update(frameTime);
     
 }
 
@@ -103,6 +112,7 @@ void Spacewar::render()
     //planet.draw();                          // add the planet to the scene
     ship1.draw();                           // add the spaceship to the scene
     enemy.draw();                           // add the spaceship to the scene
+	laser.draw();
 
     graphics->spriteEnd();                  // end drawing sprites
 }
