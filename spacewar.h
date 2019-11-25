@@ -8,6 +8,7 @@
 #include "image.h"
 //#include "planet.h"
 #include "ship.h"
+#include "enemy.h"
 
 //=============================================================================
 // This class is the core of the game
@@ -18,7 +19,8 @@ private:
     // game items
     TextureManager backgroundTexture;   // nebula texture
     TextureManager gameTextures;    // game texture
-	Ship    ship1,ship2;    // spaceships (https://www.pnglot.com/downpng/hTxmTim_first-version-of-my-sprite-sheet-i-have/)
+	Ship    ship1;    // spaceships (https://www.pnglot.com/downpng/hTxmTim_first-version-of-my-sprite-sheet-i-have/)
+	Enemy enemy; //enemy spaceships
 
     Image   background;         // backdrop image
 
