@@ -18,7 +18,8 @@ private:
     // game items
     TextureManager backgroundTexture;   // nebula texture
     TextureManager gameTextures;    // game texture
-	Ship    ship1;    // spaceships (https://www.pnglot.com/downpng/hTxmTim_first-version-of-my-sprite-sheet-i-have/)
+	Ship    ship1,ship2;    // spaceships (https://www.pnglot.com/downpng/hTxmTim_first-version-of-my-sprite-sheet-i-have/)
+
     Image   background;         // backdrop image
 
 public:

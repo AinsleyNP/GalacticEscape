@@ -46,6 +46,15 @@ void Spacewar::initialize(HWND hwnd)
     ship1.setY(GAME_HEIGHT/4);
     ship1.setVelocity(VECTOR2(shipNS::SPEED,-shipNS::SPEED)); // VECTOR2(X, Y)
 
+	// enemy
+	if (!ship2.initialize(this, shipNS::WIDTH, shipNS::HEIGHT, shipNS::TEXTURE_COLS, &gameTextures))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing ship2"));
+	ship2.setFrames(shipNS::SHIP2_START_FRAME, shipNS::SHIP2_END_FRAME);
+	ship2.setCurrentFrame(shipNS::SHIP2_START_FRAME);
+	ship2.setX(GAME_WIDTH - GAME_WIDTH / 4);
+	ship2.setY(GAME_HEIGHT / 4);
+	ship2.setVelocity(VECTOR2(-shipNS::SPEED, -shipNS::SPEED)); // VECTOR2(X, Y)
+
     return;
 }
 
@@ -55,6 +64,7 @@ void Spacewar::initialize(HWND hwnd)
 void Spacewar::update()
 {
     ship1.update(frameTime);
+	ship2.update(frameTime);
     
 }
 
@@ -92,7 +102,7 @@ void Spacewar::render()
     background.draw();                          // add the orion nebula to the scene
     //planet.draw();                          // add the planet to the scene
     ship1.draw();                           // add the spaceship to the scene
-    //ship2.draw();                           // add the spaceship to the scene
+    ship2.draw();                           // add the spaceship to the scene
 
     graphics->spriteEnd();                  // end drawing sprites
 }
