@@ -71,10 +71,15 @@ void Ship::update(float frameTime)
 	{
 		spriteData.angle += frameTime + 0.1 * shipNS::ROTATION_RATE;  // rotate the ship
 	}
+	if (input->isKeyDown(VK_UP))
+	{
+		spriteData.y += frameTime * velocity.y;         // move ship along X 
 
-	spriteData.y += frameTime * velocity.y;         // move ship along X 
-
-    spriteData.x += frameTime * velocity.x;         // move ship along X 
+	}
+	if (input->isKeyDown(VK_DOWN))
+	{
+		spriteData.x += frameTime * velocity.x;         // move ship along X 
+	}
    
 
     // Bounce off walls
