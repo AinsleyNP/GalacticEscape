@@ -42,8 +42,8 @@ void Spacewar::initialize(HWND hwnd)
         throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing ship1"));
     ship1.setFrames(shipNS::SHIP1_START_FRAME, shipNS::SHIP1_END_FRAME);
     ship1.setCurrentFrame(shipNS::SHIP1_START_FRAME);
-    ship1.setX(GAME_WIDTH/4);
-    ship1.setY(GAME_HEIGHT/4);
+    ship1.setX(GAME_WIDTH/2);
+    ship1.setY(GAME_HEIGHT/1.25);
     ship1.setVelocity(VECTOR2(shipNS::SPEED,-shipNS::SPEED)); // VECTOR2(X, Y)
 
     return;

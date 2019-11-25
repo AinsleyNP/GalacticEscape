@@ -22,6 +22,7 @@ Ship::Ship() : Entity()
     shieldOn = false;
     mass = shipNS::MASS;
     collisionType = entityNS::CIRCLE;
+	spriteData.angle = 3 * PI / 2;
 }
 
 //=============================================================================
@@ -62,34 +63,31 @@ void Ship::update(float frameTime)
 	// ROTATION OF SHIP
 	if (input->isKeyDown(VK_LEFT)) // Rotate Counter-Clockwise
 	{
-		spriteData.angle -= frameTime + 0.1 * shipNS::ROTATION_RATE;  // rotate the ship
-		if (spriteData.angle < 0) // angle set back to 0 if turns full circle
-		{
-			spriteData.angle = 6.28318530718;
-		}
+		spriteData.x -= frameTime * 2 * velocity.x;         // move ship along y
 	}
 	
 	if (input->isKeyDown(VK_RIGHT)) // Rotate Clockwise
 	{
-		spriteData.angle += frameTime + 0.1 * shipNS::ROTATION_RATE; 
-		if (spriteData.angle > 6.28318530718) // angle set back to 0 if turns full circle
-		{
-			spriteData.angle = 0;
-		}
+		spriteData.x += frameTime * 2 * velocity.x;         // move ship along y
+
 	}
 
 	// DIRECTIONAL MOVEMENT OF SHIP
 	
 	if (input->isKeyDown(VK_UP))
 	{
-		spriteData.y += frameTime * velocity.y;         // move ship along y
+		spriteData.y += frameTime * 2 * velocity.y;         // move ship along y
 
 	}
 	if (input->isKeyDown(VK_DOWN))
 	{
-		spriteData.x += frameTime * velocity.x;         // move ship along X 
+		spriteData.y -= frameTime * 2 * velocity.y;         // move ship along X 
 	}
-   
+	
+	if (input->isKeyDown(VK_SHIFT))
+	{
+		
+	}
 
     // Bounce off walls
     if (spriteData.x > GAME_WIDTH-shipNS::WIDTH)    // if hit right screen edge

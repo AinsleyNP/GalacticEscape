@@ -29,7 +29,7 @@ const char CLASS_NAME[] = "GalacticEscape";
 const char GAME_TITLE[] = "GalacticEscape";
 const bool FULLSCREEN = false;              // windowed or fullscreen
 const UINT GAME_WIDTH =  640;               // width of game in pixels
-const UINT GAME_HEIGHT = 480;               // height of game in pixels
+const UINT GAME_HEIGHT = 1000;               // height of game in pixels
 
 // game
 const double PI = 3.14159265;
