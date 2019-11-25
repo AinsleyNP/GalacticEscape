@@ -1,7 +1,3 @@
-// Programming 2D Games
-// Copyright (c) 2011 by: 
-// Charles Kelly
-// Chapter 6 ship.cpp v1.0
 
 #include "ship.h"
 
@@ -73,7 +69,7 @@ void Ship::update(float frameTime)
 	}
 	if (input->isKeyDown(VK_UP))
 	{
-		spriteData.y += frameTime * velocity.y;         // move ship along X 
+		spriteData.y += frameTime * velocity.y;         // move ship along y
 
 	}
 	if (input->isKeyDown(VK_DOWN))
