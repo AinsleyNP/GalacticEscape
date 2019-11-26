@@ -60,8 +60,7 @@ void Spacewar::initialize(HWND hwnd)
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing laser"));
 	laser.setFrames(LaserNS::Laser_START_FRAME, LaserNS::Laser_END_FRAME);
 	laser.setCurrentFrame(LaserNS::Laser_START_FRAME);
-	laser.setX(GAME_WIDTH/4);
-	laser.setY(GAME_HEIGHT/4);
+
 
     return;
 }
@@ -73,8 +72,6 @@ void Spacewar::update()
 {
     ship1.update(frameTime);
 	enemy.update(frameTime);
-	laser.update(frameTime);
-    
 }
 
 //=============================================================================
