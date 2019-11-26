@@ -7,7 +7,7 @@
 //=============================================================================
 Enemy::Enemy() : Entity()
 {
-	spriteData.width = enemyNS::WIDTH;           // size of Ship1
+	spriteData.width = enemyNS::WIDTH;           // size of enemy
 	spriteData.height = enemyNS::HEIGHT;
 	spriteData.x = enemyNS::X;                   // location on screen
 	spriteData.y = enemyNS::Y;
@@ -39,7 +39,15 @@ bool Enemy::initialize(Game *gamePtr, int width, int height, int ncols,
 //=============================================================================
 void Enemy::draw()
 {
-	Image::draw();              // draw enemy
+	int distance = rand() % (500 - 5) + 10;
+	int angle = rand() % 360;
+
+	int dx = (int)(cos(angle * PI / 180) * distance);
+	int dy = (int)(sin(angle * PI / 180) * distance);
+
+	Image::setX(dx + 10);
+	Image::setY(dy + 10);
+	Image::draw();
 }
 
 //=============================================================================
