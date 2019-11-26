@@ -47,22 +47,13 @@ void Spacewar::initialize(HWND hwnd)
     ship1.setVelocity(VECTOR2(shipNS::SPEED,-shipNS::SPEED)); // VECTOR2(X, Y)
 
 	// enemy
-
-	if (!enemy.initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &gameTextures))
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing enemy"));
-	enemy.setFrames(enemyNS::ENEMY_START_FRAME, enemyNS::ENEMY_END_FRAME);
-	enemy.setCurrentFrame(enemyNS::ENEMY_START_FRAME);
+	if (!enemy.initialize(this, shipNS::WIDTH, shipNS::HEIGHT, shipNS::TEXTURE_COLS, &gameTextures))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing ship2"));
+	enemy.setFrames(shipNS::SHIP2_START_FRAME, shipNS::SHIP2_END_FRAME);
+	enemy.setCurrentFrame(shipNS::SHIP2_START_FRAME);
 	enemy.setX(GAME_WIDTH - GAME_WIDTH / 4);
 	enemy.setY(GAME_HEIGHT / 4);
-	enemy.setVelocity(VECTOR2(-enemyNS::SPEED, -enemyNS::SPEED)); // VECTOR2(X, Y)
-
-	if (!enemy1.initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &gameTextures))
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing enemy1"));
-	enemy1.setFrames(enemyNS::ENEMY_START_FRAME, enemyNS::ENEMY_END_FRAME);
-	enemy1.setCurrentFrame(enemyNS::ENEMY_START_FRAME);
-	enemy1.setX(GAME_WIDTH - GAME_WIDTH / 4);
-	enemy1.setY(GAME_HEIGHT / 6);
-	enemy1.setVelocity(VECTOR2(-enemyNS::SPEED, -enemyNS::SPEED)); // VECTOR2(X, Y)
+	enemy.setVelocity(VECTOR2(-shipNS::SPEED, -shipNS::SPEED)); // VECTOR2(X, Y)
 
 	// laser
 	if (!laser.initialize(this, LaserNS::WIDTH, LaserNS::HEIGHT, LaserNS::TEXTURE_COLS, &gameTextures))
@@ -94,27 +85,17 @@ void Spacewar::ai()
 //=============================================================================
 void Spacewar::collisions()
 {
-	VECTOR2 collisionVector;
-	// if collision between ships
-	//if(ship1.collidesWith(ship2, collisionVector))
-	{
-		// bounce off ship
-		//ship1.bounce(collisionVector, ship2);
-		//ship1.damage(SHIP);
-		// change the direction of the collisionVector for ship2
-		//ship2.bounce(collisionVector*-1, ship1);
-		//ship2.damage(SHIP);
-	}
-
-	if (ship1.collidesWith(enemy, collisionVector))
-	{
-		//bounce off ship
-		ship1.bounce(collisionVector, enemy);
-			//ship1.damage(SHIP);
-			// change the direction of the collisionVector for ship2
-			enemy.bounce(collisionVector*-1, ship1);
-			//ship2.damage(SHIP);
-	}
+    VECTOR2 collisionVector;
+    // if collision between ships
+    //if(ship1.collidesWith(ship2, collisionVector))
+    {
+        // bounce off ship
+        //ship1.bounce(collisionVector, ship2);
+        //ship1.damage(SHIP);
+        // change the direction of the collisionVector for ship2
+        //ship2.bounce(collisionVector*-1, ship1);
+        //ship2.damage(SHIP);
+    }
 }
 
 //=============================================================================
@@ -128,7 +109,6 @@ void Spacewar::render()
     //planet.draw();                          // add the planet to the scene
     ship1.draw();                           // add the spaceship to the scene
     enemy.draw();                           // add the spaceship to the scene
-	enemy1.draw();
 	laser.draw();
 
     graphics->spriteEnd();                  // end drawing sprites
