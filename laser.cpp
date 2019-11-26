@@ -1,5 +1,4 @@
 #include "laser.h"
-#include <stdlib.h>
 
 //=============================================================================
 // default constructor
@@ -38,14 +37,8 @@ bool Laser::initialize(Game* gamePtr, int width, int height, int ncols,
 //=============================================================================
 void Laser::draw()
 {
-	int pick = rand() % 25 + 1;
+	Image::draw();              // draw laser
 
-	float Coords[4][2] = { {100,100} ,{300,200},{100,250},{200,400} };
-	int xval = Coords[pick][pick%2];
-	Image::setX(xval);
-	Image::setY(xval);
-	Image::draw();		           // draw laser
-	
 }
 
 //=============================================================================
@@ -55,6 +48,12 @@ void Laser::draw()
 //=============================================================================
 void Laser::update(float frameTime)
 {
+	if (input->isKeyDown(VK_BACK))
+	{
+		spriteData.angle = 1.5;
+		spriteData.x += 0.2;
+		spriteData.scale += 0.5;
+	}
 	Entity::update(frameTime);
 }
 
