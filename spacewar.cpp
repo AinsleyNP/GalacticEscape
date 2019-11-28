@@ -32,6 +32,10 @@ void Spacewar::initialize(HWND hwnd)
     if (!backgroundTexture.initialize(graphics,BACKGROUND_IMAGE))
         throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing nebula texture"));
 
+	// map textures
+	if (!tileTextures.initialize(graphics, TILE_TEXTURES))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing tile textures"));
+
     // main game textures
     if (!gameTextures.initialize(graphics,TEXTURES_IMAGE))
         throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing game textures"));
@@ -177,6 +181,8 @@ void Spacewar::releaseAll()
 {
     backgroundTexture.onLostDevice();
     gameTextures.onLostDevice();
+	tileTextures.onLostDevice();
+
     Game::releaseAll();
     return;
 }
@@ -188,7 +194,9 @@ void Spacewar::releaseAll()
 void Spacewar::resetAll()
 {
     gameTextures.onResetDevice();
-    backgroundTexture.onResetDevice();
+    backgroundTexture.onResetDevice();  
+	tileTextures.onResetDevice();
+
     Game::resetAll();
     return;
 }
