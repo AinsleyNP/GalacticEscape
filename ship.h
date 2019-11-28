@@ -42,6 +42,10 @@ public:
                             TextureManager *textureM);
     void update(float frameTime);
     void damage(WEAPON);
+
+	void setVelocityX(float v) { velocity.x = v; }
+	void setVelocityY(float v) { velocity.y = v; }
+
 };
 #endif
 
