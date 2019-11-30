@@ -10,6 +10,7 @@
 #include "ship.h"
 #include "enemy.h"
 #include "laser.h"
+#include "bullet.h"
 
 namespace spaceWarNS
 {
@@ -54,6 +55,7 @@ private:
 	Ship    ship1;    // spaceships (https://www.pnglot.com/downpng/hTxmTim_first-version-of-my-sprite-sheet-i-have/)
 	Enemy enemy; //enemy spaceships
 	Laser laser;
+	Bullet bullet;
 	float mapX;
 	float mapY;
 

@@ -63,6 +63,15 @@ void Spacewar::initialize(HWND hwnd)
 	enemy.setY(GAME_HEIGHT / 4);
 	enemy.setVelocity(VECTOR2(-shipNS::SPEED, -shipNS::SPEED)); // VECTOR2(X, Y)
 
+	// bullet
+	if (!bullet.initialize(this, shipNS::WIDTH, shipNS::HEIGHT, shipNS::TEXTURE_COLS, &gameTextures))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing ship1"));
+	bullet.setFrames(BulletNS::Bullet_START_FRAME, BulletNS::Bullet_END_FRAME);
+	bullet.setCurrentFrame(BulletNS::Bullet_START_FRAME);
+	bullet.setX(GAME_WIDTH / 2);
+	bullet.setY(GAME_HEIGHT / 1.25);
+	bullet.setVelocity(VECTOR2(BulletNS::SPEED, -BulletNS::SPEED));
+
 	// LASER STUFF
 	int laserpick = rand() % 25;
 
@@ -94,6 +103,7 @@ void Spacewar::update()
     ship1.update(frameTime);
 	enemy.update(frameTime);
 	laser.update(frameTime);
+	bullet.update(frameTime);
 
 
 	// SCROLLING STUFF
@@ -151,8 +161,13 @@ void Spacewar::render()
     ship1.draw();                           // add the spaceship to the scene
     enemy.draw();                           // add the spaceship to the scene
 	laser.draw();							// add lasers
-
-
+	if (input->isKeyDown(VK_SPACE))
+	{
+		bullet.draw();
+		bullet.setY(ship1.getY() + 1);
+		bullet.setX(ship1.getX() + 1);
+		bullet.setVelocityY(0);
+	}
 	// "TILES"
 	for (int col = 0; col < MAP_WIDTH; col++)       // for each column of map
 	{
