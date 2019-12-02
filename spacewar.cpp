@@ -9,6 +9,9 @@ using namespace spaceWarNS;
 typedef std::vector<Bullet *> BULLETLIST;
 
 std::vector<Bullet *> bullet_collection;
+
+float resettime = 0;
+
 //=============================================================================
 // Constructor
 //=============================================================================
@@ -165,7 +168,7 @@ void Spacewar::update()
 	enemy3.update(frameTime);
 	laser.update(frameTime);
 	bullet.update(frameTime);
-
+	resettime += (frameTime);
 
 	// SCROLLING STUFF
 	shipx = ship1.getX();
@@ -199,8 +202,20 @@ void Spacewar::collisions()
 {
     VECTOR2 collisionVector;
     // if collision between ships
-    //if(ship1.collidesWith(ship2, collisionVector))
+    if(ship1.collidesWith(enemy1, collisionVector))
     {
+
+		ship1.setX(GAME_WIDTH * 3);
+		ship1.setY(GAME_HEIGHT * 3);
+		ship1.setActive(false);
+		ship1.setVisible(false);
+
+		if (resettime >= 10)
+		{
+			ship1.setActive(true);
+			ship1.setVisible(true);
+			resettime = 0;
+		}
         // bounce off ship
         //ship1.bounce(collisionVector, ship2);
         //ship1.damage(SHIP);
