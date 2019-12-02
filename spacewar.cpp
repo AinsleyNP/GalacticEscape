@@ -58,56 +58,9 @@ void Spacewar::initialize(HWND hwnd)
     ship1.setCurrentFrame(shipNS::SHIP1_START_FRAME);
     ship1.setX(GAME_WIDTH/2);
     ship1.setY(GAME_HEIGHT/1.25);
-    ship1.setVelocity(VECTOR2(shipNS::SPEED,-shipNS::SPEED)); // VECTOR2(X, Y)
+    ship1.setVelocity(VECTOR2(shipNS::SPEED,-shipNS::SPEED)); // VECTOR2(X, Y
 
-	// enemy
-
-	// generate an object at a distance further than 'minradius' but no further than 'maxradius'
-	//  from point X,Y
-	srand(time(NULL));
-	
-	int distance = rand() % 100;	
-	int angle = rand() % 360;
-	
-	int dx = (int)(distance);
-	int dy = (int)(distance*10);
-
-	if (dy > GAME_HEIGHT / 4)
-	{
-		enemy1.setX(dx);
-		enemy2.setY(dy);
-	}
-	else {
-		int distance = rand() % 100;
-		int dx = (int)(distance);
-		int dy = (int)(distance * 10);
-		
-	}
-	//enemy1
-	if (!enemy1.initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &gameTextures))
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing enemy"));
-	enemy1.setFrames(enemyNS::ENEMY_START_FRAME, enemyNS::ENEMY_END_FRAME);
-	enemy1.setCurrentFrame(enemyNS::ENEMY_START_FRAME);
-	enemy1.setVelocity(VECTOR2(-enemyNS::SPEED, -enemyNS::SPEED)); // VECTOR2(X, Y)
-	
-	//enemy2
-	if (!enemy2.initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &gameTextures))
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing enemy"));
-	enemy2.setFrames(enemyNS::ENEMY_START_FRAME, enemyNS::ENEMY_END_FRAME);
-	enemy2.setCurrentFrame(enemyNS::ENEMY_START_FRAME);
-	enemy2.setVelocity(VECTOR2(-enemyNS::SPEED, -enemyNS::SPEED)); // VECTOR2(X, Y)
-	enemy2.setX(GAME_WIDTH / 3);
-	enemy2.setY(GAME_HEIGHT / 4);
-	//enemy3
-	if (!enemy3.initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &gameTextures))
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing enemy"));
-	enemy3.setFrames(enemyNS::ENEMY_START_FRAME, enemyNS::ENEMY_END_FRAME);
-	enemy3.setCurrentFrame(enemyNS::ENEMY_START_FRAME);
-	enemy3.setVelocity(VECTOR2(-enemyNS::SPEED, -enemyNS::SPEED)); // VECTOR2(X, Y)
-	enemy3.setX(GAME_WIDTH / 4);
-	enemy3.setY(GAME_HEIGHT / 5);
-
-	// bullet
+	// BULLETS
 	if (input->isKeyDown(VK_SPACE) && ship1.getActive())
 	{
 		bullet_collection.push_back(new Bullet());
@@ -121,11 +74,46 @@ void Spacewar::initialize(HWND hwnd)
 		(*it)->update(frameTime);
 	}
 
-	if (!bullet.initialize(this, shipNS::WIDTH, shipNS::HEIGHT, shipNS::TEXTURE_COLS, &gameTextures))
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing ship1"));
+
+	// enemy
+
+	// generate an object at a distance further than 'minradius' but no further than 'maxradius'
+	//  from point X,Y
+	srand(time(NULL));
+
+	int distance = rand() % 100;	
+
+	int dx = (int)(distance);
+	int dy = (int)(distance*10);
+	//enemy1
+	if (!enemy1.initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &gameTextures))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing enemy"));
+	enemy1.setFrames(enemyNS::ENEMY_START_FRAME, enemyNS::ENEMY_END_FRAME);
+	enemy1.setCurrentFrame(enemyNS::ENEMY_START_FRAME);
+	enemy1.setVelocity(VECTOR2(-enemyNS::SPEED, -enemyNS::SPEED)); // VECTOR2(X, Y)
+	enemy1.setX(dx);
+	enemy1.setY(dy);
+	//enemy2
+	if (!enemy2.initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &gameTextures))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing enemy"));
+	enemy2.setFrames(enemyNS::ENEMY_START_FRAME, enemyNS::ENEMY_END_FRAME);
+	enemy2.setCurrentFrame(enemyNS::ENEMY_START_FRAME);
+	enemy2.setVelocity(VECTOR2(-enemyNS::SPEED, -enemyNS::SPEED)); // VECTOR2(X, Y)
+	enemy2.setX(GAME_WIDTH / 3);
+	enemy2.setY(GAME_HEIGHT / 5);
+	//enemy3
+	if (!enemy3.initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &gameTextures))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing enemy"));
+	enemy3.setFrames(enemyNS::ENEMY_START_FRAME, enemyNS::ENEMY_END_FRAME);
+	enemy3.setCurrentFrame(enemyNS::ENEMY_START_FRAME);
+	enemy3.setVelocity(VECTOR2(-enemyNS::SPEED, -enemyNS::SPEED)); // VECTOR2(X, Y)
+	enemy3.setX(GAME_WIDTH / 4);
+	enemy3.setY(GAME_HEIGHT / 5);
+
+
 
 	// LASER STUFF
-	int laserpick = rand() % 25;
+	int laserpick = rand()%4;
 
 	float Coords[4][2] = { {100,100} ,{300,200},{100,250},{200,400} };
 
