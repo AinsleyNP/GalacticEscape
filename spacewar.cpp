@@ -81,41 +81,60 @@ void Spacewar::initialize(HWND hwnd)
 	//  from point X,Y
 	srand(time(NULL));
 
-	int distance = rand() % 100;	
+		
 
-	int dx = (int)(distance);
-	int dy = (int)(distance*10);
+	float enemyCoords[15][3] = {
+		{ 100,100,0 },{ 200,100,0 },{ 300,100,0 },{ 400,100,0 },{ 500,100,0 },
+		{ 100,200,0 },{ 200,200,0 },{ 300,200,0 },{ 400,200,0 },{ 500,200,0 },
+		{ 100,300,0 },{ 200,300,0 },{ 300,300,0 },{ 400,300,0 },{ 500,300,0 }
+	};
 	//enemy1
 	if (!enemy1.initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &gameTextures))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing enemy"));
 	enemy1.setFrames(enemyNS::ENEMY_START_FRAME, enemyNS::ENEMY_END_FRAME);
 	enemy1.setCurrentFrame(enemyNS::ENEMY_START_FRAME);
 	enemy1.setVelocity(VECTOR2(-enemyNS::SPEED, -enemyNS::SPEED)); // VECTOR2(X, Y)
-	enemy1.setX(dx);
-	enemy1.setY(dy);
+	for(int i = 1;i < 3; i++)
+	{ 
+		int enemyPick = rand() % 15;
+		if (enemyCoords[enemyPick][3] == 0)
+		{
+			enemy1.setX(enemyCoords[enemyPick][0]);
+			enemy1.setY(enemyCoords[enemyPick][1]);
+		}
+		else
+		{
+			enemyCoords[enemyPick][2] = 1;
+		}
+
+		enemy1.setX(enemyCoords[enemyPick][0]);
+		enemy1.setY(enemyCoords[enemyPick][1]);
+
+		enemy2.setX(enemyCoords[enemyPick][0]);
+		enemy2.setY(enemyCoords[enemyPick][1]);
+	}
+	
+	
 	//enemy2
 	if (!enemy2.initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &gameTextures))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing enemy"));
 	enemy2.setFrames(enemyNS::ENEMY_START_FRAME, enemyNS::ENEMY_END_FRAME);
 	enemy2.setCurrentFrame(enemyNS::ENEMY_START_FRAME);
 	enemy2.setVelocity(VECTOR2(-enemyNS::SPEED, -enemyNS::SPEED)); // VECTOR2(X, Y)
-	enemy2.setX(GAME_WIDTH / 3);
-	enemy2.setY(GAME_HEIGHT / 5);
+	
 	//enemy3
 	if (!enemy3.initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &gameTextures))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing enemy"));
 	enemy3.setFrames(enemyNS::ENEMY_START_FRAME, enemyNS::ENEMY_END_FRAME);
 	enemy3.setCurrentFrame(enemyNS::ENEMY_START_FRAME);
 	enemy3.setVelocity(VECTOR2(-enemyNS::SPEED, -enemyNS::SPEED)); // VECTOR2(X, Y)
-	enemy3.setX(GAME_WIDTH / 4);
-	enemy3.setY(GAME_HEIGHT / 5);
 
 
 
 	// LASER STUFF
 	int laserpick = rand()%4;
 
-	float Coords[4][2] = { {100,100} ,{300,200},{100,250},{200,400} };
+	float laserCoords[4][2] = { {100,100} ,{300,200},{100,250},{200,400} };
 
 	// Initialize
 	if (!laser.initialize(this, LaserNS::WIDTH, LaserNS::HEIGHT, LaserNS::TEXTURE_COLS, &gameTextures))
@@ -126,8 +145,8 @@ void Spacewar::initialize(HWND hwnd)
 	laser.setCurrentFrame(LaserNS::Laser_START_FRAME);
 
 	// Set Location
-	laser.setX(Coords[laserpick][0]);
-	laser.setY(Coords[laserpick][1]);
+	laser.setX(laserCoords[laserpick][0]);
+	laser.setY(laserCoords[laserpick][1]);
 
     return;
 }
