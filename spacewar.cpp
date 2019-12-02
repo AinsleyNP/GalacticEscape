@@ -2,6 +2,9 @@
 
 #include "spaceWar.h"
 using namespace spaceWarNS;
+typedef std::vector<Bullet*> BulletList;
+
+std::vector<Bullet*> bullet_collection;
 
 //=============================================================================
 // Constructor
@@ -68,8 +71,8 @@ void Spacewar::initialize(HWND hwnd)
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing ship1"));
 	bullet.setFrames(BulletNS::Bullet_START_FRAME, BulletNS::Bullet_END_FRAME);
 	bullet.setCurrentFrame(BulletNS::Bullet_START_FRAME);
-	bullet.setX(GAME_WIDTH / 2);
-	bullet.setY(GAME_HEIGHT / 1.25);
+	bullet.setX(ship1.getX());
+	bullet.setY(ship1.getY()-16);
 	bullet.setVelocity(VECTOR2(BulletNS::SPEED, -BulletNS::SPEED));
 
 	// LASER STUFF
@@ -100,6 +103,7 @@ void Spacewar::update()
 	float shipx;
 	float shipy;
 
+
     ship1.update(frameTime);
 	enemy.update(frameTime);
 	laser.update(frameTime);
@@ -108,13 +112,13 @@ void Spacewar::update()
 
 	// SCROLLING STUFF
 	shipx = ship1.getX();
-	if (shipx < 0)                  // if butterfly off screen left
+	if (shipx < 0)                  // if ship off screen left
 	{
 		mapX -= ship1.getVelocity().x * frameTime;  // scroll map right
-		ship1.setX(0);              // put butterfly at left edge
+		ship1.setX(0);              // put ship at left edge
 	}
 
-	// if butterfly off screen right
+	// if ship off screen right
 	else if (shipx > GAME_WIDTH - ship1.getWidth())
 	{
 		mapX -= ship1.getVelocity().x * frameTime;  // scroll map left
@@ -161,13 +165,18 @@ void Spacewar::render()
     ship1.draw();                           // add the spaceship to the scene
     enemy.draw();                           // add the spaceship to the scene
 	laser.draw();							// add lasers
+
+	// SHOOTY SHOOT THE BULLET 
 	if (input->isKeyDown(VK_SPACE))
 	{
-		bullet.draw();
-		bullet.setY(ship1.getY() + 1);
-		bullet.setX(ship1.getX() + 1);
-		bullet.setVelocityY(0);
+		bullet.setY(ship1.getY() - 16);
+		bullet.setX(ship1.getX());
+		bullet.setVelocityY(5);
+		bullet.setY(bullet.getY() - frameTime * 1000);
+		bullet.draw();		// Draw bullet when space pressed
 	}
+
+
 	// "TILES"
 	for (int col = 0; col < MAP_WIDTH; col++)       // for each column of map
 	{

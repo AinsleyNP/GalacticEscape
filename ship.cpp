@@ -63,12 +63,12 @@ void Ship::update(float frameTime)
 	// ROTATION OF SHIP
 	if (input->isKeyDown(VK_LEFT)) // Move left
 	{
-		spriteData.x -= frameTime * 2 * velocity.x;         // move ship along y
+		spriteData.x -= frameTime * 2 * velocity.x;         // move ship along x
 	}
 	
 	if (input->isKeyDown(VK_RIGHT)) // Move right
 	{
-		spriteData.x += frameTime * 2 * velocity.x;         // move ship along y
+		spriteData.x += frameTime * 2 * velocity.x;         // move ship along x
 
 	}
 
@@ -81,7 +81,7 @@ void Ship::update(float frameTime)
 	}
 	if (input->isKeyDown(VK_DOWN))
 	{
-		spriteData.y -= frameTime * 2 * velocity.y;         // move ship along X 
+		spriteData.y -= frameTime * 2 * velocity.y;         // move ship along y
 	}
 	
 	if (input->isKeyDown(VK_SPACE))
