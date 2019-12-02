@@ -65,20 +65,31 @@ void Spacewar::initialize(HWND hwnd)
 	// generate an object at a distance further than 'minradius' but no further than 'maxradius'
 	//  from point X,Y
 	srand(time(NULL));
-
+	
 	int distance = rand() % 100;	
 	int angle = rand() % 360;
-
+	
 	int dx = (int)(distance);
 	int dy = (int)(distance*10);
+
+	if (dy > GAME_HEIGHT / 4)
+	{
+		enemy1.setX(dx);
+		enemy2.setY(dy);
+	}
+	else {
+		int distance = rand() % 100;
+		int dx = (int)(distance);
+		int dy = (int)(distance * 10);
+		
+	}
 	//enemy1
 	if (!enemy1.initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &gameTextures))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing enemy"));
 	enemy1.setFrames(enemyNS::ENEMY_START_FRAME, enemyNS::ENEMY_END_FRAME);
 	enemy1.setCurrentFrame(enemyNS::ENEMY_START_FRAME);
 	enemy1.setVelocity(VECTOR2(-enemyNS::SPEED, -enemyNS::SPEED)); // VECTOR2(X, Y)
-	enemy1.setX(dx);
-	enemy1.setY(dy);
+	
 	//enemy2
 	if (!enemy2.initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &gameTextures))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing enemy"));
@@ -86,7 +97,7 @@ void Spacewar::initialize(HWND hwnd)
 	enemy2.setCurrentFrame(enemyNS::ENEMY_START_FRAME);
 	enemy2.setVelocity(VECTOR2(-enemyNS::SPEED, -enemyNS::SPEED)); // VECTOR2(X, Y)
 	enemy2.setX(GAME_WIDTH / 3);
-	enemy2.setY(GAME_HEIGHT / 5);
+	enemy2.setY(GAME_HEIGHT / 4);
 	//enemy3
 	if (!enemy3.initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &gameTextures))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing enemy"));
