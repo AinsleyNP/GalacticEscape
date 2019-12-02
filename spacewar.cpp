@@ -58,7 +58,22 @@ void Spacewar::initialize(HWND hwnd)
     ship1.setCurrentFrame(shipNS::SHIP1_START_FRAME);
     ship1.setX(GAME_WIDTH/2);
     ship1.setY(GAME_HEIGHT/1.25);
-    ship1.setVelocity(VECTOR2(shipNS::SPEED,-shipNS::SPEED)); // VECTOR2(X, Y)
+    ship1.setVelocity(VECTOR2(shipNS::SPEED,-shipNS::SPEED)); // VECTOR2(X, Y
+
+	// BULLETS
+	if (input->isKeyDown(VK_SPACE) && ship1.getActive())
+	{
+		bullet_collection.push_back(new Bullet());
+		bullet.initialize(this, shipNS::WIDTH, shipNS::HEIGHT, shipNS::TEXTURE_COLS, &gameTextures);
+		bullet.setFrames(BulletNS::Bullet_START_FRAME, BulletNS::Bullet_END_FRAME);
+		bullet.setCurrentFrame(BulletNS::Bullet_START_FRAME);
+		bullet.setVelocity(VECTOR2(BulletNS::SPEED, -BulletNS::SPEED));
+	}
+	for (std::vector<Bullet*>::iterator it = bullet_collection.begin(); it < bullet_collection.end(); ++it)
+	{
+		(*it)->update(frameTime);
+	}
+
 
 	// enemy
 
@@ -67,7 +82,6 @@ void Spacewar::initialize(HWND hwnd)
 	srand(time(NULL));
 
 	int distance = rand() % 100;	
-	int angle = rand() % 360;
 
 	int dx = (int)(distance);
 	int dy = (int)(distance*10);
@@ -96,25 +110,10 @@ void Spacewar::initialize(HWND hwnd)
 	enemy3.setX(GAME_WIDTH / 4);
 	enemy3.setY(GAME_HEIGHT / 5);
 
-	// bullet
-	if (input->isKeyDown(VK_SPACE) && ship1.getActive())
-	{
-		bullet_collection.push_back(new Bullet());
-		bullet.initialize(this, shipNS::WIDTH, shipNS::HEIGHT, shipNS::TEXTURE_COLS, &gameTextures);
-		bullet.setFrames(BulletNS::Bullet_START_FRAME, BulletNS::Bullet_END_FRAME);
-		bullet.setCurrentFrame(BulletNS::Bullet_START_FRAME);
-		bullet.setVelocity(VECTOR2(BulletNS::SPEED, -BulletNS::SPEED));
-	}
-	for (std::vector<Bullet*>::iterator it = bullet_collection.begin(); it < bullet_collection.end(); ++it)
-	{
-		(*it)->update(frameTime);
-	}
 
-	if (!bullet.initialize(this, shipNS::WIDTH, shipNS::HEIGHT, shipNS::TEXTURE_COLS, &gameTextures))
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing ship1"));
 
 	// LASER STUFF
-	int laserpick = rand() % 25;
+	int laserpick = rand()%4;
 
 	float Coords[4][2] = { {100,100} ,{300,200},{100,250},{200,400} };
 
