@@ -94,25 +94,29 @@ void Spacewar::initialize(HWND hwnd)
 	enemy1.setFrames(enemyNS::ENEMY_START_FRAME, enemyNS::ENEMY_END_FRAME);
 	enemy1.setCurrentFrame(enemyNS::ENEMY_START_FRAME);
 	enemy1.setVelocity(VECTOR2(-enemyNS::SPEED, -enemyNS::SPEED)); // VECTOR2(X, Y)
-	for(int i = 1;i < 3; i++)
-	{ 
-		int enemyPick = rand() % 15;
-		if (enemyCoords[enemyPick][3] == 0)
-		{
-			enemy1.setX(enemyCoords[enemyPick][0]);
-			enemy1.setY(enemyCoords[enemyPick][1]);
-		}
-		else
-		{
-			enemyCoords[enemyPick][2] = 1;
-		}
+	
+	int enemyPick = rand() % 15;
 
+	Enemy * e = new Enemy();
+	e->initialize();
+	if (enemyCoords[enemyPick][3] == 0)
+	{
 		enemy1.setX(enemyCoords[enemyPick][0]);
 		enemy1.setY(enemyCoords[enemyPick][1]);
-
-		enemy2.setX(enemyCoords[enemyPick][0]);
-		enemy2.setY(enemyCoords[enemyPick][1]);
 	}
+	else
+	{
+		enemyCoords[enemyPick][2] = 1;
+	}
+
+	enemy1.setX(enemyCoords[enemyPick][0]);
+	enemy1.setY(enemyCoords[enemyPick][1]);
+
+	enemyPick = rand() % 15;
+
+	enemy2.setX(enemyCoords[enemyPick][0]);
+	enemy2.setY(enemyCoords[enemyPick][1]);
+
 	
 	
 	//enemy2
