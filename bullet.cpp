@@ -15,8 +15,8 @@ Bullet::Bullet() : Entity()
 	spriteData.scale = 1;
 	velocity.x = 0;                             // velocity X
 	velocity.y = 0;                             // velocity Y
-	startFrame = BulletNS::Bullet_START_FRAME;     // first frame of laser animation
-	endFrame = BulletNS::Bullet_END_FRAME;     // last frame of laser animation
+	startFrame = BulletNS::Bullet_START_FRAME;     // first frame of bullet animation
+	endFrame = BulletNS::Bullet_END_FRAME;     // last frame of bullet animation
 	currentFrame = startFrame;
 	radius = BulletNS::WIDTH / 2.0;
 	mass = BulletNS::MASS;
