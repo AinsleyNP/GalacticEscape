@@ -63,13 +63,30 @@ void Spacewar::initialize(HWND hwnd)
 
 	int dx = (int)(cos(angle * PI / 180) * distance);
 	int dy = (int)(sin(angle * PI / 180) * distance);
-
+	//enemy1
 	if (!enemy1.initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &gameTextures))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing enemy"));
 	enemy1.setFrames(enemyNS::ENEMY_START_FRAME, enemyNS::ENEMY_END_FRAME);
 	enemy1.setCurrentFrame(enemyNS::ENEMY_START_FRAME);
-	
 	enemy1.setVelocity(VECTOR2(-enemyNS::SPEED, -enemyNS::SPEED)); // VECTOR2(X, Y)
+	enemy1.setX(dx);
+	enemy1.setY(dy);
+	//enemy2
+	if (!enemy2.initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &gameTextures))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing enemy"));
+	enemy2.setFrames(enemyNS::ENEMY_START_FRAME, enemyNS::ENEMY_END_FRAME);
+	enemy2.setCurrentFrame(enemyNS::ENEMY_START_FRAME);
+	enemy2.setVelocity(VECTOR2(-enemyNS::SPEED, -enemyNS::SPEED)); // VECTOR2(X, Y)
+	enemy2.setX(GAME_WIDTH / 3);
+	enemy2.setY(GAME_HEIGHT / 5);
+	//enemy3
+	if (!enemy3.initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &gameTextures))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing enemy"));
+	enemy3.setFrames(enemyNS::ENEMY_START_FRAME, enemyNS::ENEMY_END_FRAME);
+	enemy3.setCurrentFrame(enemyNS::ENEMY_START_FRAME);
+	enemy3.setVelocity(VECTOR2(-enemyNS::SPEED, -enemyNS::SPEED)); // VECTOR2(X, Y)
+	enemy3.setX(GAME_WIDTH / 4);
+	enemy3.setY(GAME_HEIGHT / 5);
 
 	// bullet
 	if (!bullet.initialize(this, shipNS::WIDTH, shipNS::HEIGHT, shipNS::TEXTURE_COLS, &gameTextures))
@@ -110,6 +127,8 @@ void Spacewar::update()
 
     ship1.update(frameTime);
 	enemy1.update(frameTime);
+	enemy2.update(frameTime);
+	enemy3.update(frameTime);
 	laser.update(frameTime);
 	bullet.update(frameTime);
 
@@ -168,6 +187,8 @@ void Spacewar::render()
     //planet.draw();                          // add the planet to the scene
     ship1.draw();                           // add the spaceship to the scene
     enemy1.draw();                           // add the spaceship to the scene
+	enemy2.draw();
+	enemy3.draw();
 	laser.draw();							// add lasers
 
 	//bullet draw

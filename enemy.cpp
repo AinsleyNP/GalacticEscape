@@ -22,6 +22,7 @@ Enemy::Enemy() : Entity()
 	radius = enemyNS::WIDTH / 2.0;
 	mass = enemyNS::MASS;
 	collisionType = entityNS::CIRCLE;
+	spriteData.angle = 0.5 * PI;
 }
 
 //=============================================================================
