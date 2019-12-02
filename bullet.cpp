@@ -1,25 +1,25 @@
-#include "laser.h"
+#include "bullet.h"
 #include <stdlib.h>
 
 //=============================================================================
 // default constructor
 //=============================================================================
-Laser::Laser() : Entity()
+Bullet::Bullet() : Entity()
 {
-	spriteData.width = LaserNS::WIDTH;           // size of laser
-	spriteData.height = LaserNS::HEIGHT;
-	spriteData.x = LaserNS::X;                   // location on screen
-	spriteData.y = LaserNS::Y;
-	spriteData.rect.bottom = LaserNS::HEIGHT;    // rectangle to select parts of an image
-	spriteData.rect.right = LaserNS::WIDTH;
+	spriteData.width = BulletNS::WIDTH;           // size of laser
+	spriteData.height = BulletNS::HEIGHT;
+	spriteData.x = BulletNS::X;                   // location on screen
+	spriteData.y = BulletNS::Y;
+	spriteData.rect.bottom = BulletNS::HEIGHT;    // rectangle to select parts of an image
+	spriteData.rect.right = BulletNS::WIDTH;
 	spriteData.scale = 1;
 	velocity.x = 0;                             // velocity X
 	velocity.y = 0;                             // velocity Y
-	startFrame = LaserNS::Laser_START_FRAME;     // first frame of laser animation
-	endFrame = LaserNS::Laser_END_FRAME;     // last frame of laser animation
+	startFrame = BulletNS::Bullet_START_FRAME;     // first frame of laser animation
+	endFrame = BulletNS::Bullet_END_FRAME;     // last frame of laser animation
 	currentFrame = startFrame;
-	radius = LaserNS::WIDTH / 2.0;
-	mass = LaserNS::MASS;
+	radius = BulletNS::WIDTH / 2.0;
+	mass = BulletNS::MASS;
 	collisionType = entityNS::BOX;
 }
 
@@ -27,7 +27,7 @@ Laser::Laser() : Entity()
 // Initialize the Laser.
 // Post: returns true if successful, false if failed
 //=============================================================================
-bool Laser::initialize(Game* gamePtr, int width, int height, int ncols,
+bool Bullet::initialize(Game* gamePtr, int width, int height, int ncols,
 	TextureManager* textureM)
 {
 	return(Entity::initialize(gamePtr, width, height, ncols, textureM));
@@ -36,13 +36,9 @@ bool Laser::initialize(Game* gamePtr, int width, int height, int ncols,
 //=============================================================================
 // draw the laser
 //=============================================================================
-void Laser::draw()
+void Bullet::draw()
 {
-	if (input->isKeyDown(VK_SPACE))
-	{
-		Image::draw();		           // draw laser
-	}
-
+	Image::draw();		     
 }
 
 //=============================================================================
@@ -50,7 +46,7 @@ void Laser::draw()
 // typically called once per frame
 // frameTime is used to regulate the speed of movement and animation
 //=============================================================================
-void Laser::update(float frameTime)
+void Bullet::update(float frameTime)
 {
 	Entity::update(frameTime);
 }
@@ -58,6 +54,6 @@ void Laser::update(float frameTime)
 //=============================================================================
 // damage
 //=============================================================================
-void Laser::damage(WEAPON weapon)
+void Bullet::damage(WEAPON weapon)
 {
 }

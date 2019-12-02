@@ -1,5 +1,6 @@
 
 #include "ship.h"
+#include "bullet.h"
 
 //=============================================================================
 // default constructor
@@ -24,13 +25,13 @@ Ship::Ship() : Entity()
     collisionType = entityNS::CIRCLE;
 	spriteData.angle = 3 * PI / 2;
 }
-
 //=============================================================================
 // Initialize the Ship.
 // Post: returns true if successful, false if failed
 //=============================================================================
 bool Ship::initialize(Game *gamePtr, int width, int height, int ncols,
     TextureManager *textureM)
+
 {
     shield.initialize(gamePtr->getGraphics(), width, height, ncols, textureM);
     shield.setFrames(shipNS::SHIELD_START_FRAME, shipNS::SHIELD_END_FRAME);
@@ -50,7 +51,6 @@ void Ship::draw()
         // draw shield using colorFilter 50% alpha
         shield.draw(spriteData, graphicsNS::ALPHA50 & colorFilter);
 }
-
 //=============================================================================
 // update
 // typically called once per frame
@@ -84,7 +84,7 @@ void Ship::update(float frameTime)
 		spriteData.y -= frameTime * 2 * velocity.y;         // move ship along X 
 	}
 	
-	if (input->isKeyDown(VK_SHIFT))
+	if (input->isKeyDown(VK_SPACE))
 	{
 		
 	}
