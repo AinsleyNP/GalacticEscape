@@ -21,7 +21,7 @@ private:
     TextureManager backgroundTexture;   // nebula texture
     TextureManager gameTextures;    // game texture
 	Ship    ship1;    // spaceships (https://www.pnglot.com/downpng/hTxmTim_first-version-of-my-sprite-sheet-i-have/)
-	Enemy enemy; //enemy spaceships
+	Enemy enemy,enemy1; //enemy spaceships
 	Laser laser;
 
     Image   background;         // backdrop image

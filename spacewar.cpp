@@ -47,13 +47,30 @@ void Spacewar::initialize(HWND hwnd)
     ship1.setVelocity(VECTOR2(shipNS::SPEED,-shipNS::SPEED)); // VECTOR2(X, Y)
 
 	// enemy
-	if (!enemy.initialize(this, shipNS::WIDTH, shipNS::HEIGHT, shipNS::TEXTURE_COLS, &gameTextures))
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing ship2"));
-	enemy.setFrames(shipNS::SHIP2_START_FRAME, shipNS::SHIP2_END_FRAME);
-	enemy.setCurrentFrame(shipNS::SHIP2_START_FRAME);
-	enemy.setX(GAME_WIDTH - GAME_WIDTH / 4);
-	enemy.setY(GAME_HEIGHT / 4);
-	enemy.setVelocity(VECTOR2(-shipNS::SPEED, -shipNS::SPEED)); // VECTOR2(X, Y)
+
+	// generate an object at a distance further than 'minradius' but no further than 'maxradius'
+	//  from point X,Y
+	int distance = rand() % (50 - 5) + 10;
+	int angle = rand() % 360;
+
+	int dx = (int)(cos(angle * PI / 180) * distance);
+	int dy = (int)(sin(angle * PI / 180) * distance);
+	
+
+
+	if (!enemy.initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &gameTextures))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing enemy"));
+	enemy.setFrames(enemyNS::ENEMY_START_FRAME, enemyNS::ENEMY_END_FRAME);
+	enemy.setCurrentFrame(enemyNS::ENEMY_START_FRAME);
+	
+	enemy.setVelocity(VECTOR2(-enemyNS::SPEED, -enemyNS::SPEED)); // VECTOR2(X, Y)
+
+	if (!enemy1.initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &gameTextures))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing enemy"));
+	enemy1.setFrames(enemyNS::ENEMY_START_FRAME, enemyNS::ENEMY_END_FRAME);
+	enemy1.setCurrentFrame(enemyNS::ENEMY_START_FRAME);
+	
+	enemy1.setVelocity(VECTOR2(-enemyNS::SPEED, -enemyNS::SPEED)); // VECTOR2(X, Y)
 
 	// laser
 	if (!laser.initialize(this, LaserNS::WIDTH, LaserNS::HEIGHT, LaserNS::TEXTURE_COLS, &gameTextures))
@@ -112,6 +129,7 @@ void Spacewar::render()
     //planet.draw();                          // add the planet to the scene
     ship1.draw();                           // add the spaceship to the scene
     enemy.draw();                           // add the spaceship to the scene
+	enemy1.draw();
 	laser.draw();
 
     graphics->spriteEnd();                  // end drawing sprites
