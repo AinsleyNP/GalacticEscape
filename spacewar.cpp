@@ -1,8 +1,14 @@
 // This class is the core of the game
 
 #include "spaceWar.h"
+#include <vector>
+#include <time.h>       /* time */
+
 using namespace spaceWarNS;
 
+typedef std::vector<Bullet *> BULLETLIST;
+
+std::vector<Bullet *> bullet_collection;
 //=============================================================================
 // Constructor
 //=============================================================================
@@ -58,11 +64,13 @@ void Spacewar::initialize(HWND hwnd)
 
 	// generate an object at a distance further than 'minradius' but no further than 'maxradius'
 	//  from point X,Y
-	int distance = rand() % (50 - 5) + 10;
+	srand(time(NULL));
+
+	int distance = rand() % 100;	
 	int angle = rand() % 360;
 
-	int dx = (int)(cos(angle * PI / 180) * distance);
-	int dy = (int)(sin(angle * PI / 180) * distance);
+	int dx = (int)(distance);
+	int dy = (int)(distance*10);
 	//enemy1
 	if (!enemy1.initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &gameTextures))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing enemy"));
@@ -89,13 +97,21 @@ void Spacewar::initialize(HWND hwnd)
 	enemy3.setY(GAME_HEIGHT / 5);
 
 	// bullet
+	if (input->isKeyDown(VK_SPACE) && ship1.getActive())
+	{
+		bullet_collection.push_back(new Bullet());
+		bullet.initialize(this, shipNS::WIDTH, shipNS::HEIGHT, shipNS::TEXTURE_COLS, &gameTextures);
+		bullet.setFrames(BulletNS::Bullet_START_FRAME, BulletNS::Bullet_END_FRAME);
+		bullet.setCurrentFrame(BulletNS::Bullet_START_FRAME);
+		bullet.setVelocity(VECTOR2(BulletNS::SPEED, -BulletNS::SPEED));
+	}
+	for (std::vector<Bullet*>::iterator it = bullet_collection.begin(); it < bullet_collection.end(); ++it)
+	{
+		(*it)->update(frameTime);
+	}
+
 	if (!bullet.initialize(this, shipNS::WIDTH, shipNS::HEIGHT, shipNS::TEXTURE_COLS, &gameTextures))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing ship1"));
-	bullet.setFrames(BulletNS::Bullet_START_FRAME, BulletNS::Bullet_END_FRAME);
-	bullet.setCurrentFrame(BulletNS::Bullet_START_FRAME);
-	bullet.setX(GAME_WIDTH / 2);
-	bullet.setY(GAME_HEIGHT / 1.25);
-	bullet.setVelocity(VECTOR2(BulletNS::SPEED, -BulletNS::SPEED));
 
 	// LASER STUFF
 	int laserpick = rand() % 25;
@@ -195,9 +211,6 @@ void Spacewar::render()
 	if (input->isKeyDown(VK_SPACE))
 	{
 		bullet.draw();
-		bullet.setY(ship1.getY() + 1);
-		bullet.setX(ship1.getX() + 1);
-		bullet.setVelocityY(0);
 	}
 
 	// "TILES"
