@@ -53,7 +53,7 @@ private:
 	TextureManager tileTextures;
 	Image tile;
 	Ship    ship1;    // spaceships (https://www.pnglot.com/downpng/hTxmTim_first-version-of-my-sprite-sheet-i-have/)
-	Enemy enemy,enemy1; //enemy spaceships
+	Enemy enemy1, enemy2, enemy3; //enemy spaceships
 	Laser laser;
 	Bullet bullet;
 	float mapX;

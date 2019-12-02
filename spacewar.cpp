@@ -63,15 +63,6 @@ void Spacewar::initialize(HWND hwnd)
 
 	int dx = (int)(cos(angle * PI / 180) * distance);
 	int dy = (int)(sin(angle * PI / 180) * distance);
-	
-
-
-	if (!enemy.initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &gameTextures))
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing enemy"));
-	enemy.setFrames(enemyNS::ENEMY_START_FRAME, enemyNS::ENEMY_END_FRAME);
-	enemy.setCurrentFrame(enemyNS::ENEMY_START_FRAME);
-	
-	enemy.setVelocity(VECTOR2(-enemyNS::SPEED, -enemyNS::SPEED)); // VECTOR2(X, Y)
 
 	if (!enemy1.initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &gameTextures))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing enemy"));
@@ -118,7 +109,7 @@ void Spacewar::update()
 	float shipy;
 
     ship1.update(frameTime);
-	enemy.update(frameTime);
+	enemy1.update(frameTime);
 	laser.update(frameTime);
 	bullet.update(frameTime);
 
@@ -176,8 +167,34 @@ void Spacewar::render()
     background.draw();                          // add the to the scene
     //planet.draw();                          // add the planet to the scene
     ship1.draw();                           // add the spaceship to the scene
-    enemy.draw();                           // add the spaceship to the scene
-	laser.draw();
+    enemy1.draw();                           // add the spaceship to the scene
+	laser.draw();							// add lasers
+
+	//bullet draw
+	if (input->isKeyDown(VK_SPACE))
+	{
+		bullet.draw();
+		bullet.setY(ship1.getY() + 1);
+		bullet.setX(ship1.getX() + 1);
+		bullet.setVelocityY(0);
+	}
+
+	// "TILES"
+	for (int col = 0; col < MAP_WIDTH; col++)       // for each column of map
+	{
+		tile.setX((float)(col * TEXTURE_SIZE)); // set tile X
+		for (int row = 0; row < MAP_HEIGHT; row++)    // for each row of map
+		{
+			if (tileMap[row][col] >= 0)          // if tile present
+			{
+				tile.setCurrentFrame(tileMap[row][col]);    // set tile texture
+				tile.setY((float)(row * TEXTURE_SIZE) + mapY);   // set tile Y
+				// if tile on screen
+				if (tile.getY() > -TEXTURE_SIZE && tile.getY() < GAME_HEIGHT)
+					tile.draw();                // draw tile
+			}
+		}
+	}
 
     graphics->spriteEnd();                  // end drawing sprites
 }
