@@ -7,8 +7,11 @@
 using namespace spaceWarNS;
 
 typedef std::vector<Bullet *> BULLETLIST;
+typedef std::vector<Enemy *> ENEMYLIST;
 
 std::vector<Bullet *> bullet_collection;
+std::vector<Enemy *> enemyList;
+
 
 float resettime = 0;
 bool respawn = false;
@@ -39,7 +42,6 @@ void Spacewar::initialize(HWND hwnd)
 {
     Game::initialize(hwnd); // throws GameError
 
-	srand(time(NULL)); // Set RANDOM seed info
 
 
     // Background texture
@@ -96,18 +98,19 @@ void Spacewar::initialize(HWND hwnd)
 	
 	
 	Enemy * e = new Enemy(); // POINTER
-	int enemyPick = rand() % 15;
-
+	enemyList.push_back(e);
 	e->initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &gameTextures);
 	e->setFrames(enemyNS::ENEMY_START_FRAME, enemyNS::ENEMY_END_FRAME);
 	e->setCurrentFrame(enemyNS::ENEMY_START_FRAME);
 	e->setVelocity(VECTOR2(-enemyNS::SPEED, -enemyNS::SPEED)); // VECTOR2(X, Y)
+
+	srand(time(NULL)); // Set RANDOM seed info
+	int enemyPick = rand() % 15;
 	if (enemyCoords[enemyPick][2] == 0)
 	{
 		e->setX(enemyCoords[enemyPick][0]);
 		e->setY(enemyCoords[enemyPick][1]);
 		enemyCoords[enemyPick][2] = 1;
-		e->draw();
 	}
 
 
@@ -242,7 +245,8 @@ void Spacewar::render()
 	{
 		ship1.draw();                           // add the spaceship to the scene
 	}
-    enemy1.draw();
+    enemy1.draw(); // enemy spaceship draw
+	
 	laser.draw();							// add lasers
 
 	// BULLETS
