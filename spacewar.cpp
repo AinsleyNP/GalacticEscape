@@ -9,6 +9,9 @@ using namespace spaceWarNS;
 typedef std::vector<Bullet *> BULLETLIST;
 
 std::vector<Bullet *> bullet_collection;
+
+float resettime = 0;
+
 //=============================================================================
 // Constructor
 //=============================================================================
@@ -34,6 +37,9 @@ void Spacewar::initialize(HWND hwnd)
 {
     Game::initialize(hwnd); // throws GameError
 
+	srand(time(NULL)); // Set RANDOM seed info
+
+
     // Background texture
     if (!backgroundTexture.initialize(graphics,BACKGROUND_IMAGE))
         throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing nebula texture"));
@@ -49,6 +55,12 @@ void Spacewar::initialize(HWND hwnd)
     // nebula image
     if (!background.initialize(graphics,0,0,0,&backgroundTexture))
         throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing nebula"));
+
+	// tile image
+	if (!tile.initialize(graphics, TEXTURE_SIZE, TEXTURE_SIZE, TEXTURE_COLS, &tileTextures))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing tile"));
+	tile.setFrames(0, 0);
+	tile.setCurrentFrame(0);
 
 
     // ship
@@ -76,58 +88,39 @@ void Spacewar::initialize(HWND hwnd)
 
 
 	// enemy
-
-	// generate an object at a distance further than 'minradius' but no further than 'maxradius'
-	//  from point X,Y
-	srand(time(NULL));
-	
-	int distance = rand() % 100;	
-	int angle = rand() % 360;
-
-	int dx = (int)(distance);
-	int dy = (int)(distance*10);
-
-	if (dy > GAME_HEIGHT / 4)
-	{
-		enemy1.setX(dx);
-		enemy2.setY(dy);
-	}
-	else {
-		int distance = rand() % 100;
-		int dx = (int)(distance);
-		int dy = (int)(distance * 10);
-		
-	}
-	//enemy1
 	if (!enemy1.initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &gameTextures))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing enemy"));
 	enemy1.setFrames(enemyNS::ENEMY_START_FRAME, enemyNS::ENEMY_END_FRAME);
 	enemy1.setCurrentFrame(enemyNS::ENEMY_START_FRAME);
 	enemy1.setVelocity(VECTOR2(-enemyNS::SPEED, -enemyNS::SPEED)); // VECTOR2(X, Y)
 	
-	//enemy2
-	if (!enemy2.initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &gameTextures))
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing enemy"));
-	enemy2.setFrames(enemyNS::ENEMY_START_FRAME, enemyNS::ENEMY_END_FRAME);
-	enemy2.setCurrentFrame(enemyNS::ENEMY_START_FRAME);
-	enemy2.setVelocity(VECTOR2(-enemyNS::SPEED, -enemyNS::SPEED)); // VECTOR2(X, Y)
-	enemy2.setX(GAME_WIDTH / 3);
-	enemy2.setY(GAME_HEIGHT / 4);
-	//enemy3
-	if (!enemy3.initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &gameTextures))
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing enemy"));
-	enemy3.setFrames(enemyNS::ENEMY_START_FRAME, enemyNS::ENEMY_END_FRAME);
-	enemy3.setCurrentFrame(enemyNS::ENEMY_START_FRAME);
-	enemy3.setVelocity(VECTOR2(-enemyNS::SPEED, -enemyNS::SPEED)); // VECTOR2(X, Y)
-	enemy3.setX(GAME_WIDTH / 4);
-	enemy3.setY(GAME_HEIGHT / 5);
+	float enemyCoords[15][3] = {
+		{ 100,100,0 },{ 200,100,0 },{ 300,100,0 },{ 400,100,0 },{ 500,100,0 },
+		{ 100,200,0 },{ 200,200,0 },{ 300,200,0 },{ 400,200,0 },{ 500,200,0 },
+		{ 100,300,0 },{ 200,300,0 },{ 300,300,0 },{ 400,300,0 },{ 500,300,0 }
+	};
+	
+	
+	Enemy * e = new Enemy(); // POINTER
+	int enemyPick = rand() % 15;
 
+	e->initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &gameTextures);
+	e->setFrames(enemyNS::ENEMY_START_FRAME, enemyNS::ENEMY_END_FRAME);
+	e->setCurrentFrame(enemyNS::ENEMY_START_FRAME);
+	e->setVelocity(VECTOR2(-enemyNS::SPEED, -enemyNS::SPEED)); // VECTOR2(X, Y)
+	if (enemyCoords[enemyPick][2] == 0)
+	{
+		e->setX(enemyCoords[enemyPick][0]);
+		e->setY(enemyCoords[enemyPick][1]);
+		enemyCoords[enemyPick][2] = 1;
+		e->draw();
+	}
 
 
 	// LASER STUFF
 	int laserpick = rand()%4;
 
-	float Coords[4][2] = { {100,100} ,{300,200},{100,250},{200,400} };
+	float laserCoords[4][2] = { {100,100} ,{300,200},{100,250},{200,400} };
 
 	// Initialize
 	if (!laser.initialize(this, LaserNS::WIDTH, LaserNS::HEIGHT, LaserNS::TEXTURE_COLS, &gameTextures))
@@ -138,8 +131,8 @@ void Spacewar::initialize(HWND hwnd)
 	laser.setCurrentFrame(LaserNS::Laser_START_FRAME);
 
 	// Set Location
-	laser.setX(Coords[laserpick][0]);
-	laser.setY(Coords[laserpick][1]);
+	laser.setX(laserCoords[laserpick][0]);
+	laser.setY(laserCoords[laserpick][1]);
 
     return;
 }
@@ -154,28 +147,41 @@ void Spacewar::update()
 
     ship1.update(frameTime);
 	enemy1.update(frameTime);
-	enemy2.update(frameTime);
-	enemy3.update(frameTime);
 	laser.update(frameTime);
 	bullet.update(frameTime);
-
+	resettime += (frameTime);
+	
 
 	// SCROLLING STUFF
 	shipx = ship1.getX();
-	if (shipx < 0)                  // if butterfly off screen left
+	if (shipx < 0)                  // if ship off screen left
 	{
 		mapX -= ship1.getVelocity().x * frameTime;  // scroll map right
-		ship1.setX(0);              // put butterfly at left edge
+		ship1.setX(0);              // put ship at left edge
 	}
 
-	// if butterfly off screen right
+	// if ship off screen right
 	else if (shipx > GAME_WIDTH - ship1.getWidth())
 	{
 		mapX -= ship1.getVelocity().x * frameTime;  // scroll map left
-		// put butterfly at right edge
+		// put ship at right edge
 		ship1.setX((float)(GAME_WIDTH - ship1.getWidth()));
 	}
 
+	// Vertical "Scrolling"
+	shipy = ship1.getY();
+	if (shipy < GAME_HEIGHT/2)
+	{
+		ship1.setY(GAME_HEIGHT/2 -1); // So ship doesnt go past half way(ish)
+		ship1.setActive(true);
+		ship1.setVisible(true);
+	}
+
+	if (shipy > GAME_HEIGHT - 2*ship1.getHeight())
+	{
+		ship1.setY(GAME_HEIGHT / 1.25);
+		mapY -= ship1.getVelocity().y * frameTime;
+	}
 	
 }
 
@@ -192,8 +198,20 @@ void Spacewar::collisions()
 {
     VECTOR2 collisionVector;
     // if collision between ships
-    //if(ship1.collidesWith(ship2, collisionVector))
+    if(ship1.collidesWith(Enemy(), collisionVector))
     {
+		resettime = 0;
+		ship1.setX(GAME_WIDTH/1.25);
+		ship1.setY(GAME_HEIGHT/1.25);
+		ship1.setActive(false);
+		ship1.setVisible(false);
+
+		if (resettime >= 1)
+		{
+			ship1.setActive(true);
+			ship1.setVisible(true);
+			resettime = 0;
+		}
         // bounce off ship
         //ship1.bounce(collisionVector, ship2);
         //ship1.damage(SHIP);
@@ -213,9 +231,7 @@ void Spacewar::render()
     background.draw();                          // add the to the scene
     //planet.draw();                          // add the planet to the scene
     ship1.draw();                           // add the spaceship to the scene
-    enemy1.draw();                           // add the spaceship to the scene
-	enemy2.draw();
-	enemy3.draw();
+    enemy1.draw();
 	laser.draw();							// add lasers
 
 	//bullet draw
