@@ -11,7 +11,9 @@ typedef std::vector<Bullet *> BULLETLIST;
 std::vector<Bullet *> bullet_collection;
 
 float resettime = 0;
-
+bool respawn = false;
+int heart = 5;
+bool die = false;
 //=============================================================================
 // Constructor
 //=============================================================================
@@ -200,17 +202,25 @@ void Spacewar::collisions()
     // if collision between ships
     if(ship1.collidesWith(Enemy(), collisionVector))
     {
-		resettime = 0;
-		ship1.setX(GAME_WIDTH/1.25);
-		ship1.setY(GAME_HEIGHT/1.25);
+		heart = heart - 1;
 		ship1.setActive(false);
 		ship1.setVisible(false);
+		ship1.setX(GAME_WIDTH/1.25);
+		ship1.setY(GAME_HEIGHT/1.25);
+		
+		respawn = true;
+		Sleep(500);
 
-		if (resettime >= 1)
+		if (respawn == true)
 		{
 			ship1.setActive(true);
 			ship1.setVisible(true);
-			resettime = 0;
+			ship1.setX(GAME_WIDTH / 2);
+			ship1.setY(GAME_HEIGHT / 1.5);
+		}
+		if (heart == 0)
+		{
+			PostQuitMessage(0);
 		}
         // bounce off ship
         //ship1.bounce(collisionVector, ship2);
