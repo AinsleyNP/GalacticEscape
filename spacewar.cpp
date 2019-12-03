@@ -17,8 +17,8 @@ float resettime = 0;
 //=============================================================================
 Spacewar::Spacewar()
 {
-	mapX = 0;
-	mapY = 0;
+	mapX = 1;
+	mapY = 10;
 }
 
 //=============================================================================
@@ -177,9 +177,9 @@ void Spacewar::update()
 		ship1.setVisible(true);
 	}
 
-	if (shipy > GAME_HEIGHT - 2*ship1.getHeight())
+	if (shipy > GAME_HEIGHT - ship1.getHeight())
 	{
-		ship1.setY(GAME_HEIGHT / 1.25);
+		ship1.setY(GAME_HEIGHT - ship1.getHeight()+1);
 		mapY -= ship1.getVelocity().y * frameTime;
 	}
 	
@@ -240,7 +240,7 @@ void Spacewar::render()
 		bullet.draw();
 	}
 
-	// "TILES"
+	// DRAW "TILES"
 	for (int col = 0; col < MAP_WIDTH; col++)       // for each column of map
 	{
 		tile.setX((float)(col * TEXTURE_SIZE)); // set tile X
