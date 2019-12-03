@@ -74,15 +74,7 @@ void Spacewar::initialize(HWND hwnd)
     ship1.setY(GAME_HEIGHT/1.25);
     ship1.setVelocity(VECTOR2(shipNS::SPEED,-shipNS::SPEED)); // VECTOR2(X, Y
 
-	// BULLETS
-	if (input->isKeyDown(VK_SPACE) && ship1.getActive())
-	{
-		bullet_collection.push_back(new Bullet());
-		bullet.initialize(this, shipNS::WIDTH, shipNS::HEIGHT, shipNS::TEXTURE_COLS, &gameTextures);
-		bullet.setFrames(BulletNS::Bullet_START_FRAME, BulletNS::Bullet_END_FRAME);
-		bullet.setCurrentFrame(BulletNS::Bullet_START_FRAME);
-		bullet.setVelocity(VECTOR2(BulletNS::SPEED, -BulletNS::SPEED));
-	}
+	
 	for (std::vector<Bullet*>::iterator it = bullet_collection.begin(); it < bullet_collection.end(); ++it)
 	{
 		(*it)->update(frameTime);
@@ -184,6 +176,15 @@ void Spacewar::update()
 		ship1.setY(GAME_HEIGHT - ship1.getHeight()+1);
 		mapY -= ship1.getVelocity().y * frameTime;
 	}
+	if (respawn == true)
+	{
+		ship1.setVisible(true);
+		ship1.setActive(true);
+		ship1.setX(GAME_WIDTH / 2);
+		ship1.setY(GAME_HEIGHT / 1.5);
+		respawn = false;
+	}
+	
 	
 }
 
@@ -200,24 +201,20 @@ void Spacewar::collisions()
 {
     VECTOR2 collisionVector;
     // if collision between ships
-    if(ship1.collidesWith(Enemy(), collisionVector))
+    if(ship1.collidesWith(enemy1, collisionVector))
     {
 		heart = heart - 1;
-		ship1.setActive(false);
 		ship1.setVisible(false);
+		ship1.setActive(false);
 		ship1.setX(GAME_WIDTH/1.25);
 		ship1.setY(GAME_HEIGHT/1.25);
 		
 		respawn = true;
-		Sleep(500);
 
-		if (respawn == true)
-		{
-			ship1.setActive(true);
-			ship1.setVisible(true);
-			ship1.setX(GAME_WIDTH / 2);
-			ship1.setY(GAME_HEIGHT / 1.5);
-		}
+
+		
+			
+		
 		if (heart == 0)
 		{
 			PostQuitMessage(0);
@@ -239,17 +236,27 @@ void Spacewar::render()
     graphics->spriteBegin();                // begin drawing sprites
 
     background.draw();                          // add the to the scene
-    //planet.draw();                          // add the planet to the scene
-    ship1.draw();                           // add the spaceship to the scene
+    //planet.draw();
+	// add the planet to the scene
+	if (ship1.getActive())
+	{
+		ship1.draw();                           // add the spaceship to the scene
+	}
     enemy1.draw();
 	laser.draw();							// add lasers
 
-	//bullet draw
-	if (input->isKeyDown(VK_SPACE))
+	// BULLETS
+	if (input->isKeyDown(VK_SPACE) && ship1.getActive())
 	{
 		bullet.draw();
-	}
-
+		//bullet.setX(ship1.getX());
+		//bullet.setY(ship1.getY());
+		bullet_collection.push_back(new Bullet());
+		bullet.initialize(this, shipNS::WIDTH, shipNS::HEIGHT, shipNS::TEXTURE_COLS, &gameTextures);
+		bullet.setFrames(BulletNS::Bullet_START_FRAME, BulletNS::Bullet_END_FRAME);
+		bullet.setCurrentFrame(BulletNS::Bullet_START_FRAME);
+		bullet.setVelocity(VECTOR2(BulletNS::SPEED, -BulletNS::SPEED));
+	} 
 	// DRAW "TILES"
 	for (int col = 0; col < MAP_WIDTH; col++)       // for each column of map
 	{

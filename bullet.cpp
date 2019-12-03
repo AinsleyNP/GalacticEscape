@@ -49,6 +49,9 @@ void Bullet::draw()
 void Bullet::update(float frameTime)
 {
 	Entity::update(frameTime);
+
+	spriteData.y += frameTime * velocity.y;
+	
 }
 
 //=============================================================================

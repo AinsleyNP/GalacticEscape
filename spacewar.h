@@ -22,7 +22,7 @@ namespace spaceWarNS
 	const int __ = -1;                  // empty tile
 
 	const int tileMap[MAP_HEIGHT][MAP_WIDTH] = { // TILEMAP
-		__,__,__,__,__, //Starting row
+		1,__,__,__,__, //Starting row
 		__,__,__,__,__,
 		__,__,__,__,__,
 		__,__,__,__,__,
