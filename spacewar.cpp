@@ -22,8 +22,8 @@ bool die = false;
 //=============================================================================
 Spacewar::Spacewar()
 {
-	mapX = 1;
-	mapY = 10;
+	mapX = 0;
+	mapY = -1024;
 }
 
 //=============================================================================
@@ -152,6 +152,10 @@ void Spacewar::update()
 	laser.update(frameTime);
 	bullet.update(frameTime);
 	resettime += (frameTime);
+	if (mapY >= 0)
+	{
+		mapY = -1024;
+	}
 	
 
 	// SCROLLING STUFF
@@ -175,6 +179,7 @@ void Spacewar::update()
 	if (shipy < GAME_HEIGHT/2)
 	{
 		ship1.setY(GAME_HEIGHT/2 -1); // So ship doesnt go past half way(ish)
+		mapY -= ship1.getVelocity().y * frameTime * 2;
 		ship1.setActive(true);
 		ship1.setVisible(true);
 	}
