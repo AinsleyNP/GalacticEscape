@@ -17,26 +17,26 @@ namespace spaceWarNS
 	const int TEXTURE_SIZE = 128;
 	const int TEXTURE_COLS = 4;
 	const int MAP_HEIGHT = 15;
-	const int MAP_WIDTH = 4;
+	const int MAP_WIDTH = 5;
 	const float SCROLL_RATE = 10;
 	const int __ = -1;                  // empty tile
 
-	const int tileMap[MAP_HEIGHT][MAP_WIDTH] = {
-		__,__,__,__, //Starting row
-		__,__,__,__,
-		__,__,__,__,
-		__,__,__,__,
-		__,__,__,__, //Row 5
-		__,__,__,__,
-		__,__,__,__,
-		__,__,__,__,
-		__,__,__,__,
-		__,__,__,__, //Row 10
-		__,__,__,__,
-		__,__,__,__,
-		__,__,__,__,
-		__,__,__,__,
-		__,__,__,__, //Row 15
+	const int tileMap[MAP_HEIGHT][MAP_WIDTH] = { // TILEMAP
+		__,__,__,__,__, //Starting row
+		__,__,__,__,__,
+		__,__,__,__,__,
+		__,__,__,__,__,
+		__,__,__,__,__,//Row 5
+		__,__,__,__,__,
+		__,__,__,__,__,
+		__,__,__,__,__,
+		__,__,__,__,__,
+		__,__,__,__,__,//Row 10
+		__,__,__,__,__,
+		__,__,__,__,__,
+		__,__,__,__,__,
+		__,__,__,__,__,
+		__,__,__,__,__,//Row 15
 	};
 }
 
@@ -53,7 +53,7 @@ private:
 	TextureManager tileTextures;
 	Image tile;
 	Ship    ship1;    // spaceships (https://www.pnglot.com/downpng/hTxmTim_first-version-of-my-sprite-sheet-i-have/)
-	Enemy enemy1, enemy2, enemy3; //enemy spaceships
+	Enemy enemy1; //enemy spaceships
 	Laser laser;
 	Bullet bullet;
 	float mapX;
