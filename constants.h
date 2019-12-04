@@ -45,6 +45,7 @@ const float MASS_SHIP = 5.0f;
 const char BACKGROUND_IMAGE[] =   "pictures\\galaxy2.jpg";     // Background Image
 const char TEXTURES_IMAGE[] = "pictures\\textures.png";  // game textures
 const char TILE_TEXTURES[] = "pictures\\tiles.png";         // tiles
+const char MAINMENU_TEXTURE[] = "pictures\\MainMenu.jpg";
 
 
 // key mappings

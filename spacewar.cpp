@@ -56,6 +56,17 @@ void Spacewar::initialize(HWND hwnd)
     if (!gameTextures.initialize(graphics,TEXTURES_IMAGE))
         throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing game textures"));
 
+	// main menu textures
+	if (!mainMenuTexture.initialize(graphics, MAINMENU_TEXTURE))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing main menu textures"));
+
+	// main menu image 
+	if (!mainMenu.initialize(graphics, 0, 0, 0, &mainMenuTexture))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing main menu"));
+	// place main menu in center of screen
+	mainMenu.setX(GAME_WIDTH * 0.5f - mainMenu.getWidth() * 0.5f);
+	mainMenu.setY(GAME_HEIGHT * 0.5f - mainMenu.getHeight() * 0.5f);
+
     // nebula image
     if (!background.initialize(graphics,0,0,0,&backgroundTexture))
         throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing nebula"));
@@ -203,8 +214,19 @@ void Spacewar::update()
 		(*it)->update(frameTime);
 	}
 	
+	// checks for return key press
+	// game starts if key pressed
+	if (input->wasKeyPressed(VK_RETURN))
+	{
+		menu = false;
+	}
 
-	
+	// checks for escape key press
+	// game application quits if key pressed
+	if (input->wasKeyPressed(VK_ESCAPE))
+	{
+		PostQuitMessage(0);
+	}
 	
 	
 }
@@ -261,6 +283,10 @@ void Spacewar::render()
 		ship1.draw();                           // add the spaceship to the scene
 	}
     enemy1.draw(); // enemy spaceship draw
+
+	if (menu) {
+		mainMenu.draw(); // main menu draw
+	}
 	
 	laser.draw();							// add lasers
 
@@ -300,6 +326,7 @@ void Spacewar::releaseAll()
     backgroundTexture.onLostDevice();
     gameTextures.onLostDevice();
 	tileTextures.onLostDevice();
+	mainMenuTexture.onLostDevice();
 
     Game::releaseAll();
     return;
@@ -314,6 +341,7 @@ void Spacewar::resetAll()
     gameTextures.onResetDevice();
     backgroundTexture.onResetDevice();  
 	tileTextures.onResetDevice();
+	mainMenuTexture.onResetDevice();
 
     Game::resetAll();
     return;

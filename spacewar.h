@@ -51,6 +51,8 @@ private:
     TextureManager backgroundTexture;   // nebula texture
     TextureManager gameTextures;    // game texture
 	TextureManager tileTextures;
+	TextureManager mainMenuTexture;		// main menu texture
+	Image mainMenu;						// main menu image
 	Image tile;
 	Ship    ship1;    // spaceships (https://www.pnglot.com/downpng/hTxmTim_first-version-of-my-sprite-sheet-i-have/)
 	Enemy enemy1; //enemy spaceships
@@ -60,6 +62,8 @@ private:
 	float mapY;
 
     Image   background;         // backdrop image
+
+	bool menu = true;
 
 public:
     // Constructor
