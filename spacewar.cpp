@@ -44,10 +44,6 @@ void Spacewar::initialize(HWND hwnd)
 {
     Game::initialize(hwnd); // throws GameError
 
-    // Background texture
-    if (!backgroundTexture.initialize(graphics,BACKGROUND_IMAGE))
-        throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing nebula texture"));
-
 	// map textures
 	if (!tileTextures.initialize(graphics, TILE_TEXTURES))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing tile textures"));
