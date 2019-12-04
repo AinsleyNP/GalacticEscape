@@ -18,13 +18,14 @@ float resettime = 0;
 bool respawn = false;
 int heart = 5;
 bool die = false;
+int ScreenTileY=GAME_HEIGHT/TEXTURE_SIZE;
 //=============================================================================
 // Constructor
 //=============================================================================
 Spacewar::Spacewar()
 {
 	mapX = 0;
-	mapY = -1024;
+	mapY = -(TEXTURE_SIZE*ScreenTileY*2);
 }
 
 //=============================================================================
@@ -42,8 +43,6 @@ Spacewar::~Spacewar()
 void Spacewar::initialize(HWND hwnd)
 {
     Game::initialize(hwnd); // throws GameError
-
-
 
     // Background texture
     if (!backgroundTexture.initialize(graphics,BACKGROUND_IMAGE))
@@ -163,6 +162,21 @@ void Spacewar::initialize(HWND hwnd)
 //=============================================================================
 void Spacewar::update()
 {
+
+	// checks for return key press
+	// game starts if key pressed
+	if (input->wasKeyPressed(VK_RETURN))
+	{
+		menu = false;
+	}
+
+	// checks for escape key press
+	// game application quits if key pressed
+	if (input->wasKeyPressed(VK_ESCAPE))
+	{
+		PostQuitMessage(0);
+	}
+
 	float shipx;
 	float shipy;
 
@@ -171,41 +185,33 @@ void Spacewar::update()
 	laser.update(frameTime);
 	bullet.update(frameTime);
 	resettime += (frameTime);
-	if (mapY >= 0)
-	{
-		mapY = -1024;
-	}
+
 	
 //==================================================================================================================
 	// SCROLLING STUFF
-	shipx = ship1.getX();
-	if (shipx < 0)                  // if ship off screen left
+	if (mapY >= ScreenTileY) // RECURRING SCROLLING
 	{
-		mapX -= ship1.getVelocity().x * frameTime;  // scroll map right
-		ship1.setX(0);              // put ship at left edge
+		mapY = -TEXTURE_SIZE*MAP_HEIGHT;
 	}
-
-	// if ship off screen right
-	else if (shipx > GAME_WIDTH - ship1.getWidth())
-	{
-		mapX -= ship1.getVelocity().x * frameTime;  // scroll map left
-		// put ship at right edge
-		ship1.setX((float)(GAME_WIDTH - ship1.getWidth()));
-	}
-
-	// Vertical "Scrolling"
+	//						Vertical "Scrolling"
 	shipy = ship1.getY();
 	if (shipy < GAME_HEIGHT/2)
 	{
-		ship1.setY(GAME_HEIGHT/2 -1); // So ship doesnt go past half way(ish)
-		mapY -= ship1.getVelocity().y * frameTime;
+		ship1.setY(GAME_HEIGHT/2 -1);	// Checks ship at about half GAME_HEIGHT
+		if (input->isKeyDown(VK_UP))	// Checks MovementKey(UP) pressed
+		{
+			mapY -= ship1.getVelocity().y * frameTime;	// Scroll at fastest speed
+		}
+		else	// If NOT pressing UP while at about half GAME_HEIGHT
+		{
+			mapY -= ship1.getVelocity().y * frameTime * 0.5; //Scrolls at normal speed
+		}
+	}
+	else		// Scrolls at normal speed all the time
+	{
+		mapY -= ship1.getVelocity().y * frameTime * 0.5;
 	}
 
-	if (shipy > GAME_HEIGHT - ship1.getHeight())
-	{
-		ship1.setY(GAME_HEIGHT - ship1.getHeight()+1);
-		mapY -= ship1.getVelocity().y * frameTime;
-	}
 	//==================================================================================================================
 
 	if (respawn == true)
@@ -220,23 +226,7 @@ void Spacewar::update()
 	for (std::vector<Bullet*>::iterator it = bullet_collection.begin(); it < bullet_collection.end(); ++it)
 	{
 		(*it)->update(frameTime);
-	}
-	
-	// checks for return key press
-	// game starts if key pressed
-	if (input->wasKeyPressed(VK_RETURN))
-	{
-		menu = false;
-	}
-
-	// checks for escape key press
-	// game application quits if key pressed
-	if (input->wasKeyPressed(VK_ESCAPE))
-	{
-		PostQuitMessage(0);
-	}
-	
-	
+	}	
 }
 
 //=============================================================================
@@ -298,7 +288,11 @@ void Spacewar::render()
 		mainMenu.draw(); // main menu draw
 	}
 	
-	laser.draw();							// add lasers
+	//==================================================================================================================
+	for (std::vector<Laser*>::iterator it = laserlist.begin(); it < laserlist.end(); ++it)
+	{
+		(*it)->draw();
+	}
 
 	//==================================================================================================================
 	// BULLETS
