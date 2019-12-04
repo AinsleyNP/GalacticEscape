@@ -185,9 +185,9 @@ void Spacewar::update()
 	
 //==================================================================================================================
 	// SCROLLING STUFF
-	if (mapY >= ScreenTileY) // RECURRING SCROLLING
+	if (mapY >= GAME_HEIGHT) // RECURRING SCROLLING
 	{
-		mapY = -TEXTURE_SIZE*MAP_HEIGHT;
+		mapY = -TEXTURE_SIZE*MAP_HEIGHT-128;
 	}
 	//						Vertical "Scrolling"
 	shipy = ship1.getY();
@@ -196,7 +196,7 @@ void Spacewar::update()
 		ship1.setY(GAME_HEIGHT/2 -1);	// Checks ship at about half GAME_HEIGHT
 		if (input->isKeyDown(VK_UP))	// Checks MovementKey(UP) pressed
 		{
-			mapY -= ship1.getVelocity().y * frameTime;	// Scroll at fastest speed
+			mapY -= ship1.getVelocity().y * frameTime*3;	// Scroll at fastest speed
 		}
 		else	// If NOT pressing UP while at about half GAME_HEIGHT
 		{
@@ -269,7 +269,23 @@ void Spacewar::render()
 {
     graphics->spriteBegin();                // begin drawing sprites
 
-    background.draw();                          // add the to the scene
+	//==================================================================================================================
+	// DRAW "TILES"
+	for (int col = 0; col < MAP_WIDTH; col++)       // for each column of map
+	{
+		tile.setX((float)(col * TEXTURE_SIZE)); // set tile X
+		for (int row = 0; row < MAP_HEIGHT; row++)    // for each row of map
+		{
+			if (tileMap[row][col] >= 0)          // if tile present
+			{
+				tile.setCurrentFrame(tileMap[row][col]);    // set tile texture
+				tile.setY((float)(row * TEXTURE_SIZE) + mapY);   // set tile Y
+				// if tile on screen
+				if (tile.getY() > -TEXTURE_SIZE && tile.getY() < GAME_HEIGHT)
+					tile.draw();                // draw tile
+			}
+		}
+	}
 
 	//==================================================================================================================
 	if (ship1.getActive())
@@ -298,24 +314,6 @@ void Spacewar::render()
 		bullet_collection.push_back(new Bullet());
 		bullet.initialize(this, shipNS::WIDTH, shipNS::HEIGHT, shipNS::TEXTURE_COLS, &gameTextures);
 	} 
-
-	//==================================================================================================================
-	// DRAW "TILES"
-	for (int col = 0; col < MAP_WIDTH; col++)       // for each column of map
-	{
-		tile.setX((float)(col * TEXTURE_SIZE)); // set tile X
-		for (int row = 0; row < MAP_HEIGHT; row++)    // for each row of map
-		{
-			if (tileMap[row][col] >= 0)          // if tile present
-			{
-				tile.setCurrentFrame(tileMap[row][col]);    // set tile texture
-				tile.setY((float)(row * TEXTURE_SIZE) + mapY);   // set tile Y
-				// if tile on screen
-				if (tile.getY() > -TEXTURE_SIZE && tile.getY() < GAME_HEIGHT)
-					tile.draw();                // draw tile
-			}
-		}
-	}
 
     graphics->spriteEnd();                  // end drawing sprites
 }
