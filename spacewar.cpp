@@ -8,9 +8,11 @@ using namespace spaceWarNS;
 
 typedef std::vector<Bullet *> BULLETLIST;
 typedef std::vector<Enemy *> ENEMYLIST;
+typedef std::vector<Laser*> LASERLIST;
 
 std::vector<Bullet *> bullet_collection;
 std::vector<Enemy *> enemyList;
+std::vector<Laser*> LaserList;
 
 
 float resettime = 0;
@@ -23,7 +25,7 @@ bool die = false;
 Spacewar::Spacewar()
 {
 	mapX = 0;
-	mapY = -1024;
+	mapY = -GAME_HEIGHT;
 }
 
 //=============================================================================
@@ -42,11 +44,16 @@ void Spacewar::initialize(HWND hwnd)
 {
     Game::initialize(hwnd); // throws GameError
 
+	// main menu textures
+	if (!mainMenuTexture.initialize(graphics, MAINMENU_TEXTURE))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing main menu textures"));
 
-
-    // Background texture
-    if (!backgroundTexture.initialize(graphics,BACKGROUND_IMAGE))
-        throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing nebula texture"));
+	// main menu image 
+	if (!mainMenu.initialize(graphics, 0, 0, 0, &mainMenuTexture))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing main menu"));
+	// place main menu in center of screen
+	mainMenu.setX(GAME_WIDTH * 0.5f - mainMenu.getWidth() * 0.5f);
+	mainMenu.setY(GAME_HEIGHT * 0.5f - mainMenu.getHeight() * 0.5f);
 
 	// map textures
 	if (!tileTextures.initialize(graphics, TILE_TEXTURES))
@@ -74,12 +81,9 @@ void Spacewar::initialize(HWND hwnd)
     ship1.setCurrentFrame(shipNS::SHIP1_START_FRAME);
     ship1.setX(GAME_WIDTH/2);
     ship1.setY(GAME_HEIGHT/1.25);
-    ship1.setVelocity(VECTOR2(shipNS::SPEED,-shipNS::SPEED)); // VECTOR2(X, Y
+    ship1.setVelocity(VECTOR2(shipNS::SPEED,-shipNS::SPEED)); // VECTOR2(X, Y)
 
-	
-	
-
-
+	//=========================================================================
 	// enemy spawn test
 	if (!enemy1.initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &gameTextures))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing enemy"));
@@ -125,27 +129,39 @@ void Spacewar::initialize(HWND hwnd)
 		}
 	}
 	
+	//=========================================================================
+	// LASER STUFF	
+	float laserCoords[4][3] =
+	{
+		{GAME_WIDTH / 3,GAME_HEIGHT / (4 / 3),3 * PI / 2} ,
+		{GAME_WIDTH / 3 * 2,GAME_HEIGHT / (4 / 3),3 * PI / 2},
+		{GAME_WIDTH / 3,GAME_HEIGHT / (4 / 3),7 * PI / 4},
+		{GAME_WIDTH / 3,GAME_HEIGHT / (4 / 3),5 * PI / 4}
+	};
 
-	
-	
+	for (int i = 0; i <3; i++)
+	{
+		Laser* e = new Laser(); // POINTER
+		LaserList.push_back(e); //Adds e into laserList(vector)
+	}
 
-	// LASER STUFF
-	int laserpick = rand()%4;
+	for (std::vector<Laser*>::iterator lz = LaserList.begin(); lz < LaserList.end(); ++lz)
+	{
+		(*lz)->initialize(this, LaserNS::WIDTH, LaserNS::HEIGHT, LaserNS::TEXTURE_COLS, &gameTextures);
+		(*lz)->setFrames(LaserNS::Laser_START_FRAME, LaserNS::Laser_END_FRAME);
+		(*lz)->setCurrentFrame(LaserNS::Laser_START_FRAME);
+		(*lz)->setVelocity(VECTOR2(-LaserNS::SPEED, -LaserNS::SPEED)); // VECTOR2(X, Y)
 
-	float laserCoords[4][2] = { {100,100} ,{300,200},{100,250},{200,400} };
+		for (int i = 0; i < 3; i++)
+		{
+			(*lz)->setX(laserCoords[i][0]);
+			(*lz)->setY(laserCoords[i][1]);
+			(*lz)->setRadians(laserCoords[i][2]);
+		}
+	}
 
-	// Initialize
-	if (!laser.initialize(this, LaserNS::WIDTH, LaserNS::HEIGHT, LaserNS::TEXTURE_COLS, &gameTextures))
-		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing laser"));
-
-	// Set ANIMATION frames
-	laser.setFrames(LaserNS::Laser_START_FRAME, LaserNS::Laser_END_FRAME);
-	laser.setCurrentFrame(LaserNS::Laser_START_FRAME);
-
-	// Set Location
-	laser.setX(laserCoords[laserpick][0]);
-	laser.setY(laserCoords[laserpick][1]);
-
+	//=========================================================================
+	// BULLETS
 	bullet.setX(ship1.getX());
 	bullet.setY(ship1.getY());
 
@@ -162,6 +178,19 @@ void Spacewar::initialize(HWND hwnd)
 //=============================================================================
 void Spacewar::update()
 {
+	// checks for return key press
+	// game starts if key pressed
+	if (input->wasKeyPressed(VK_RETURN))
+	{
+		menu = false;
+	}
+	// checks for escape key press
+	// game application quits if key pressed
+	if (input->wasKeyPressed(VK_ESCAPE))
+	{
+		PostQuitMessage(0);
+	}
+
 	float shipx;
 	float shipy;
 
@@ -170,26 +199,12 @@ void Spacewar::update()
 	laser.update(frameTime);
 	bullet.update(frameTime);
 	resettime += (frameTime);
-	if (mapY >= 0)
-	{
-		mapY = -1024;
-	}
-	
-
+		
+	//=========================================================================
 	// SCROLLING STUFF
-	shipx = ship1.getX();
-	if (shipx < 0)                  // if ship off screen left
+	if (mapY >= GAME_HEIGHT)
 	{
-		mapX -= ship1.getVelocity().x * frameTime;  // scroll map right
-		ship1.setX(0);              // put ship at left edge
-	}
-
-	// if ship off screen right
-	else if (shipx > GAME_WIDTH - ship1.getWidth())
-	{
-		mapX -= ship1.getVelocity().x * frameTime;  // scroll map left
-		// put ship at right edge
-		ship1.setX((float)(GAME_WIDTH - ship1.getWidth()));
+		mapY = -TEXTURE_SIZE*MAP_HEIGHT-128;
 	}
 
 	// Vertical "Scrolling"
@@ -197,16 +212,21 @@ void Spacewar::update()
 	if (shipy < GAME_HEIGHT/2)
 	{
 		ship1.setY(GAME_HEIGHT/2 -1); // So ship doesnt go past half way(ish)
-		mapY -= ship1.getVelocity().y * frameTime * 2;
-		ship1.setActive(true);
-		ship1.setVisible(true);
+		if (input->isKeyDown(VK_UP))
+		{
+			mapY -= ship1.getVelocity().y * frameTime * 3;
+		}
+		else
+		{
+			mapY -= ship1.getVelocity().y * frameTime * 0.5;
+		}
+	}
+	else
+	{
+		mapY -= ship1.getVelocity().y * frameTime * 0.5;
 	}
 
-	if (shipy > GAME_HEIGHT - ship1.getHeight())
-	{
-		ship1.setY(GAME_HEIGHT - ship1.getHeight()+1);
-		mapY -= ship1.getVelocity().y * frameTime;
-	}
+	//=========================================================================
 	if (respawn == true)
 	{
 		Sleep(500);
@@ -216,14 +236,12 @@ void Spacewar::update()
 		ship1.setY(GAME_HEIGHT / 1.5);
 		respawn = false;
 	}
+
+	//=========================================================================
 	for (std::vector<Bullet*>::iterator it = bullet_collection.begin(); it < bullet_collection.end(); ++it)
 	{
 		(*it)->update(frameTime);
 	}
-	
-
-	
-	
 	
 }
 
@@ -271,34 +289,11 @@ void Spacewar::render()
 {
     graphics->spriteBegin();                // begin drawing sprites
 
-    background.draw();                          // add the to the scene
-    //planet.draw();
-	// add the planet to the scene
-	if (ship1.getActive())
-	{
-		ship1.draw();                           // add the spaceship to the scene
-	}
-    enemy1.draw(); // enemy spaceship draw
 
-	for (std::vector<Enemy *>::iterator it = enemyList.begin(); it < enemyList.end(); ++it)
-	{
-		(*it)->draw();
-	}
-
-	
-	laser.draw();							// add lasers
-
-	// BULLETS
-	if (input->isKeyDown(VK_SPACE) && ship1.getActive())
-	{
-		bullet.draw();
-		bullet_collection.push_back(new Bullet());
-		bullet.initialize(this, shipNS::WIDTH, shipNS::HEIGHT, shipNS::TEXTURE_COLS, &gameTextures);
-	} 
 	// DRAW "TILES"
 	for (int col = 0; col < MAP_WIDTH; col++)       // for each column of map
 	{
-		tile.setX((float)(col * TEXTURE_SIZE)); // set tile X
+		tile.setX((float)(col * TEXTURE_SIZE));	// set tile X
 		for (int row = 0; row < MAP_HEIGHT; row++)    // for each row of map
 		{
 			if (tileMap[row][col] >= 0)          // if tile present
@@ -310,6 +305,36 @@ void Spacewar::render()
 					tile.draw();                // draw tile
 			}
 		}
+	}
+
+
+	if (ship1.getActive())
+	{
+		ship1.draw();                           // add the spaceship to the scene
+	}
+
+    enemy1.draw(); // enemy spaceship draw
+
+	for (std::vector<Enemy *>::iterator it = enemyList.begin(); it < enemyList.end(); ++it)
+	{
+		(*it)->draw();
+	}
+
+	for (std::vector<Laser*>::iterator lz = LaserList.begin(); lz < LaserList.end(); ++lz)
+	{
+		(*lz)->draw();
+	}
+
+	// BULLETS
+	if (input->isKeyDown(VK_SPACE) && ship1.getActive())
+	{
+		bullet.draw();
+		bullet_collection.push_back(new Bullet());
+		bullet.initialize(this, shipNS::WIDTH, shipNS::HEIGHT, shipNS::TEXTURE_COLS, &gameTextures);
+	} 
+
+	if (menu) {
+		mainMenu.draw(); // main menu draw
 	}
 
     graphics->spriteEnd();                  // end drawing sprites
@@ -324,6 +349,7 @@ void Spacewar::releaseAll()
     backgroundTexture.onLostDevice();
     gameTextures.onLostDevice();
 	tileTextures.onLostDevice();
+	mainMenuTexture.onLostDevice();
 
     Game::releaseAll();
     return;
@@ -333,11 +359,12 @@ void Spacewar::releaseAll()
 // The grahics device has been reset.
 // Recreate all surfaces.
 //=============================================================================
-void Spacewar::resetAll()
+void Spacewar::resetAll()	
 {
     gameTextures.onResetDevice();
     backgroundTexture.onResetDevice();  
 	tileTextures.onResetDevice();
+	mainMenuTexture.onResetDevice();
 
     Game::resetAll();
     return;
