@@ -122,11 +122,6 @@ void Spacewar::initialize(HWND hwnd)
 			(*it)->setY(enemyCoords[enemyPick][1]);
 			enemyCoords[enemyPick][2] = 1;
 		}
-		else
-		{
-			(*it)->setX(GAME_WIDTH / 2);
-			(*it)->setY(GAME_HEIGHT / 4);
-		}
 	}
 	
 	//=========================================================================
