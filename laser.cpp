@@ -38,11 +38,7 @@ bool Laser::initialize(Game* gamePtr, int width, int height, int ncols,
 //=============================================================================
 void Laser::draw()
 {
-	if (input->isKeyDown(VK_SPACE))
-	{
 		Image::draw();		           // draw laser
-	}
-
 }
 
 //=============================================================================
