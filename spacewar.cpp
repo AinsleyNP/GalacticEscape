@@ -80,54 +80,36 @@ void Spacewar::initialize(HWND hwnd)
 	
 
 
-	// enemy spawn test
+	// enemy
 	if (!enemy1.initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &gameTextures))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing enemy"));
 	enemy1.setFrames(enemyNS::ENEMY_START_FRAME, enemyNS::ENEMY_END_FRAME);
 	enemy1.setCurrentFrame(enemyNS::ENEMY_START_FRAME);
 	enemy1.setVelocity(VECTOR2(-enemyNS::SPEED, -enemyNS::SPEED)); // VECTOR2(X, Y)
-
-	// Enemy Spawning
-
-	//Enemy Coords
+	
 	float enemyCoords[15][3] = {
 		{ 100,100,0 },{ 200,100,0 },{ 300,100,0 },{ 400,100,0 },{ 500,100,0 },
 		{ 100,200,0 },{ 200,200,0 },{ 300,200,0 },{ 400,200,0 },{ 500,200,0 },
 		{ 100,300,0 },{ 200,300,0 },{ 300,300,0 },{ 400,300,0 },{ 500,300,0 }
 	};
+	
+	
+	Enemy * e = new Enemy(); // POINTER
+	enemyList.push_back(e);
+	e->initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &gameTextures);
+	e->setFrames(enemyNS::ENEMY_START_FRAME, enemyNS::ENEMY_END_FRAME);
+	e->setCurrentFrame(enemyNS::ENEMY_START_FRAME);
+	e->setVelocity(VECTOR2(-enemyNS::SPEED, -enemyNS::SPEED)); // VECTOR2(X, Y)
 
-	for (int i = 0; i < 10; i++)
+	srand(time(NULL)); // Set RANDOM seed info
+	int enemyPick = rand() % 15;
+	if (enemyCoords[enemyPick][2] == 0)
 	{
-		Enemy * e = new Enemy(); // POINTER
-		enemyList.push_back(e); //Adds e into enemyList(vector)
+		e->setX(enemyCoords[enemyPick][0]);
+		e->setY(enemyCoords[enemyPick][1]);
+		enemyCoords[enemyPick][2] = 1;
 	}
 
-	for (std::vector<Enemy *>::iterator it = enemyList.begin(); it < enemyList.end(); ++it)
-	{
-		(*it)->initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &gameTextures);
-		(*it)->setFrames(enemyNS::ENEMY_START_FRAME, enemyNS::ENEMY_END_FRAME);
-		(*it)->setCurrentFrame(enemyNS::ENEMY_START_FRAME);
-		(*it)->setVelocity(VECTOR2(-enemyNS::SPEED, -enemyNS::SPEED)); // VECTOR2(X, Y)
-
-		//Randomizer Spawn
-		srand(time(NULL)); // Set RANDOM seed info
-		int enemyPick = rand() % 15;
-		if (enemyCoords[enemyPick][2] == 0)
-		{
-			(*it)->setX(enemyCoords[enemyPick][0]);
-			(*it)->setY(enemyCoords[enemyPick][1]);
-			enemyCoords[enemyPick][2] = 1;
-		}
-		else
-		{
-			(*it)->setX(GAME_WIDTH / 2);
-			(*it)->setY(GAME_HEIGHT / 4);
-		}
-	}
-	
-
-	
-	
 
 	// LASER STUFF
 	int laserpick = rand()%4;
@@ -279,12 +261,6 @@ void Spacewar::render()
 		ship1.draw();                           // add the spaceship to the scene
 	}
     enemy1.draw(); // enemy spaceship draw
-
-	for (std::vector<Enemy *>::iterator it = enemyList.begin(); it < enemyList.end(); ++it)
-	{
-		(*it)->draw();
-	}
-
 	
 	laser.draw();							// add lasers
 
