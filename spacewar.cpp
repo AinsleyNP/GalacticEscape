@@ -8,11 +8,11 @@ using namespace spaceWarNS;
 
 typedef std::vector<Bullet *> BULLETLIST;
 typedef std::vector<Enemy *> ENEMYLIST;
-typedef std::vector<Laser*> LASERLIST;
+typedef std::vector<Laser *> LASERLIST;
 
 std::vector<Bullet *> bullet_collection;
 std::vector<Enemy *> enemyList;
-std::vector<Laser*> LaserList;
+std::vector<Laser *> laserList;
 
 
 float resettime = 0;
@@ -105,7 +105,7 @@ void Spacewar::initialize(HWND hwnd)
 		Enemy * e = new Enemy(); // POINTER
 		enemyList.push_back(e); //Adds e into enemyList(vector)
 	}
-
+	srand(time(NULL)); // Set RANDOM seed info
 	for (std::vector<Enemy *>::iterator it = enemyList.begin(); it < enemyList.end(); ++it)
 	{
 		(*it)->initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &gameTextures);
@@ -114,7 +114,7 @@ void Spacewar::initialize(HWND hwnd)
 		(*it)->setVelocity(VECTOR2(-enemyNS::SPEED, -enemyNS::SPEED)); // VECTOR2(X, Y)
 
 		//Randomizer Spawn
-		srand(time(NULL)); // Set RANDOM seed info
+
 		int enemyPick = rand() % 15;
 		if (enemyCoords[enemyPick][2] == 0)
 		{
@@ -142,22 +142,14 @@ void Spacewar::initialize(HWND hwnd)
 	for (int i = 0; i <3; i++)
 	{
 		Laser* e = new Laser(); // POINTER
-		LaserList.push_back(e); //Adds e into laserList(vector)
-	}
-
-	for (std::vector<Laser*>::iterator lz = LaserList.begin(); lz < LaserList.end(); ++lz)
-	{
-		(*lz)->initialize(this, LaserNS::WIDTH, LaserNS::HEIGHT, LaserNS::TEXTURE_COLS, &gameTextures);
-		(*lz)->setFrames(LaserNS::Laser_START_FRAME, LaserNS::Laser_END_FRAME);
-		(*lz)->setCurrentFrame(LaserNS::Laser_START_FRAME);
-		(*lz)->setVelocity(VECTOR2(-LaserNS::SPEED, -LaserNS::SPEED)); // VECTOR2(X, Y)
-
-		for (int i = 0; i < 3; i++)
-		{
-			(*lz)->setX(laserCoords[i][0]);
-			(*lz)->setY(laserCoords[i][1]);
-			(*lz)->setRadians(laserCoords[i][2]);
-		}
+		laserList.push_back(e); //Adds e into laserList(vector)
+		e->initialize(this, LaserNS::WIDTH, LaserNS::HEIGHT, LaserNS::TEXTURE_COLS, &gameTextures);
+		e->setFrames(LaserNS::Laser_START_FRAME, LaserNS::Laser_END_FRAME);
+		e->setCurrentFrame(LaserNS::Laser_START_FRAME);
+		e->setVelocity(VECTOR2(-LaserNS::SPEED, -LaserNS::SPEED)); // VECTOR2(X, Y)
+		e->setX(laserCoords[i][0]);
+		e->setY(laserCoords[i][1]);
+		e->setRadians(laserCoords[i][2]);
 	}
 
 	//=========================================================================
@@ -178,6 +170,7 @@ void Spacewar::initialize(HWND hwnd)
 //=============================================================================
 void Spacewar::update()
 {
+
 	// checks for return key press
 	// game starts if key pressed
 	if (input->wasKeyPressed(VK_RETURN))
@@ -191,6 +184,7 @@ void Spacewar::update()
 		PostQuitMessage(0);
 	}
 
+	//=========================================================================
 	float shipx;
 	float shipy;
 
@@ -320,7 +314,7 @@ void Spacewar::render()
 		(*it)->draw();
 	}
 
-	for (std::vector<Laser*>::iterator lz = LaserList.begin(); lz < LaserList.end(); ++lz)
+	for (std::vector<Laser *>::iterator lz = laserList.begin(); lz < laserList.end(); ++lz)
 	{
 		(*lz)->draw();
 	}
