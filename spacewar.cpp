@@ -149,13 +149,25 @@ void Spacewar::initialize(HWND hwnd)
 
 	//=========================================================================
 	// BULLETS
-	bullet.setX(ship1.getX());
-	bullet.setY(ship1.getY());
-
 	
-	bullet.setFrames(BulletNS::Bullet_START_FRAME, BulletNS::Bullet_END_FRAME);
+
+	for (int i = 0; i < 20; i++)
+	{
+		Bullet *b = new Bullet();
+		bullet_collection.push_back(b);
+	}
+	for (std::vector<Bullet *>::iterator ib = bullet_collection.begin(); ib < bullet_collection.end(); ++ib)
+	{
+		(*ib)->setX(ship1.getX());
+		(*ib)->setY(ship1.getY());
+		(*ib)->initialize(this, BulletNS::WIDTH, BulletNS::HEIGHT, BulletNS::TEXTURE_COLS, &gameTextures);
+		(*ib)->setFrames(BulletNS::Bullet_START_FRAME, BulletNS::Bullet_END_FRAME);
+		(*ib)->setCurrentFrame(BulletNS::Bullet_START_FRAME);
+		(*ib)->setVelocity(VECTOR2(-BulletNS::SPEED, -BulletNS::SPEED)); // VECTOR2(X, Y)
+	}
+	/*bullet.setFrames(BulletNS::Bullet_START_FRAME, BulletNS::Bullet_END_FRAME);
 	bullet.setCurrentFrame(BulletNS::Bullet_START_FRAME);
-	bullet.setVelocity(VECTOR2(BulletNS::SPEED, -BulletNS::SPEED));
+	bullet.setVelocity(VECTOR2(BulletNS::SPEED, -BulletNS::SPEED));*/
 
     return;
 }
@@ -227,11 +239,7 @@ void Spacewar::update()
 	}
 
 	//=========================================================================
-	for (std::vector<Bullet*>::iterator it = bullet_collection.begin(); it < bullet_collection.end(); ++it)
-	{
-		(*it)->update(frameTime);
-	}
-	
+
 }
 
 //=============================================================================
@@ -317,9 +325,14 @@ void Spacewar::render()
 	// BULLETS
 	if (input->isKeyDown(VK_SPACE) && ship1.getActive())
 	{
-		bullet.draw();
-		bullet_collection.push_back(new Bullet());
-		bullet.initialize(this, shipNS::WIDTH, shipNS::HEIGHT, shipNS::TEXTURE_COLS, &gameTextures);
+		for (std::vector<Bullet *>::iterator lb = bullet_collection.begin(); lb < bullet_collection.end(); ++lb)
+		{
+			
+			(*lb)->draw();
+
+			
+
+		}
 	} 
 
 	if (menu) {
