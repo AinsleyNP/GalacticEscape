@@ -1,3 +1,7 @@
+//  Module:             Gameplay Programming
+//  Assignment1:        Galactic Escape
+//  Student Name:       Ainsley Malcolm Pereira
+//  Student Number:     S10186606
 
 #ifndef _GRAPHICS_H             // Prevent multiple definitions if this 
 #define _GRAPHICS_H             // file is included in more than one place

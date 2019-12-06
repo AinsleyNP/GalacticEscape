@@ -1,5 +1,25 @@
 // This class is the core of the game
 
+//  Module:             Gameplay Programming
+//  Assignment1:        Galactic Escape
+//  Student Name:       Lim Wei Fu
+//  Student Number:     S10189687
+
+//  Module:             Gameplay Programming
+//  Assignment1:        Galactic Escape
+//  Student Name:       Brannon Chua
+//  Student Number:     S10187075
+
+//  Module:             Gameplay Programming
+//  Assignment1:        Galactic Escape
+//  Student Name:       Ainsley Malcolm Pereira
+//  Student Number:     S10186606
+
+//  Module:             Gameplay Programming
+//  Assignment1:        Galactic Escape
+//  Student Name:		Dinesh KP
+//  Student Number:     S10185976
+
 #include "spaceWar.h"
 #include <vector>
 #include <time.h>       /* time */

@@ -2,6 +2,25 @@
 #ifndef _SPACEWAR_H             // Prevent multiple definitions if this 
 #define _SPACEWAR_H             // file is included in more than one place
 #define WIN32_LEAN_AND_MEAN
+//  Module:             Gameplay Programming
+//  Assignment1:        Galactic Escape
+//  Student Name:       Lim Wei Fu
+//  Student Number:     S10189687
+
+//  Module:             Gameplay Programming
+//  Assignment1:        Galactic Escape
+//  Student Name:       Brannon Chua
+//  Student Number:     S10187075
+
+//  Module:             Gameplay Programming
+//  Assignment1:        Galactic Escape
+//  Student Name:       Ainsley Malcolm Pereira
+//  Student Number:     S10186606
+
+//  Module:             Gameplay Programming
+//  Assignment1:        Galactic Escape
+//  Student Name:		Dinesh KP
+//  Student Number:     S10185976
 
 #include "game.h"
 #include "textureManager.h"

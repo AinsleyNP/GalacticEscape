@@ -1,7 +1,17 @@
-// Programming 2D Games
-// Copyright (c) 2011 by: 
-// Charles Kelly
-// Chapter 6 entity.cpp v1.3
+//  Module:             Gameplay Programming
+//  Assignment1:        Galactic Escape
+//  Student Name:       Lim Wei Fu
+//  Student Number:     S10189687
+
+//  Module:             Gameplay Programming
+//  Assignment1:        Galactic Escape
+//  Student Name:       Brannon Chua
+//  Student Number:     S10187075
+
+//  Module:             Gameplay Programming
+//  Assignment1:        Galactic Escape
+//  Student Name:       Ainsley Malcolm Pereira
+//  Student Number:     S10186606
 
 #include "entity.h"
 

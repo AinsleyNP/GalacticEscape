@@ -1,6 +1,11 @@
 #include "bullet.h"
 #include <stdlib.h>
 
+//  Module:             Gameplay Programming
+//  Assignment1:        Galactic Escape
+//  Student Name:       Lim Wei Fu
+//  Student Number:     S10189687
+
 //=============================================================================
 // default constructor
 //=============================================================================

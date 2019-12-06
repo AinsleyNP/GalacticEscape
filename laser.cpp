@@ -1,6 +1,11 @@
 #include "laser.h"
 #include <stdlib.h>
 
+//  Module:             Gameplay Programming
+//  Assignment1:        Galactic Escape
+//  Student Name:       Ainsley Malcolm Pereira
+//  Student Number:     S10186606
+
 //=============================================================================
 // default constructor
 //=============================================================================

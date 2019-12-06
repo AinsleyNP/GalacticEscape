@@ -1,5 +1,10 @@
 // Enemy Class
 
+//  Module:             Gameplay Programming
+//  Assignment1:        Galactic Escape
+//  Student Name:       Brannon Chua
+//  Student Number:     S10187075
+
 #include "enemy.h"
 
 //=============================================================================

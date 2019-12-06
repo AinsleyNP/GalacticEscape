@@ -2,6 +2,11 @@
 #define _BULLET_H                 // file is included in more than one place
 #define WIN32_LEAN_AND_MEAN
 
+//  Module:             Gameplay Programming
+//  Assignment1:        Galactic Escape
+//  Student Name:       Lim Wei Fu
+//  Student Number:     S10189687
+
 #include "entity.h"
 #include "constants.h"
 
