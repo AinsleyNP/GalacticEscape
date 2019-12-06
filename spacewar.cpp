@@ -283,7 +283,7 @@ void Spacewar::update()
 
 	//===================================================================================================
 	// Bullets
-	if (input->wasKeyPressed(VK_SPACE) && resettime > 1)
+	if (input->wasKeyPressed(VK_SPACE) && resettime > 0.5)
 	{
 		Bullet* b = new Bullet();
 		bullet_collection.push_back(b);
@@ -300,8 +300,13 @@ void Spacewar::update()
 			(*ib)->setFrames(BulletNS::Bullet_START_FRAME, BulletNS::Bullet_END_FRAME);
 			(*ib)->setCurrentFrame(BulletNS::Bullet_START_FRAME);
 			(*ib)->setVelocity(VECTOR2(-BulletNS::SPEED, -BulletNS::SPEED)); // VECTOR2(X, Y)
-			(*ib)->setY((*ib)->getY()-0.1);
+			(*ib)->setY((*ib)->getY()-1);
+
+			
+
 		}
+	
+
 	}
 }
 
@@ -328,8 +333,24 @@ void Spacewar::collisions()
 		
 		respawn = true;
     }
+	for (std::vector<Bullet *>::iterator ib = bullet_collection.begin(); ib < bullet_collection.end(); ++ib)
+	{
+		
+			for (std::vector<Enemy*>::iterator ie = enemyList.begin(); ie < enemyList.end(); ++ie)
+			{
+				if ((*ie)->collidesWith(**ib, collisionVector))
+				{
+					(*ie)->setVisible(false);
+					(*ie)->setActive(false);
+					break;
+				}
+			}
+			if (!(*ib)->getActive())
+				ib = bullet_collection.erase(ib);
+			else
+				ib++;		
 
-
+	}
 
 
 		// bounce off ship
