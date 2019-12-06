@@ -361,7 +361,7 @@ void Spacewar::collisions()
 		
 		respawn = true;
     }
-	for (std::vector<Bullet *>::iterator ib = bullet_collection.begin(); ib < bullet_collection.end(); ++ib)
+	/*for (std::vector<Bullet *>::iterator ib = bullet_collection.begin(); ib < bullet_collection.end(); ++ib)
 	{
 		
 			for (std::vector<Enemy*>::iterator ie = enemyList.begin(); ie < enemyList.end(); ++ie)
@@ -378,7 +378,7 @@ void Spacewar::collisions()
 			else
 				ib++;		
 
-	}
+	}*/
 
 
 		// bounce off ship
