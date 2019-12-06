@@ -84,7 +84,7 @@ void Spacewar::initialize(HWND hwnd)
     ship1.setVelocity(VECTOR2(shipNS::SPEED,-shipNS::SPEED)); // VECTOR2(X, Y)
 
 	//=========================================================================
-	// enemy spawn test
+	// enemy initialize
 	if (!enemy1.initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &gameTextures))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing enemy"));
 	enemy1.setFrames(enemyNS::ENEMY_START_FRAME, enemyNS::ENEMY_END_FRAME);
@@ -124,6 +124,10 @@ void Spacewar::initialize(HWND hwnd)
 		}
 	}
 	
+	if (frameTime > 10)
+	{
+
+	}
 	//=========================================================================
 	// LASER STUFF	
 	float laserCoords[4][3] =
@@ -254,7 +258,7 @@ void Spacewar::ai()
 void Spacewar::collisions()
 {
     VECTOR2 collisionVector;
-    // if collision between ships
+    // if collision between ship and enemy
     if(ship1.collidesWith(enemy1, collisionVector))
     {
 		heart = heart - 1;

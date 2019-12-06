@@ -52,6 +52,55 @@ void Enemy::draw()
 void Enemy::update(float frameTime)
 {
 	Entity::update(frameTime);
+
+	//Test movement of enemy ship left and right
+
+	// Movement along X Axis
+	if (input->isKeyDown(VK_LEFT)) // Move left
+	{
+		spriteData.x -= frameTime * 2 * velocity.x;         // move ship along x
+	}
+
+	if (input->isKeyDown(VK_RIGHT)) // Move right
+	{
+		spriteData.x += frameTime * 2 * velocity.x;         // move ship along x
+
+	}
+
+	// Movement along Y Axis
+
+	if (input->isKeyDown(VK_UP))
+	{
+		spriteData.y += frameTime * 2 * velocity.y;         // move ship along y
+
+	}
+	if (input->isKeyDown(VK_DOWN))
+	{
+		spriteData.y -= frameTime * 2 * velocity.y;         // move ship along y
+	}
+
+	// Prevents ship from going outside the boundaries of the screen
+
+	if (spriteData.x > GAME_WIDTH - enemyNS::WIDTH)    // if hit right screen edge
+	{
+		spriteData.x = GAME_WIDTH - enemyNS::WIDTH;    // position at right screen edge
+		//velocity.x = -velocity.x;                   // reverse X direction
+	}
+	else if (spriteData.x < 0)                    // else if hit left screen edge
+	{
+		spriteData.x = 0;                           // position at left screen edge
+		//velocity.x = -velocity.x;                   // reverse X direction
+	}
+	if (spriteData.y > GAME_HEIGHT - enemyNS::HEIGHT)  // if hit bottom screen edge
+	{
+		spriteData.y = GAME_HEIGHT - enemyNS::HEIGHT;  // position at bottom screen edge
+		//velocity.y = -velocity.y;                   // reverse Y direction
+	}
+	else if (spriteData.y < 0)                    // else if hit top screen edge
+	{
+		spriteData.y = 0;                           // position at top screen edge
+		//velocity.y = -velocity.y;                   // reverse Y direction
+	}
 }
 
 //=============================================================================
