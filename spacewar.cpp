@@ -186,16 +186,6 @@ void Spacewar::initialize(HWND hwnd)
 		l += 1;
 	}
 
-
-	//=========================================================================
-	// BULLETS
-	if(input->isKeyDown(VK_SPACE))
-	{
-		Bullet *b = new Bullet();
-		bullet_collection.push_back(b);
-		b->setX(ship1.getX());
-		b->setY(ship1.getY() - 17);
-	}
 	
 	/*bullet.setFrames(BulletNS::Bullet_START_FRAME, BulletNS::Bullet_END_FRAME);
 	bullet.setCurrentFrame(BulletNS::Bullet_START_FRAME);
@@ -260,6 +250,7 @@ void Spacewar::update()
 	}
 
 	//=========================================================================
+	// Player Control
 	if (respawn == true)
 	{
 		Sleep(500);
@@ -277,6 +268,10 @@ void Spacewar::update()
 	{
 		Gameover.setVisible(true);
 	}
+
+	//===================================================================================================
+	
+
 	//===================================================================================================
 	// ENEMY POINTER MOVEMENT CONTROL
 	for (std::vector<Enemy*>::iterator it = enemyList.begin(); it < enemyList.end(); ++it)
@@ -287,6 +282,16 @@ void Spacewar::update()
 
 
 	//===================================================================================================
+	// Bullets
+	if (input->wasKeyPressed(VK_SPACE) && resettime > 1)
+	{
+		Bullet* b = new Bullet();
+		bullet_collection.push_back(b);
+		b->setX(ship1.getX());
+		b->setY(ship1.getY() - 16);
+		resettime = 0;
+	}
+
 	for (std::vector<Bullet *>::iterator ib = bullet_collection.begin(); ib < bullet_collection.end(); ++ib)
 	{
 		if (resettime > 0.1)
@@ -295,8 +300,8 @@ void Spacewar::update()
 			(*ib)->setFrames(BulletNS::Bullet_START_FRAME, BulletNS::Bullet_END_FRAME);
 			(*ib)->setCurrentFrame(BulletNS::Bullet_START_FRAME);
 			(*ib)->setVelocity(VECTOR2(-BulletNS::SPEED, -BulletNS::SPEED)); // VECTOR2(X, Y)
+			(*ib)->setY((*ib)->getY()-0.1);
 		}
-		
 	}
 }
 
@@ -381,13 +386,10 @@ void Spacewar::render()
 	}
 
 	// BULLETS
-	if (input->isKeyDown(VK_SPACE) && ship1.getActive())
+	for (std::vector<Bullet*>::iterator lb = bullet_collection.begin(); lb < bullet_collection.end(); ++lb)
 	{
-		for (std::vector<Bullet *>::iterator lb = bullet_collection.begin(); lb < bullet_collection.end(); ++lb)
-		{			
-			(*lb)->draw();
-		}
-	} 
+		(*lb)->draw();
+	}
 
 	if (menu) {
 		mainMenu.draw(); // main menu draw
