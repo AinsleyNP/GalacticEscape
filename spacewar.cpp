@@ -324,7 +324,16 @@ void Spacewar::update()
 	{
 		float xvel = (*it)->getVelocity().x;
 		float xloc = (*it)->getX();
-		(*it)->setX(xloc += xvel*frameTime);
+		int direction = (*it)->getDirection();
+		if (xloc > GAME_WIDTH-enemyNS::WIDTH)
+		{
+			(*it)->setDirection(1);
+		}
+		else if (xloc < 0)
+		{
+			(*it)->setDirection(-1);
+		}
+		(*it)->setX(xloc += xvel * frameTime * direction);
 	}
 
 	// Enemy Bullets
