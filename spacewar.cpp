@@ -16,6 +16,7 @@ std::vector<Enemy *> enemyList;
 std::vector<Laser *> laserList;
 std::vector<Bullet*> enemyBulletList;
 
+float lasertimer = 0;
 float enemybulletValue = 0;
 float resettime = 0;
 bool respawn = false;
@@ -225,6 +226,7 @@ void Spacewar::update()
 	bullet.update(frameTime);
 	resettime += (frameTime);
 	enemybulletValue += (frameTime);
+	lasertimer += (frameTime);
 		
 	//=========================================================================
 	// SCROLLING STUFF
@@ -273,20 +275,32 @@ void Spacewar::update()
 	}
 
 	//===================================================================================================
-	
-
-	//===================================================================================================
-	// ENEMY POINTER MOVEMENT CONTROL
-	for (std::vector<Enemy*>::iterator it = enemyList.begin(); it < enemyList.end(); ++it)
+	if (lasertimer > 10)
 	{
-		float xloc =(*it)->getX();
-		(*it)->setX(xloc += 0);
+		float laserduration = 0;
+		srand(time(NULL));
+		int laserchoice = rand() % 4;
+		int check = 0;
+		while (lasertimer > 10)
+		{
+			for (std::vector<Laser*>::iterator lz = laserList.begin(); lz < laserList.end(); ++lz)
+			{
+				(*lz)->setActive(true);
+				if (laserduration > 2)
+				{
+					laserduration = 0;
+					lasertimer = 0;
+					(*lz)->setActive(false);
+				}
+			}
+			laserduration += frameTime;
+		}
 	}
 
 
 	//===================================================================================================
 	// Bullets
-	if (input->wasKeyPressed(VK_SPACE) && resettime > 0.5)
+	if (input->isKeyDown(VK_SPACE) && resettime > 0.5)
 	{
 		Bullet* b = new Bullet();
 		bullet_collection.push_back(b);
@@ -297,21 +311,22 @@ void Spacewar::update()
 
 	for (std::vector<Bullet *>::iterator ib = bullet_collection.begin(); ib < bullet_collection.end(); ++ib)
 	{
-		if (resettime > 0.1)
-		{
 			(*ib)->initialize(this, BulletNS::WIDTH, BulletNS::HEIGHT, BulletNS::TEXTURE_COLS, &gameTextures);
 			(*ib)->setFrames(BulletNS::Bullet_START_FRAME, BulletNS::Bullet_END_FRAME);
 			(*ib)->setCurrentFrame(BulletNS::Bullet_START_FRAME);
 			(*ib)->setVelocity(VECTOR2(-BulletNS::SPEED, -BulletNS::SPEED)); // VECTOR2(X, Y)
 			(*ib)->setY((*ib)->getY()-1);
-
-			
-
-		}
-	
-
 	}
+
 	//===================================================================================================
+	// ENEMY POINTER MOVEMENT CONTROL
+	for (std::vector<Enemy*>::iterator it = enemyList.begin(); it < enemyList.end(); ++it)
+	{
+		float xvel = (*it)->getVelocity().x;
+		float xloc = (*it)->getX();
+		(*it)->setX(xloc += xvel*frameTime);
+	}
+
 	// Enemy Bullets
 
 	if (enemybulletValue > 1)
