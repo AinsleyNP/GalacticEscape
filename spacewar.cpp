@@ -19,6 +19,7 @@ float resettime = 0;
 bool respawn = false;
 int heart = 5;
 bool die = false;
+bool over = false;
 //=============================================================================
 // Constructor
 //=============================================================================
@@ -55,6 +56,8 @@ void Spacewar::initialize(HWND hwnd)
 	mainMenu.setX(GAME_WIDTH * 0.5f - mainMenu.getWidth() * 0.5f);
 	mainMenu.setY(GAME_HEIGHT * 0.5f - mainMenu.getHeight() * 0.5f);
 
+
+
 	// map textures
 	if (!tileTextures.initialize(graphics, TILE_TEXTURES))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing tile textures"));
@@ -73,6 +76,12 @@ void Spacewar::initialize(HWND hwnd)
 	tile.setFrames(0, 0);
 	tile.setCurrentFrame(0);
 
+	// Game over textures
+	if (!gameOverTexture.initialize(graphics, GAMEOVER_TEXTURE))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing main menu textures"));
+
+	if (!Gameover.initialize(graphics, 0, 0, 0, &gameOverTexture))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error Initializing Game over menu"));
 
     // ship
     if (!ship1.initialize(this, shipNS::WIDTH, shipNS::HEIGHT, shipNS::TEXTURE_COLS, &gameTextures))
@@ -122,6 +131,10 @@ void Spacewar::initialize(HWND hwnd)
 			(*it)->setY(enemyCoords[enemyPick][1]);
 			enemyCoords[enemyPick][2] = 1;
 		}
+
+		Gameover.setX(GAME_WIDTH * 0.5f - Gameover.getWidth() * 0.5f);
+		Gameover.setY(GAME_HEIGHT * 0.5f - Gameover.getHeight() * 0.5f);
+
 	}
 	
 	//=========================================================================
@@ -156,15 +169,7 @@ void Spacewar::initialize(HWND hwnd)
 		Bullet *b = new Bullet();
 		bullet_collection.push_back(b);
 	}
-	for (std::vector<Bullet *>::iterator ib = bullet_collection.begin(); ib < bullet_collection.end(); ++ib)
-	{
-		(*ib)->setX(ship1.getX());
-		(*ib)->setY(ship1.getY());
-		(*ib)->initialize(this, BulletNS::WIDTH, BulletNS::HEIGHT, BulletNS::TEXTURE_COLS, &gameTextures);
-		(*ib)->setFrames(BulletNS::Bullet_START_FRAME, BulletNS::Bullet_END_FRAME);
-		(*ib)->setCurrentFrame(BulletNS::Bullet_START_FRAME);
-		(*ib)->setVelocity(VECTOR2(-BulletNS::SPEED, -BulletNS::SPEED)); // VECTOR2(X, Y)
-	}
+	
 	/*bullet.setFrames(BulletNS::Bullet_START_FRAME, BulletNS::Bullet_END_FRAME);
 	bullet.setCurrentFrame(BulletNS::Bullet_START_FRAME);
 	bullet.setVelocity(VECTOR2(BulletNS::SPEED, -BulletNS::SPEED));*/
@@ -237,9 +242,24 @@ void Spacewar::update()
 		ship1.setY(GAME_HEIGHT / 1.5);
 		respawn = false;
 	}
+	if (over == false) {
+		Gameover.setVisible(false);
+	}
 
+	if (heart == 0)
+	{
+		Gameover.setVisible(true);
+	}
 	//=========================================================================
-
+	for (std::vector<Bullet *>::iterator ib = bullet_collection.begin(); ib < bullet_collection.end(); ++ib)
+	{
+		(*ib)->setX(ship1.getX());
+		(*ib)->setY(ship1.getY());
+		(*ib)->initialize(this, BulletNS::WIDTH, BulletNS::HEIGHT, BulletNS::TEXTURE_COLS, &gameTextures);
+		(*ib)->setFrames(BulletNS::Bullet_START_FRAME, BulletNS::Bullet_END_FRAME);
+		(*ib)->setCurrentFrame(BulletNS::Bullet_START_FRAME);
+		(*ib)->setVelocity(VECTOR2(-BulletNS::SPEED, -BulletNS::SPEED)); // VECTOR2(X, Y)
+	}
 }
 
 //=============================================================================
@@ -266,10 +286,7 @@ void Spacewar::collisions()
 		respawn = true;
 
 
-		if (heart == 0)
-		{
-			PostQuitMessage(0);
-		}
+
         // bounce off ship
         //ship1.bounce(collisionVector, ship2);
         //ship1.damage(SHIP);
@@ -326,12 +343,8 @@ void Spacewar::render()
 	if (input->isKeyDown(VK_SPACE) && ship1.getActive())
 	{
 		for (std::vector<Bullet *>::iterator lb = bullet_collection.begin(); lb < bullet_collection.end(); ++lb)
-		{
-			
+		{			
 			(*lb)->draw();
-
-			
-
 		}
 	} 
 
@@ -339,6 +352,9 @@ void Spacewar::render()
 		mainMenu.draw(); // main menu draw
 	}
 
+	if (over = true) {
+		Gameover.draw();
+	}
     graphics->spriteEnd();                  // end drawing sprites
 }
 
@@ -352,6 +368,7 @@ void Spacewar::releaseAll()
     gameTextures.onLostDevice();
 	tileTextures.onLostDevice();
 	mainMenuTexture.onLostDevice();
+	gameOverTexture.onLostDevice();
 
     Game::releaseAll();
     return;
@@ -367,6 +384,7 @@ void Spacewar::resetAll()
     backgroundTexture.onResetDevice();  
 	tileTextures.onResetDevice();
 	mainMenuTexture.onResetDevice();
+	gameOverTexture.onLostDevice();
 
     Game::resetAll();
     return;
