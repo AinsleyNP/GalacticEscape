@@ -9,12 +9,14 @@ using namespace spaceWarNS;
 typedef std::vector<Bullet *> BULLETLIST;
 typedef std::vector<Enemy *> ENEMYLIST;
 typedef std::vector<Laser *> LASERLIST;
+typedef std::vector<Bullet*> ENEMYBULLETLIST;
 
 std::vector<Bullet *> bullet_collection;
 std::vector<Enemy *> enemyList;
 std::vector<Laser *> laserList;
+std::vector<Bullet*> enemyBulletList;
 
-
+float enemybulletValue = 0;
 float resettime = 0;
 bool respawn = false;
 int heart = 5;
@@ -103,13 +105,13 @@ void Spacewar::initialize(HWND hwnd)
 	// Enemy Spawning
 
 	//Enemy Coords
-	float enemyCoords[15][3] = {
-		{ 100,100,0 },{ 200,100,0 },{ 300,100,0 },{ 400,100,0 },{ 500,100,0 },
-		{ 100,200,0 },{ 200,200,0 },{ 300,200,0 },{ 400,200,0 },{ 500,200,0 },
-		{ 100,300,0 },{ 200,300,0 },{ 300,300,0 },{ 400,300,0 },{ 500,300,0 }
+	float enemyCoords[21][3] = {
+		{ 50,150,0 },{100,150,0},{ 200,100,0 },{ 300,150,0 },{ 400,100,0 },{ 500,150,0 },{600,125,0},
+		{ 50,200,0 },{100,225,0},{ 250,250,0 },{ 350,200,0 },{ 400,250,0 },{ 550,200,0 },{600,225,0},
+		{ 50,325,0 },{100,300,0},{ 200,350,0 },{ 300,300,0 },{ 400,350,0 },{ 500,300,0 },{600,350,0}
 	};
 
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 15; i++)
 	{
 		Enemy * e = new Enemy(); // POINTER
 		enemyList.push_back(e); //Adds e into enemyList(vector)
@@ -125,7 +127,7 @@ void Spacewar::initialize(HWND hwnd)
 
 		//Randomizer Spawn
 		int cantspawn = 1;
-		int enemyPick = rand() % 15;
+		int enemyPick = rand() % 21;
 		if (enemyCoords[enemyPick][2] == 0)
 		{
 			(*it)->setX(enemyCoords[enemyPick][0]);
@@ -222,6 +224,7 @@ void Spacewar::update()
 	laser.update(frameTime);
 	bullet.update(frameTime);
 	resettime += (frameTime);
+	enemybulletValue += (frameTime);
 		
 	//=========================================================================
 	// SCROLLING STUFF
@@ -277,7 +280,7 @@ void Spacewar::update()
 	for (std::vector<Enemy*>::iterator it = enemyList.begin(); it < enemyList.end(); ++it)
 	{
 		float xloc =(*it)->getX();
-		(*it)->setX(xloc += 1);
+		(*it)->setX(xloc += 0);
 	}
 
 
@@ -307,6 +310,31 @@ void Spacewar::update()
 		}
 	
 
+	}
+	//===================================================================================================
+	// Enemy Bullets
+
+	if (enemybulletValue > 1)
+	{
+		for (std::vector<Enemy*>::iterator e = enemyList.begin(); e < enemyList.end(); ++e)
+		{
+			float xvalue = (*e)->getX();
+			float yvalue = (*e)->getY();
+			Bullet* b = new Bullet();
+			enemyBulletList.push_back(b);
+			b->setX(xvalue);
+			b->setY(yvalue + 16);
+			enemybulletValue = 0;
+		}
+	}
+
+	for (std::vector<Bullet*>::iterator ibe = enemyBulletList.begin(); ibe < enemyBulletList.end(); ++ibe)
+	{
+		(*ibe)->initialize(this, BulletNS::WIDTH, BulletNS::HEIGHT, BulletNS::TEXTURE_COLS, &gameTextures);
+		(*ibe)->setFrames(BulletNS::Bullet_START_FRAME, BulletNS::Bullet_END_FRAME);
+		(*ibe)->setCurrentFrame(BulletNS::Bullet_START_FRAME);
+		(*ibe)->setVelocity(VECTOR2(-BulletNS::SPEED, -BulletNS::SPEED)); // VECTOR2(X, Y)
+		(*ibe)->setY((*ibe)->getY() + 1.3);
 	}
 }
 
@@ -410,6 +438,12 @@ void Spacewar::render()
 	for (std::vector<Bullet*>::iterator lb = bullet_collection.begin(); lb < bullet_collection.end(); ++lb)
 	{
 		(*lb)->draw();
+	}
+
+	//ENEMY BULLETS
+	for (std::vector<Bullet*>::iterator be = enemyBulletList.begin(); be < enemyBulletList.end(); ++be)
+	{
+		(*be)->draw();
 	}
 
 	if (menu) {
