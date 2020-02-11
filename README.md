@@ -21,5 +21,7 @@ Ainsley (Environment):
 -Enemy Movement (Enemy)
 
   Dinesh (HUD/Menu):
--Start Up Menu	(Menu)
+-Main Menu	(Menu)
+-Start Function (Menu)
+-Options Function (Menu)
 -Quit Function	(Menu)
