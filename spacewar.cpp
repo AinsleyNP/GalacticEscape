@@ -36,9 +36,6 @@ std::vector<Enemy *> enemyList;
 std::vector<Laser *> laserList;
 std::vector<Bullet*> enemyBulletList;
 
-float lasertimer = 0;
-float enemybulletValue = 0;
-float resettime = 0;
 bool respawn = false;
 int heart = 5;
 bool die = false;
@@ -48,8 +45,9 @@ bool over = false;
 //=============================================================================
 Spacewar::Spacewar()
 {
+	menu = false;
 	mapX = 0;
-	mapY = -GAME_HEIGHT;
+	mapY = -1024;
 }
 
 //=============================================================================
@@ -123,97 +121,7 @@ void Spacewar::initialize(HWND hwnd)
 	enemy1.setCurrentFrame(enemyNS::ENEMY_START_FRAME);
 	enemy1.setVelocity(VECTOR2(-enemyNS::SPEED, -enemyNS::SPEED)); // VECTOR2(X, Y)
 
-	// Enemy Spawning
-
-	//Enemy Coords
-	float enemyCoords[21][3] = {
-		{ 50,150,0 },{100,150,0},{ 200,100,0 },{ 300,150,0 },{ 400,100,0 },{ 500,150,0 },{600,125,0},
-		{ 50,200,0 },{100,225,0},{ 250,250,0 },{ 350,200,0 },{ 400,250,0 },{ 550,200,0 },{600,225,0},
-		{ 50,325,0 },{100,300,0},{ 200,350,0 },{ 300,300,0 },{ 400,350,0 },{ 500,300,0 },{600,350,0}
-	};
-
-	for (int i = 0; i < 15; i++)
-	{
-		Enemy * e = new Enemy(); // POINTER
-		enemyList.push_back(e); //Adds e into enemyList(vector)
-	}
-
-	srand(time(NULL)); // Set RANDOM seed info
-	for (std::vector<Enemy *>::iterator it = enemyList.begin(); it < enemyList.end(); ++it)
-	{
-		(*it)->initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &gameTextures);
-		(*it)->setFrames(enemyNS::ENEMY_START_FRAME, enemyNS::ENEMY_END_FRAME);
-		(*it)->setCurrentFrame(enemyNS::ENEMY_START_FRAME);
-		(*it)->setVelocity(VECTOR2(-enemyNS::SPEED, -enemyNS::SPEED)); // VECTOR2(X, Y)
-
-		//Randomizer Spawn
-		int cantspawn = 1;
-		int enemyPick = rand() % 21;
-		if (enemyCoords[enemyPick][2] == 0)
-		{
-			(*it)->setX(enemyCoords[enemyPick][0]);
-			(*it)->setY(enemyCoords[enemyPick][1]);
-			enemyCoords[enemyPick][2] = 1;
-		}
-		else
-		{
-			cantspawn = 0;
-			while (cantspawn == 0)
-			{
-				enemyPick = rand() % 15;
-				if (enemyCoords[enemyPick][2] == 0)
-				{
-					(*it)->setX(enemyCoords[enemyPick][0]);
-					(*it)->setY(enemyCoords[enemyPick][1]);
-					enemyCoords[enemyPick][2] = 1;
-					cantspawn = 1;
-				}
-			}
-		}
-
-		Gameover.setX(GAME_WIDTH * 0.5f - Gameover.getWidth() * 0.5f);
-		Gameover.setY(GAME_HEIGHT * 0.5f - Gameover.getHeight() * 0.5f);
-
-	}
 	
-	if (frameTime > 10)
-	{
-
-	}
-	//=========================================================================
-	// LASER STUFF	
-	float laserCoords[4][3] =
-	{
-		{GAME_WIDTH / 3,GAME_HEIGHT/ 3		,	3 * PI / 2} ,
-		{GAME_WIDTH * 2/3,GAME_HEIGHT/3		,	3 * PI / 2},
-		{GAME_WIDTH / 3,GAME_HEIGHT * 2/3	,	7 * PI / 4},
-		{GAME_WIDTH	* 2/3,GAME_HEIGHT * 2/3	,	5 * PI / 4}
-	};
-
-	for (int i = 0; i < 4; i++) // Add Laser POINTER to vector 4 times
-	{
-		Laser * e = new Laser(); // POINTER
-		laserList.push_back(e); //Adds e into laserList(vector)
-	}
-
-	int l = 0;
-	for (std::vector<Laser *>::iterator lz = laserList.begin(); lz < laserList.end(); ++lz)
-	{
-		(*lz)->initialize(this, LaserNS::WIDTH, LaserNS::HEIGHT, LaserNS::TEXTURE_COLS, &gameTextures);
-		(*lz)->setFrames(LaserNS::Laser_START_FRAME, LaserNS::Laser_END_FRAME);
-		(*lz)->setCurrentFrame(LaserNS::Laser_START_FRAME);
-		(*lz)->setVelocity(VECTOR2(-LaserNS::SPEED, -LaserNS::SPEED)); // VECTOR2(X, Y)
-		(*lz)->setX(laserCoords[l][0]);
-		(*lz)->setY(laserCoords[l][1]);
-		(*lz)->setRadians(laserCoords[l][2]);
-		l += 1;
-	}
-
-	
-	/*bullet.setFrames(BulletNS::Bullet_START_FRAME, BulletNS::Bullet_END_FRAME);
-	bullet.setCurrentFrame(BulletNS::Bullet_START_FRAME);
-	bullet.setVelocity(VECTOR2(BulletNS::SPEED, -BulletNS::SPEED));*/
-
     return;
 }
 
@@ -244,9 +152,7 @@ void Spacewar::update()
 	enemy1.update(frameTime);
 	laser.update(frameTime);
 	bullet.update(frameTime);
-	resettime += (frameTime);
-	enemybulletValue += (frameTime);
-	lasertimer += (frameTime);
+
 		
 	//=========================================================================
 	// SCROLLING STUFF
@@ -293,92 +199,7 @@ void Spacewar::update()
 		Gameover.setVisible(true);
 	}
 
-	//===================================================================================================
-	if (lasertimer > 10)
-	{
-		float laserduration = 0;
-		srand(time(NULL));
-		int laserchoice = rand() % 4;
-		int check = 0;
-		while (lasertimer > 10)
-		{
-			for (std::vector<Laser*>::iterator lz = laserList.begin(); lz < laserList.end(); ++lz)
-			{
-				(*lz)->setActive(true);
-				if (laserduration > 2)
-				{
-					laserduration = 0;
-					lasertimer = 0;
-					(*lz)->setActive(false);
-				}
-			}
-			laserduration += frameTime;
-		}
-	}
-
-
-	//===================================================================================================
-	// Bullets
-	if (input->isKeyDown(VK_SPACE) && resettime > 0.5)
-	{
-		Bullet* b = new Bullet();
-		bullet_collection.push_back(b);
-		b->setX(ship1.getX());
-		b->setY(ship1.getY() - 16);
-		resettime = 0;
-	}
-
-	for (std::vector<Bullet *>::iterator ib = bullet_collection.begin(); ib < bullet_collection.end(); ++ib)
-	{
-			(*ib)->initialize(this, BulletNS::WIDTH, BulletNS::HEIGHT, BulletNS::TEXTURE_COLS, &gameTextures);
-			(*ib)->setFrames(BulletNS::Bullet_START_FRAME, BulletNS::Bullet_END_FRAME);
-			(*ib)->setCurrentFrame(BulletNS::Bullet_START_FRAME);
-			(*ib)->setVelocity(VECTOR2(-BulletNS::SPEED, -BulletNS::SPEED)); // VECTOR2(X, Y)
-			(*ib)->setY((*ib)->getY()-1);
-	}
-
-	//===================================================================================================
-	// ENEMY POINTER MOVEMENT CONTROL
-	for (std::vector<Enemy*>::iterator it = enemyList.begin(); it < enemyList.end(); ++it)
-	{
-		float xvel = (*it)->getVelocity().x;
-		float xloc = (*it)->getX();
-		int direction = (*it)->getDirection();
-		if (xloc > GAME_WIDTH-enemyNS::WIDTH)
-		{
-			(*it)->setDirection(1);
-		}
-		else if (xloc < 0)
-		{
-			(*it)->setDirection(-1);
-		}
-		(*it)->setX(xloc += xvel * frameTime * direction);
-	}
-
-	// Enemy Bullets
-
-	if (enemybulletValue > 1)
-	{
-		for (std::vector<Enemy*>::iterator e = enemyList.begin(); e < enemyList.end(); ++e)
-		{
-			float xvalue = (*e)->getX();
-			float yvalue = (*e)->getY();
-			Bullet* b = new Bullet();
-			enemyBulletList.push_back(b);
-			b->setX(xvalue);
-			b->setY(yvalue + 16);
-			enemybulletValue = 0;
-		}
-	}
-
-	for (std::vector<Bullet*>::iterator ibe = enemyBulletList.begin(); ibe < enemyBulletList.end(); ++ibe)
-	{
-		(*ibe)->initialize(this, BulletNS::WIDTH, BulletNS::HEIGHT, BulletNS::TEXTURE_COLS, &gameTextures);
-		(*ibe)->setFrames(BulletNS::Bullet_START_FRAME, BulletNS::Bullet_END_FRAME);
-		(*ibe)->setCurrentFrame(BulletNS::Bullet_START_FRAME);
-		(*ibe)->setVelocity(VECTOR2(-BulletNS::SPEED, -BulletNS::SPEED)); // VECTOR2(X, Y)
-		(*ibe)->setY((*ibe)->getY() + 1.3);
-	}
+	
 }
 
 //=============================================================================
@@ -465,17 +286,7 @@ void Spacewar::render()
 
     enemy1.draw(); // enemy spaceship draw
 
-	for (std::vector<Enemy *>::iterator it = enemyList.begin(); it < enemyList.end(); ++it)
-	{
-		(*it)->draw();
-	}
 
-	if (input->isKeyDown(VK_BACK)) {
-		for (std::vector<Laser*>::iterator lz = laserList.begin(); lz < laserList.end(); ++lz)
-		{
-			(*lz)->draw();
-		}
-	}
 
 	// BULLETS
 	for (std::vector<Bullet*>::iterator lb = bullet_collection.begin(); lb < bullet_collection.end(); ++lb)
@@ -483,11 +294,6 @@ void Spacewar::render()
 		(*lb)->draw();
 	}
 
-	//ENEMY BULLETS
-	for (std::vector<Bullet*>::iterator be = enemyBulletList.begin(); be < enemyBulletList.end(); ++be)
-	{
-		(*be)->draw();
-	}
 
 	if (menu) {
 		mainMenu.draw(); // main menu draw

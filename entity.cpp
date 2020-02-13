@@ -69,8 +69,6 @@ void Entity::activate()
 void Entity::update(float frameTime)
 {
     velocity += deltaV;
-    deltaV.x = 0;
-    deltaV.y = 0;
     Image::update(frameTime);
     rotatedBoxReady = false;    // for rotatedBox collision detection
 }

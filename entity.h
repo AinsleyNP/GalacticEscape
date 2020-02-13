@@ -56,7 +56,7 @@ class Entity : public Image
     HRESULT hr;             // standard return type
     bool    active;         // only active entities may collide
     bool    rotatedBoxReady;    // true when rotated collision box is ready
-	float		direction;
+    bool    grounded;
 
     // --- The following functions are protected because they are not intended to be
     // --- called from outside the class.
@@ -131,7 +131,7 @@ class Entity : public Image
     virtual entityNS::COLLISION_TYPE getCollisionType() {return collisionType;}
 
 	// Return Direction
-	virtual float getDirection() const { return direction; }
+	virtual float getGrounded() const { return grounded; }
 
     ////////////////////////////////////////
     //           Set functions            //
@@ -159,7 +159,7 @@ class Entity : public Image
     virtual void setCollisionRadius(float r)    {radius = r;}
 
 	// Set direction
-	virtual void setDirection(float d) { direction = d; }
+	virtual void setGrounded(float g) { grounded = g; }
 
     ////////////////////////////////////////
     //         Other functions            //
