@@ -272,7 +272,7 @@ void Spacewar::update()
 	}
 	else
 	{
-		mapY -= ship1.getVelocity().y * frameTime * 3;
+		//mapY -= ship1.getVelocity().y * frameTime * 3;
 	}
 
 	//=========================================================================
