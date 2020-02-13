@@ -259,7 +259,6 @@ void Spacewar::update()
 	shipy = ship1.getY();
 	if (shipy < GAME_HEIGHT/2)
 	{
-		ship1.setY(GAME_HEIGHT/2 -1); // So ship doesnt go past half way(ish)
 		if (input->isKeyDown(VK_UP))
 		{
 			mapY -= ship1.getVelocity().y * frameTime * 3;
