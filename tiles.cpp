@@ -5,20 +5,20 @@
 //=============================================================================
 Tile::Tile() : Entity()
 {
-	spriteData.width = spaceWarNS::WIDTH;           // size of Ship1
-	spriteData.height = spaceWarNS::HEIGHT;
-	spriteData.x = spaceWarNS::X;                   // location on screen
-	spriteData.y = spaceWarNS::Y;
-	spriteData.rect.bottom = spaceWarNS::HEIGHT;    // rectangle to select parts of an image
-	spriteData.rect.right = spaceWarNS::WIDTH;
+	spriteData.width = tilesNS::WIDTH;           // size of Ship1
+	spriteData.height = tilesNS::HEIGHT;
+	spriteData.x = tilesNS::X;                   // location on screen
+	spriteData.y = tilesNS::Y;
+	spriteData.rect.bottom = tilesNS::HEIGHT;    // rectangle to select parts of an image
+	spriteData.rect.right = tilesNS::WIDTH;
 	velocity.x = 0;                             // velocity X
 	velocity.y = 0;                             // velocity Y
-	startFrame = spaceWarNS::TILES_START_FRAME;     // first frame of ship animation
-	endFrame = spaceWarNS::TILES_END_FRAME;     // last frame of ship animation
+	startFrame = tilesNS::TILES_START_FRAME;     // first frame of ship animation
+	endFrame = tilesNS::TILES_END_FRAME;     // last frame of ship animation
 	currentFrame = startFrame;
-	radius = spaceWarNS::WIDTH / 2.0;
+	radius = tilesNS::WIDTH / 2.0;
 	shieldOn = false;
-	mass = spaceWarNS::MASS;
+	mass = tilesNS::MASS;
 	collisionType = entityNS::BOX;
 
 }

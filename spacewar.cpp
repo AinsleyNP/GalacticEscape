@@ -244,13 +244,6 @@ void Spacewar::update()
 	if (over == false) {
 		Gameover.setVisible(false);
 	}
-
-    ship1.update(frameTime);
-	enemy1.update(frameTime);
-	laser.update(frameTime);
-	bullet.update(frameTime);
-	shotdelaytime += (frameTime);
-
 		
 	//=========================================================================
 	// SCROLLING STUFF
@@ -279,7 +272,7 @@ void Spacewar::update()
 	}
 
 	//=========================================================================
-	// Player Control
+	// Player Control Related
 
 	// Shoot Bullet
 	if (input->isKeyDown(VK_SPACE) && shotdelaytime > 0.5)
@@ -309,6 +302,10 @@ void Spacewar::update()
 			(*ib)->update(frameTime);
 	}
 
+	for (std::vector<Tile*>::iterator t = tileslist.begin(); t < tileslist.end(); ++t)
+	{
+		(*t)->update(frameTime);
+	}
 	//===================================================================================================
 	// ENEMY POINTER MOVEMENT CONTROL
 	for (std::vector<Enemy*>::iterator it = enemyList.begin(); it < enemyList.end(); ++it)
@@ -339,6 +336,7 @@ void Spacewar::update()
 	enemy1.update(frameTime);
 	laser.update(frameTime);
 	bullet.update(frameTime);
+	tile.update(frameTime);
 }
 
 //=============================================================================
@@ -378,12 +376,15 @@ void Spacewar::collisions()
 			break;
 		}
 	}
+
+
 	for (std::vector<Tile *>::iterator it = tileslist.begin(); it < tileslist.end(); ++it) 
 	{
 		if ((*it)->collidesWith(ship1, collisionVector))
 		{
 			float y = (*it)->getY();
-			ship1.setY(y+1);
+			ship1.setGrounded(true);
+			ship1.setY(GAME_HEIGHT / 2);
 		}
 		
 	}
@@ -420,18 +421,19 @@ void Spacewar::render()
 				{ 
 					tile.draw();                // draw tile
 
-
-
 				Tile* t = new Tile();
 				tileslist.push_back(t);
 
-				t->setX(col * TEXTURE_SIZE);
-				t->setY(row * TEXTURE_SIZE);
+				t->initialize(this, tilesNS::WIDTH, tilesNS::HEIGHT, tilesNS::TEXTURE_COLS, &gameTextures);
+				t->setFrames(tilesNS::TILES_START_FRAME, tilesNS::TILES_END_FRAME);
+				t->setCurrentFrame(tilesNS::TILES_START_FRAME);
+				t->setX(tile.getX());
+				t->setY(tile.getY());
+				t->setScale(4);
 				}
 			}
 		}
 	}
-
 
 	if (ship1.getActive())
 	{
