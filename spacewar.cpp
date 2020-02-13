@@ -247,8 +247,7 @@ void Spacewar::update()
 	laser.update(frameTime);
 	bullet.update(frameTime);
 	resettime += (frameTime);
-	enemybulletValue += (frameTime);
-	lasertimer += (frameTime);
+
 		
 	//=========================================================================
 	// SCROLLING STUFF
@@ -258,7 +257,7 @@ void Spacewar::update()
 	}
 
 	// Vertical "Scrolling"
-	shipy = ship1.getY();
+	float shipy = ship1.getY();
 	if (shipy < GAME_HEIGHT / 2)
 	{
 		ship1.setY(GAME_HEIGHT / 2 - 1); // So ship doesnt go past half way(ish)
@@ -304,7 +303,7 @@ void Spacewar::update()
 			(*ib)->setFrames(BulletNS::Bullet_START_FRAME, BulletNS::Bullet_END_FRAME);
 			(*ib)->setCurrentFrame(BulletNS::Bullet_START_FRAME);
 			(*ib)->setVelocity(VECTOR2(-BulletNS::SPEED, -BulletNS::SPEED)); // VECTOR2(X, Y)
-			(*ib)->setY((*ib)->getY()-1);
+			(*ib)->update(frameTime);
 	}
 
 	//===================================================================================================
@@ -329,12 +328,6 @@ void Spacewar::update()
 	if (heart == 0)
 	{
 		Gameover.setVisible(true);
-	}
-
-	//Bullet Pointer Update
-	for (std::vector<Bullet*>::iterator ib = bullet_collection.begin(); ib < bullet_collection.end(); ++ib)
-	{
-		(*ib)->update(frameTime);
 	}
 
 	//=========================================================================
