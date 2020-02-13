@@ -41,7 +41,7 @@ int heart = 5;
 int game_height = GAME_HEIGHT;
 bool die = false;
 bool over = false;
-float resettime = 0;
+float shotdelaytime = 0;
 //=============================================================================
 // Constructor
 //=============================================================================
@@ -246,7 +246,7 @@ void Spacewar::update()
 	enemy1.update(frameTime);
 	laser.update(frameTime);
 	bullet.update(frameTime);
-	resettime += (frameTime);
+	shotdelaytime += (frameTime);
 
 		
 	//=========================================================================
@@ -279,7 +279,7 @@ void Spacewar::update()
 	// Player Control
 
 	// Shoot Bullet
-	if (input->isKeyDown(VK_SPACE) && resettime > 0.5)
+	if (input->isKeyDown(VK_SPACE) && shotdelaytime > 0.5)
 	{
 		Bullet* b = new Bullet();
 		bullet_collection.push_back(b);
@@ -294,7 +294,7 @@ void Spacewar::update()
 			b->setDirection(-1);
 		}
 		b->setY(ship1.getY());
-		resettime = 0;
+		shotdelaytime = 0;
 	}
 
 	for (std::vector<Bullet*>::iterator ib = bullet_collection.begin(); ib < bullet_collection.end(); ++ib)
@@ -331,7 +331,7 @@ void Spacewar::update()
 	}
 
 	//=========================================================================
-	resettime += frameTime;
+	shotdelaytime += frameTime;
 	ship1.update(frameTime);
 	enemy1.update(frameTime);
 	laser.update(frameTime);
