@@ -26,9 +26,9 @@ Enemy::Enemy() : Entity()
 	currentFrame = startFrame;
 	radius = enemyNS::WIDTH / 2.0;
 	mass = enemyNS::MASS;
-	collisionType = entityNS::CIRCLE;
+	collisionType = entityNS::BOX;
 	spriteData.angle = 0.5 * PI;
-	direction = -1;
+	health = 3;
 }
 
 //=============================================================================
@@ -106,6 +106,12 @@ void Enemy::update(float frameTime)
 	{
 		spriteData.y = 0;                           // position at top screen edge
 		//velocity.y = -velocity.y;                   // reverse Y direction
+	}
+
+
+	if (health <= 0)
+	{
+		spriteData.y = GAME_HEIGHT / 2;
 	}
 }
 

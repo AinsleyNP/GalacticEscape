@@ -8,7 +8,6 @@
 //  Student Name:       Ainsley
 //  Student Number:     S10186606
 
-float Yaccel = 0;
 
 //=============================================================================
 // default constructor
@@ -30,8 +29,11 @@ Ship::Ship() : Entity()
     radius = shipNS::WIDTH/2.0;
     shieldOn = false;
     mass = shipNS::MASS;
-    collisionType = entityNS::CIRCLE;
-	spriteData.angle = 3 * PI / 2;
+    collisionType = entityNS::BOX;
+
+	health = 100;
+	grounded = true;
+	direction = 1; // -1 <- Left | Right -> 1
 }
 //=============================================================================
 // Initialize the Ship.
@@ -66,10 +68,17 @@ void Ship::draw()
 //=============================================================================
 void Ship::update(float frameTime)
 {
-	float vely;
-	vely = velocity.y;
-	float velx;
-	velx = velocity.x;
+	float rest = shipNS::SPEED;
+	float vely = velocity.y;
+	float velx = velocity.x;	
+
+	//Fake state control
+	if (grounded)
+	{
+		velocity.y = -rest;
+		deltaV.y = 0;
+		vely = 0;
+	}
 
 	// Screen movement restriction
 	//===============================================================================
@@ -84,62 +93,59 @@ void Ship::update(float frameTime)
 
 	if (spriteData.y < 0)
 	{
-		spriteData.y = 0;
-		velocity.y = -shipNS::SPEED;
+		spriteData.y = GAME_HEIGHT - spriteData.height;
+		velocity.y = -rest;
 		deltaV.y = 0;
-		Yaccel = 0;
 		vely = 0;
 	}
 
-	if (spriteData.y > GAME_HEIGHT - spriteData.height)
+	if (spriteData.y > GAME_HEIGHT - spriteData.height) // Bottom of screen
 	{
 		spriteData.y = GAME_HEIGHT - spriteData.height;
-		velocity.y = -shipNS::SPEED;
-		deltaV.y = 0;
-		Yaccel = 0;
-		vely = 0;
+		grounded = true;
 	}
 
-	//Horizontal Movement		--- to be changed to changing velocity instead of sprite position -- Ported into states
+	//Horizontal Movement		--- to be changed to changing velocity instead of sprite position directly
 	//======================================================================================
 
-	if (input->isKeyDown(VK_LEFT)) // Move left
+	if (input->isKeyDown(VK_RIGHT)) // Move right
 	{
-		velx -= 100;         // move player along x
+		velx += 200;         // move player along x
+		flipHorizontal(false);
+		direction = 1;
 	}
-	else if (input->isKeyDown(VK_RIGHT)) // Move right
+
+	else if (input->isKeyDown(VK_LEFT)) // Move left
 	{
-		velx += 100;         // move player along x
+		velx -= 200;         // move player along x
+		flipHorizontal(true);
+		direction = -1;
 	}
+
 	else
 	{
 		velx = 0;
 	}
 
-	//Vertical Movement / Gravity   --- DeltaV.y = acceleration	 --- Will be ported into states
+	//Vertical Movement / Gravity   --- DeltaV.y = vertical acceleration
 	//======================================================================================
 
-	if (input->wasKeyPressed(VK_UP))
+	if (grounded && input->wasKeyPressed(VK_UP)) // IF "GROUNDED" , can Jump
 	{
-		Yaccel += 5000 * frameTime;
+		velocity.y = 2000;
+		grounded = false;
 	}
 
-	if (input->isKeyDown(VK_DOWN))
+	else if (!grounded) // Not grounded
 	{
-		Yaccel -= 200 * frameTime;
-	}
-
-	if (Yaccel != 0)
-	{
-		Yaccel -= 1;
-		if (velocity.y < -750)	// Terminal Velocity
+		if (velocity.y <= -750)	// Terminal Velocity
 		{
-			vely = -750;
-			Yaccel = 0;
+			velocity.y = -750;
+			deltaV.y = 0;
 		}
-		else					//Gravity
+		else
 		{
-			deltaV.y = Yaccel;
+			deltaV.y -= 10;
 		}
 	}
 
