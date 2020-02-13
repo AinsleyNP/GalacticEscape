@@ -3,22 +3,22 @@
 #define _SPACEWAR_H             // file is included in more than one place
 #define WIN32_LEAN_AND_MEAN
 //  Module:             Gameplay Programming
-//  Assignment1:        Galactic Escape
+//  Assignment2:        Galactic Escape
 //  Student Name:       Lim Wei Fu
 //  Student Number:     S10189687
 
 //  Module:             Gameplay Programming
-//  Assignment1:        Galactic Escape
+//  Assignment2:        Galactic Escape
 //  Student Name:       Brannon Chua
 //  Student Number:     S10187075
 
 //  Module:             Gameplay Programming
-//  Assignment1:        Galactic Escape
+//  Assignment2:        Galactic Escape
 //  Student Name:       Ainsley Malcolm Pereira
 //  Student Number:     S10186606
 
 //  Module:             Gameplay Programming
-//  Assignment1:        Galactic Escape
+//  Assignment2:        Galactic Escape
 //  Student Name:		Dinesh KP
 //  Student Number:     S10185976
 
@@ -30,6 +30,7 @@
 #include "enemy.h"
 #include "laser.h"
 #include "bullet.h"
+#include "Menu.h"
 
 namespace spaceWarNS
 {
@@ -66,9 +67,9 @@ namespace spaceWarNS
 class Spacewar : public Game
 {
 private:
-    // game items
-    TextureManager backgroundTexture;   // nebula texture
-    TextureManager gameTextures;    // game texture
+	// game items
+	TextureManager backgroundTexture;   // nebula texture
+	TextureManager gameTextures;    // game texture
 	TextureManager tileTextures;
 	TextureManager mainMenuTexture;		// main menu texture
 	TextureManager gameOverTexture;
@@ -81,25 +82,26 @@ private:
 	float mapX;
 	float mapY;
 	Image Gameover;
-    Image   background;         // backdrop image
+	Image   background;         // backdrop image
+	Menu menu_;
 
 	bool menu = true;
 	bool over = false;
 public:
-    // Constructor
-    Spacewar();
+	// Constructor
+	Spacewar();
 
-    // Destructor
-    virtual ~Spacewar();
+	// Destructor
+	virtual ~Spacewar();
 
-    // Initialize the game
-    void initialize(HWND hwnd);
-    void update();      // must override pure virtual from Game
-    void ai();          // "
-    void collisions();  // "
-    void render();      // "
-    void releaseAll();
-    void resetAll();
+	// Initialize the game
+	void initialize(HWND hwnd);
+	void update();      // must override pure virtual from Game
+	void ai();          // "
+	void collisions();  // "
+	void render();      // "
+	void releaseAll();
+	void resetAll();
 };
 
 #endif

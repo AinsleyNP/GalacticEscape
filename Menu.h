@@ -15,9 +15,16 @@ namespace menuNS
 
 class Menu : public Entity            // inherits from Entity class
 {
+private:
+	Input* input;
 public:
 	// constructor
-	Menu();
+	Menu(Input* input);
+
+	void update();
+	//void draw();
+
 };
+
 #endif 
 
