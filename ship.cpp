@@ -3,10 +3,12 @@
 #include "bullet.h"
 
 
-//  Module:             Gameplay Programming
+//  Module:             Falling Paradise
 //  Assignment1:        Galactic Escape
-//  Student Name:       Lim Wei Fu
-//  Student Number:     S10189687
+//  Student Name:       Ainsley
+//  Student Number:     S10186606
+
+float Yaccel = 0;
 
 //=============================================================================
 // default constructor
@@ -64,65 +66,88 @@ void Ship::draw()
 //=============================================================================
 void Ship::update(float frameTime)
 {
-    Entity::update(frameTime);
+	float vely;
+	vely = velocity.y;
+	float velx;
+	velx = velocity.x;
 
-	// ROTATION OF SHIP
+	// Screen movement restriction
+	//===============================================================================
+	if (spriteData.x < 0)
+	{
+		spriteData.x = 0;
+	}
+	if (spriteData.x > GAME_WIDTH - spriteData.width)
+	{
+		spriteData.x = GAME_WIDTH - spriteData.width;
+	}
+
+	if (spriteData.y < 0)
+	{
+		spriteData.y = 0;
+		velocity.y = -shipNS::SPEED;
+		deltaV.y = 0;
+		Yaccel = 0;
+		vely = 0;
+	}
+
+	if (spriteData.y > GAME_HEIGHT - spriteData.height)
+	{
+		spriteData.y = GAME_HEIGHT - spriteData.height;
+		velocity.y = -shipNS::SPEED;
+		deltaV.y = 0;
+		Yaccel = 0;
+		vely = 0;
+	}
+
+	//Horizontal Movement		--- to be changed to changing velocity instead of sprite position -- Ported into states
+	//======================================================================================
+
 	if (input->isKeyDown(VK_LEFT)) // Move left
 	{
-		spriteData.x -= frameTime * 2 * velocity.x;         // move ship along x
+		velx -= 100;         // move player along x
 	}
-	
-	if (input->isKeyDown(VK_RIGHT)) // Move right
+	else if (input->isKeyDown(VK_RIGHT)) // Move right
 	{
-		spriteData.x += frameTime * 2 * velocity.x;         // move ship along x
-
+		velx += 100;         // move player along x
 	}
-
-	// DIRECTIONAL MOVEMENT OF SHIP
-	
-	if (input->isKeyDown(VK_UP))
+	else
 	{
-		spriteData.y += frameTime * 2 * velocity.y;         // move ship along y
-
+		velx = 0;
 	}
+
+	//Vertical Movement / Gravity   --- DeltaV.y = acceleration	 --- Will be ported into states
+	//======================================================================================
+
+	if (input->wasKeyPressed(VK_UP))
+	{
+		Yaccel += 5000 * frameTime;
+	}
+
 	if (input->isKeyDown(VK_DOWN))
 	{
-		spriteData.y -= frameTime * 2 * velocity.y;         // move ship along y
-	}
-	
-	if (input->isKeyDown(VK_SPACE))
-	{
-		
+		Yaccel -= 200 * frameTime;
 	}
 
-    // Bounce off walls
-    if (spriteData.x > GAME_WIDTH-shipNS::WIDTH)    // if hit right screen edge
-    {
-        spriteData.x = GAME_WIDTH-shipNS::WIDTH;    // position at right screen edge
-        //velocity.x = -velocity.x;                   // reverse X direction
-    } else if (spriteData.x < 0)                    // else if hit left screen edge
-    {
-        spriteData.x = 0;                           // position at left screen edge
-        //velocity.x = -velocity.x;                   // reverse X direction
-    }
-    if (spriteData.y > GAME_HEIGHT-shipNS::HEIGHT)  // if hit bottom screen edge
-    {
-        spriteData.y = GAME_HEIGHT-shipNS::HEIGHT;  // position at bottom screen edge
-        //velocity.y = -velocity.y;                   // reverse Y direction
-    } else if (spriteData.y < 0)                    // else if hit top screen edge
-    {
-        spriteData.y = 0;                           // position at top screen edge
-        //velocity.y = -velocity.y;                   // reverse Y direction
-    }
-    if(shieldOn)
-    {
-        shield.update(frameTime);
-        if(shield.getAnimationComplete())
-        {
-            shieldOn = false;
-            shield.setAnimationComplete(false);
-        }
-    }
+	if (Yaccel != 0)
+	{
+		Yaccel -= 1;
+		if (velocity.y < -750)	// Terminal Velocity
+		{
+			vely = -750;
+			Yaccel = 0;
+		}
+		else					//Gravity
+		{
+			deltaV.y = Yaccel;
+		}
+	}
+
+//Movement based on velocity
+spriteData.x += frameTime * velx;
+spriteData.y -= frameTime * (vely);
+
+Entity::update(frameTime);
 }
 
 //=============================================================================

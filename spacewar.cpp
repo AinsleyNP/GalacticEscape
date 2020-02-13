@@ -271,7 +271,7 @@ void Spacewar::update()
 	}
 	else
 	{
-		mapY -= ship1.getVelocity().y * frameTime * 0.5;
+		mapY -= ship1.getVelocity().y * frameTime * 3;
 	}
 
 	//=========================================================================
