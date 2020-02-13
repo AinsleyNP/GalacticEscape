@@ -40,6 +40,7 @@ bool respawn = false;
 int heart = 5;
 bool die = false;
 bool over = false;
+float resettime = 0;
 //=============================================================================
 // Constructor
 //=============================================================================
@@ -130,7 +131,11 @@ void Spacewar::initialize(HWND hwnd)
 //=============================================================================
 void Spacewar::update()
 {
+	// DEFINING VARIABLES
+	float shipx;
+	float shipy;
 
+	// HUD/MENU =====================================================================================
 	// checks for return key press
 	// game starts if key pressed
 	if (input->wasKeyPressed(VK_RETURN))
@@ -144,17 +149,12 @@ void Spacewar::update()
 		PostQuitMessage(0);
 	}
 
-	//=========================================================================
-	float shipx;
-	float shipy;
-
-    ship1.update(frameTime);
-	enemy1.update(frameTime);
-	laser.update(frameTime);
-	bullet.update(frameTime);
+	if (over == false) {
+		Gameover.setVisible(false);
+	}
 
 		
-	//=========================================================================
+	//========================================================================= ENVIRONMENT STUFF
 	// SCROLLING STUFF
 	if (mapY >= GAME_HEIGHT)
 	{
@@ -181,6 +181,34 @@ void Spacewar::update()
 
 	//=========================================================================
 	// Player Control
+
+	// Shoot Bullet
+	if (input->isKeyDown(VK_SPACE) && resettime > 0.5)
+	{
+		Bullet* b = new Bullet();
+		bullet_collection.push_back(b);
+		if (ship1.getDirection()==1)
+		{
+			b->setX(ship1.getX() + (shipNS::WIDTH / 2));
+			b->setDirection(1);
+		}
+		else
+		{
+			b->setX(ship1.getX() - (shipNS::WIDTH / 2));
+			b->setDirection(-1);
+		}
+		b->setY(ship1.getY());
+		resettime = 0;
+	}
+
+	for (std::vector<Bullet*>::iterator ib = bullet_collection.begin(); ib < bullet_collection.end(); ++ib)
+	{
+		(*ib)->initialize(this, BulletNS::WIDTH, BulletNS::HEIGHT, BulletNS::TEXTURE_COLS, &gameTextures);
+		(*ib)->setFrames(BulletNS::Bullet_START_FRAME, BulletNS::Bullet_END_FRAME);
+		(*ib)->setCurrentFrame(BulletNS::Bullet_START_FRAME);
+		(*ib)->setVelocity(VECTOR2(-BulletNS::SPEED, -BulletNS::SPEED)); // VECTOR2(X, Y)
+	}
+
 	if (respawn == true)
 	{
 		Sleep(500);
@@ -190,16 +218,25 @@ void Spacewar::update()
 		ship1.setY(GAME_HEIGHT / 1.5);
 		respawn = false;
 	}
-	if (over == false) {
-		Gameover.setVisible(false);
-	}
 
+	
 	if (heart == 0)
 	{
 		Gameover.setVisible(true);
 	}
 
-	
+	//Bullet Pointer Update
+	for (std::vector<Bullet*>::iterator ib = bullet_collection.begin(); ib < bullet_collection.end(); ++ib)
+	{
+		(*ib)->update(frameTime);
+	}
+
+	//=========================================================================
+	resettime += frameTime;
+	ship1.update(frameTime);
+	enemy1.update(frameTime);
+	laser.update(frameTime);
+	bullet.update(frameTime);
 }
 
 //=============================================================================

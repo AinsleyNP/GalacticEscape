@@ -16,8 +16,8 @@ namespace BulletNS
 	const int HEIGHT = 32;                  // image height
 	const int X = GAME_WIDTH / 3 - WIDTH / 2;   // location on screen
 	const int Y = GAME_HEIGHT / 3 - HEIGHT / 2;
-	const float SPEED = 100;                // 100 pixels per second
-	const float MASS = 300.0f;              // mass
+	const float SPEED = 150;                // 100 pixels per second
+	const float MASS = 100.0f;              // mass
 	const int   TEXTURE_COLS = 8;           // texture has 8 columns
 	const int   Bullet_START_FRAME = 41;      // laser frames
 	const int   Bullet_END_FRAME = 44;        //

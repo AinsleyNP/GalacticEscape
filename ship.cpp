@@ -29,10 +29,11 @@ Ship::Ship() : Entity()
     radius = shipNS::WIDTH/2.0;
     shieldOn = false;
     mass = shipNS::MASS;
-    collisionType = entityNS::CIRCLE;
-	spriteData.angle = 3 * PI / 2;
+    collisionType = entityNS::BOX;
+
 	health = 100;
 	grounded = true;
+	direction = 1; // -1 <- Left | Right -> 1
 }
 //=============================================================================
 // Initialize the Ship.
@@ -68,10 +69,8 @@ void Ship::draw()
 void Ship::update(float frameTime)
 {
 	float rest = shipNS::SPEED;
-	float vely;
-	vely = velocity.y;
-	float velx;
-	velx = velocity.x;
+	float vely = velocity.y;
+	float velx = velocity.x;	
 
 	//Fake state control
 	if (grounded)
@@ -109,14 +108,20 @@ void Ship::update(float frameTime)
 	//Horizontal Movement		--- to be changed to changing velocity instead of sprite position directly
 	//======================================================================================
 
-	if (input->isKeyDown(VK_LEFT)) // Move left
+	if (input->isKeyDown(VK_RIGHT)) // Move right
 	{
-		velx -= 100;         // move player along x
+		velx += 200;         // move player along x
+		flipHorizontal(false);
+		direction = 1;
 	}
-	else if (input->isKeyDown(VK_RIGHT)) // Move right
+
+	else if (input->isKeyDown(VK_LEFT)) // Move left
 	{
-		velx += 100;         // move player along x
+		velx -= 200;         // move player along x
+		flipHorizontal(true);
+		direction = -1;
 	}
+
 	else
 	{
 		velx = 0;

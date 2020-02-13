@@ -56,6 +56,8 @@ class Entity : public Image
     HRESULT hr;             // standard return type
     bool    active;         // only active entities may collide
     bool    rotatedBoxReady;    // true when rotated collision box is ready
+
+    int     direction;
     bool    grounded;
 
     // --- The following functions are protected because they are not intended to be
@@ -130,8 +132,11 @@ class Entity : public Image
     // Return collision type (NONE, CIRCLE, BOX, ROTATED_BOX)
     virtual entityNS::COLLISION_TYPE getCollisionType() {return collisionType;}
 
-	// Return Direction
+	// Return Grounded State
 	virtual float getGrounded() const { return grounded; }
+
+    // Return Direction
+    virtual float getDirection() const { return direction; }
 
     ////////////////////////////////////////
     //           Set functions            //
@@ -158,8 +163,11 @@ class Entity : public Image
     // Set radius of collision circle.
     virtual void setCollisionRadius(float r)    {radius = r;}
 
-	// Set direction
+	// Set Grounded State
 	virtual void setGrounded(float g) { grounded = g; }
+
+    // Set Direction
+    virtual void setDirection(float d) { direction = d; }
 
     ////////////////////////////////////////
     //         Other functions            //
