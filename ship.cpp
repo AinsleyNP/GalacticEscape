@@ -127,7 +127,7 @@ void Ship::update(float frameTime)
 
 	if (grounded && input->wasKeyPressed(VK_UP)) // IF "GROUNDED" , can Jump
 	{
-		velocity.y = 1250;
+		velocity.y = 2000;
 		grounded = false;
 	}
 
