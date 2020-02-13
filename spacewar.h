@@ -31,6 +31,7 @@
 #include "laser.h"
 #include "bullet.h"
 #include "Menu.h"
+#include "tiles.h"
 
 namespace spaceWarNS
 {

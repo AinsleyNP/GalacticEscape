@@ -30,11 +30,14 @@ typedef std::vector<Bullet*> BULLETLIST;
 typedef std::vector<Enemy*> ENEMYLIST;
 typedef std::vector<Laser*> LASERLIST;
 typedef std::vector<Bullet*> ENEMYBULLETLIST;
+typedef std::vector<Tile*> TILELIST;
 
 std::vector<Bullet*> bullet_collection;
 std::vector<Enemy*> enemyList;
 std::vector<Laser*> laserList;
 std::vector<Bullet*> enemyBulletList;
+
+std::vector<Tile*> tileslist;
 
 bool respawn = false;
 int heart = 5;
@@ -375,6 +378,15 @@ void Spacewar::collisions()
 			break;
 		}
 	}
+	for (std::vector<Tile *>::iterator it = tileslist.begin(); it < tileslist.end(); ++it) 
+	{
+		if ((*it)->collidesWith(ship1, collisionVector))
+		{
+			float y = (*it)->getY();
+			ship1.setY(y+1);
+		}
+		
+	}
 
 
 	// bounce off ship
@@ -405,7 +417,17 @@ void Spacewar::render()
 				tile.setY((float)(row * TEXTURE_SIZE) + mapY);   // set tile Y
 				// if tile on screen
 				if (tile.getY() > -TEXTURE_SIZE && tile.getY() < GAME_HEIGHT)
+				{ 
 					tile.draw();                // draw tile
+
+
+
+				Tile* t = new Tile();
+				tileslist.push_back(t);
+
+				t->setX(col * TEXTURE_SIZE);
+				t->setY(row * TEXTURE_SIZE);
+				}
 			}
 		}
 	}
@@ -425,7 +447,6 @@ void Spacewar::render()
 	{
 		(*lb)->draw();
 	}
-
 
 	if (menu) {
 		mainMenu.draw(); // main menu draw
