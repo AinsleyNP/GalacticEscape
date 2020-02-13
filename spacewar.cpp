@@ -263,24 +263,19 @@ void Spacewar::collisions()
 		
 		respawn = true;
     }
-	/*for (std::vector<Bullet *>::iterator ib = bullet_collection.begin(); ib < bullet_collection.end(); ++ib)
-	{
-		
-			for (std::vector<Enemy*>::iterator ie = enemyList.begin(); ie < enemyList.end(); ++ie)
-			{
-				if ((*ie)->collidesWith(**ib, collisionVector))
-				{
-					(*ie)->setVisible(false);
-					(*ie)->setActive(false);
-					break;
-				}
-			}
-			if (!(*ib)->getActive())
-				ib = bullet_collection.erase(ib);
-			else
-				ib++;		
 
-	}*/
+	for (std::vector<Bullet *>::iterator ib = bullet_collection.begin(); ib < bullet_collection.end(); ++ib)
+	{
+		if ((*ib)->collidesWith(enemy1, collisionVector))
+		{
+			float hp = enemy1.getHealth();
+			(*ib)->setVisible(false);
+			(*ib)->setActive(false);
+			ib = bullet_collection.erase(ib);
+			enemy1.setHealth(hp-1);
+			break;
+		}
+	}
 
 
 		// bounce off ship
