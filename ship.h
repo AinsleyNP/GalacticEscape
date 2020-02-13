@@ -3,10 +3,10 @@
 #define _SHIP_H                 // file is included in more than one place
 #define WIN32_LEAN_AND_MEAN
 
-//  Module:             Gameplay Programming
+//  Module:             Falling Paradise
 //  Assignment1:        Galactic Escape
-//  Student Name:       Lim Wei Fu
-//  Student Number:     S10189687
+//  Student Name:       Ainsley
+//  Student Number:     S10186606
 
 #include "entity.h"
 #include "constants.h"
