@@ -41,6 +41,7 @@ float enemybulletValue = 0;
 float resettime = 0;
 bool respawn = false;
 int heart = 5;
+int game_height = GAME_HEIGHT;
 bool die = false;
 bool over = false;
 //=============================================================================
@@ -49,7 +50,7 @@ bool over = false;
 Spacewar::Spacewar()
 {
 	mapX = 0;
-	mapY = -GAME_HEIGHT;
+	mapY = -TEXTURE_SIZE * (MAP_HEIGHT - (game_height / TEXTURE_SIZE));
 }
 
 //=============================================================================
@@ -261,16 +262,16 @@ void Spacewar::update()
 	{
 		if (input->isKeyDown(VK_UP))
 		{
-			mapY -= ship1.getVelocity().y * frameTime * 3;
+			mapY +=  frameTime * SCROLL_RATE;
 		}
 		else
 		{
-			mapY -= ship1.getVelocity().y * frameTime * 0.5;
+			//mapY += frameTime * SCROLL_RATE;
 		}
 	}
 	else
 	{
-		mapY -= ship1.getVelocity().y * frameTime * 3;
+		//mapY +=  frameTime * SCROLL_RATE;
 	}
 
 	//=========================================================================
