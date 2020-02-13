@@ -47,7 +47,6 @@ float resettime = 0;
 //=============================================================================
 Spacewar::Spacewar()
 {
-	menu = false;
 	mapX = 0;
 	mapY = -TEXTURE_SIZE * (MAP_HEIGHT - (game_height / TEXTURE_SIZE));
 }
@@ -264,6 +263,7 @@ void Spacewar::collisions()
 		respawn = true;
     }
 
+	// BULLET COLLISION
 	for (std::vector<Bullet *>::iterator ib = bullet_collection.begin(); ib < bullet_collection.end(); ++ib)
 	{
 		if ((*ib)->collidesWith(enemy1, collisionVector))
