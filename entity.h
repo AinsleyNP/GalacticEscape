@@ -85,6 +85,7 @@ class Entity : public Image
     bool projectionsOverlap(Entity &ent);
     bool collideCornerCircle(VECTOR2 corner, Entity &ent, VECTOR2 &collisionVector);
 
+
   public:
     // Constructor
     Entity();
@@ -220,6 +221,8 @@ class Entity : public Image
 
     // Adds the gravitational force to the velocity vector of this entity
     void gravityForce(Entity *other, float frameTime);
+
+    virtual void angleDiff(Entity* ent);
 };
 
 #endif
