@@ -59,6 +59,7 @@ class Entity : public Image
 
     int     direction;
     bool    grounded;
+    float   terminalVel;
 
     // --- The following functions are protected because they are not intended to be
     // --- called from outside the class.
@@ -137,6 +138,14 @@ class Entity : public Image
 
     // Return Direction
     virtual float getDirection() const { return direction; }
+
+    // Return Terminal Velocity
+    virtual float getTerminalVel() const
+    {
+        sqrt((2 * mass * GRAVITY) / 1200);
+
+        return terminalVel;
+    }
 
     ////////////////////////////////////////
     //           Set functions            //

@@ -32,6 +32,7 @@
 #include "bullet.h"
 #include "Menu.h"
 #include "tiles.h"
+#include "arrow.h"
 
 namespace spaceWarNS
 {
@@ -80,6 +81,7 @@ private:
 	Enemy enemy1; //enemy spaceships
 	Laser laser;
 	Bullet bullet;
+	Arrow arrow;
 	float mapX;
 	float mapY;
 	Image Gameover;

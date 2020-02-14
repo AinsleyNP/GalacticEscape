@@ -27,12 +27,14 @@
 using namespace spaceWarNS;
 
 typedef std::vector<Bullet*> BULLETLIST;
-typedef std::vector<Enemy*> ENEMYLIST;
+typedef std::vector<Arrow*> ARROWLIST;
 typedef std::vector<Laser*> LASERLIST;
+typedef std::vector<Enemy*> ENEMYLIST;
 typedef std::vector<Bullet*> ENEMYBULLETLIST;
 typedef std::vector<Tile*> TILELIST;
 
 std::vector<Bullet*> bullet_collection;
+std::vector<Arrow*> ArrowCollection;
 std::vector<Enemy*> enemyList;
 std::vector<Laser*> laserList;
 std::vector<Bullet*> enemyBulletList;
@@ -184,35 +186,6 @@ void Spacewar::initialize(HWND hwnd)
 	{
 
 	}
-	//=========================================================================
-	// LASER STUFF	
-	float laserCoords[4][3] =
-	{
-		{GAME_WIDTH / 3,GAME_HEIGHT/ 3		,	3 * PI / 2} ,
-		{GAME_WIDTH * 2/3,GAME_HEIGHT/3		,	3 * PI / 2},
-		{GAME_WIDTH / 3,GAME_HEIGHT * 2/3	,	7 * PI / 4},
-		{GAME_WIDTH	* 2/3,GAME_HEIGHT * 2/3	,	5 * PI / 4}
-	};
-
-	for (int i = 0; i < 4; i++) // Add Laser POINTER to vector 4 times
-	{
-		Laser * e = new Laser(); // POINTER
-		laserList.push_back(e); //Adds e into laserList(vector)
-	}
-
-	int l = 0;
-	for (std::vector<Laser *>::iterator lz = laserList.begin(); lz < laserList.end(); ++lz)
-	{
-		(*lz)->initialize(this, LaserNS::WIDTH, LaserNS::HEIGHT, LaserNS::TEXTURE_COLS, &gameTextures);
-		(*lz)->setFrames(LaserNS::Laser_START_FRAME, LaserNS::Laser_END_FRAME);
-		(*lz)->setCurrentFrame(LaserNS::Laser_START_FRAME);
-		(*lz)->setVelocity(VECTOR2(-LaserNS::SPEED, -LaserNS::SPEED)); // VECTOR2(X, Y)
-		(*lz)->setX(laserCoords[l][0]);
-		(*lz)->setY(laserCoords[l][1]);
-		(*lz)->setRadians(laserCoords[l][2]);
-		l += 1;
-	}
-
 	
 	/*bullet.setFrames(BulletNS::Bullet_START_FRAME, BulletNS::Bullet_END_FRAME);
 	bullet.setCurrentFrame(BulletNS::Bullet_START_FRAME);
@@ -226,8 +199,9 @@ void Spacewar::initialize(HWND hwnd)
 //=============================================================================
 void Spacewar::update()
 {
-
-	// HUD/MENU =====================================================================================
+	//==================================================================================================================================================
+	// HUD/MENU 
+	//==================================================================================================================================================
 	// checks for return key press
 	// game starts if key pressed
 	if (input->wasKeyPressed(VK_RETURN))
@@ -244,8 +218,9 @@ void Spacewar::update()
 	if (over == false) {
 		Gameover.setVisible(false);
 	}
-		
-	//=========================================================================
+	//==================================================================================================================================================
+	// ENVIRONMENT RELATED
+	//==================================================================================================================================================
 	// SCROLLING STUFF
 	if (mapY >= GAME_HEIGHT)
 	{
@@ -271,15 +246,20 @@ void Spacewar::update()
 		//mapY -= ship1.getVelocity().y * frameTime * 3;
 	}
 
-	//=========================================================================
-	// Player Control Related
+	for (std::vector<Tile*>::iterator t = tileslist.begin(); t < tileslist.end(); ++t)
+	{
+		(*t)->update(frameTime);
+	}
 
+	//==================================================================================================================================================
+	// Player Control Related
+	//==================================================================================================================================================
 	// Shoot Bullet
 	if (input->isKeyDown(VK_SPACE) && shotdelaytime > 0.5)
 	{
 		Bullet* b = new Bullet();
 		bullet_collection.push_back(b);
-		if (ship1.getDirection()==1)
+		if (ship1.getDirection()==1) // Set Location
 		{
 			b->setX(ship1.getX() + (shipNS::WIDTH / 2));
 			b->setDirection(1);
@@ -302,12 +282,38 @@ void Spacewar::update()
 			(*ib)->update(frameTime);
 	}
 
-	for (std::vector<Tile*>::iterator t = tileslist.begin(); t < tileslist.end(); ++t)
+	// Shoot Arrow
+	if (input->isKeyDown(VK_BACK) && shotdelaytime > 1)
 	{
-		(*t)->update(frameTime);
+		Arrow* a = new Arrow();
+		ArrowCollection.push_back(a);
+
+		a->initialize(this, ArrowNS::WIDTH, ArrowNS::HEIGHT, ArrowNS::TEXTURE_COLS, &gameTextures);
+		a->setFrames(ArrowNS::ARROW_START_FRAME, ArrowNS::ARROW_END_FRAME);
+		a->setCurrentFrame(ArrowNS::ARROW_START_FRAME);
+		a->setVelocity(VECTOR2(-ArrowNS::SPEED, -ArrowNS::SPEED)); // VECTOR2(X, Y)
+		a->setY(ship1.getY() - (shipNS::HEIGHT / 2));
+		a->setX(ship1.getX() + (shipNS::WIDTH / 2) * ship1.getDirection());
+		
+		if (ship1.getDirection() == 1) //Set Location
+		{
+			a->setDirection(1);
+		}
+		else
+		{
+			a->setDirection(-1);
+		}
+		shotdelaytime = 0;
 	}
-	//===================================================================================================
-	// ENEMY POINTER MOVEMENT CONTROL
+	for (std::vector<Arrow*>::iterator ar = ArrowCollection.begin(); ar < ArrowCollection.end(); ++ar)
+	{
+		(*ar)->update(frameTime);
+	}
+
+
+	//==================================================================================================================================================
+	// ENEMY CONTROLS
+	//==================================================================================================================================================
 	for (std::vector<Enemy*>::iterator it = enemyList.begin(); it < enemyList.end(); ++it)
 	{
 		float xvel = (*it)->getVelocity().x;
@@ -324,7 +330,8 @@ void Spacewar::update()
 		(*it)->setX(xloc += xvel * frameTime * direction);
 	}
 
-	
+
+	//==================================================================================================================================================
 	if (heart == 0)
 	{
 		Gameover.setVisible(true);
@@ -351,6 +358,7 @@ void Spacewar::ai()
 void Spacewar::collisions()
 {
 	VECTOR2 collisionVector;
+
 	// if collision between ship and enemy
 	if (ship1.collidesWith(enemy1, collisionVector))
 	{
@@ -377,7 +385,7 @@ void Spacewar::collisions()
 		}
 	}
 
-
+	//==================================================================================================================================================
 	for (std::vector<Tile *>::iterator it = tileslist.begin(); it < tileslist.end(); ++it) 
 	{
 		if ((*it)->collidesWith(ship1, collisionVector))
@@ -406,6 +414,8 @@ void Spacewar::render()
 	graphics->spriteBegin();                // begin drawing sprites
 
 	menu_.draw();
+
+	//==================================================================================================================================================
 	// DRAW "TILES"
 	for (int col = 0; col < MAP_WIDTH; col++)       // for each column of map
 	{
@@ -448,6 +458,11 @@ void Spacewar::render()
 	for (std::vector<Bullet*>::iterator lb = bullet_collection.begin(); lb < bullet_collection.end(); ++lb)
 	{
 		(*lb)->draw();
+	}
+	// ARROWS
+	for (std::vector<Arrow*>::iterator a = ArrowCollection.begin(); a < ArrowCollection.end(); ++a)
+	{
+		(*a)->draw();
 	}
 
 	if (menu) {

@@ -1,4 +1,4 @@
-#include "bullet.h"
+#include "arrow.h"
 #include <stdlib.h>
 
 //  Module:             Falling Paradise
@@ -9,22 +9,22 @@
 //=============================================================================
 // default constructor
 //=============================================================================
-Bullet::Bullet() : Entity()
+Arrow::Arrow() : Entity()
 {
-	spriteData.width = BulletNS::WIDTH;           // size of laser
-	spriteData.height = BulletNS::HEIGHT;
-	spriteData.x = BulletNS::X;                   // location on screen
-	spriteData.y = BulletNS::Y;
-	spriteData.rect.bottom = BulletNS::HEIGHT;    // rectangle to select parts of an image
-	spriteData.rect.right = BulletNS::WIDTH;
+	spriteData.width = ArrowNS::WIDTH;           // size of laser
+	spriteData.height = ArrowNS::HEIGHT;
+	spriteData.x = ArrowNS::X;                   // location on screen
+	spriteData.y = ArrowNS::Y;
+	spriteData.rect.bottom = ArrowNS::HEIGHT;    // rectangle to select parts of an image
+	spriteData.rect.right = ArrowNS::WIDTH;
 	spriteData.scale = 1;
 	velocity.x = 0;                             // velocity X
 	velocity.y = 0;                             // velocity Y
-	startFrame = BulletNS::Bullet_START_FRAME;     // first frame of bullet animation
-	endFrame = BulletNS::Bullet_END_FRAME;     // last frame of bullet animation
+	startFrame = ArrowNS::ARROW_START_FRAME;     // first frame of bullet animation
+	endFrame = ArrowNS::ARROW_END_FRAME;     // last frame of bullet animation
 	currentFrame = startFrame;
-	radius = BulletNS::WIDTH / 2.0;
-	mass = BulletNS::MASS;
+	radius = ArrowNS::WIDTH / 2.0;
+	mass = ArrowNS::MASS;
 	collisionType = entityNS::BOX;
 }
 
@@ -32,7 +32,7 @@ Bullet::Bullet() : Entity()
 // Initialize the Laser.
 // Post: returns true if successful, false if failed
 //=============================================================================
-bool Bullet::initialize(Game* gamePtr, int width, int height, int ncols,
+bool Arrow::initialize(Game* gamePtr, int width, int height, int ncols,
 	TextureManager* textureM)
 {
 	return(Entity::initialize(gamePtr, width, height, ncols, textureM));
@@ -41,9 +41,9 @@ bool Bullet::initialize(Game* gamePtr, int width, int height, int ncols,
 //=============================================================================
 // draw the laser
 //=============================================================================
-void Bullet::draw()
+void Arrow::draw()
 {
-	Image::draw();		     
+	Image::draw();
 }
 
 //=============================================================================
@@ -51,15 +51,20 @@ void Bullet::draw()
 // typically called once per frame
 // frameTime is used to regulate the speed of movement and animation
 //=============================================================================
-void Bullet::update(float frameTime)
+void Arrow::update(float frameTime)
 {
-	spriteData.x -= frameTime * velocity.x * direction; //Simple move bullet straight on X-axis depending direction facing when bullet shot
+	/*
+	Equation for Range:
+	(InitialVelocity)^2 * sin(2*angle) } /gravity
+	*/
+
+
 	Entity::update(frameTime);
 }
 
 //=============================================================================
 // damage
 //=============================================================================
-void Bullet::damage(WEAPON weapon)
+void Arrow::damage(WEAPON weapon)
 {
 }
