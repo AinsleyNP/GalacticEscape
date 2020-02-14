@@ -178,7 +178,7 @@ void Spacewar::update()
 	float shipy = ship1.getY();
 	if (shipy < GAME_HEIGHT / 2)
 	{
-		ship1.setY(GAME_HEIGHT / 2 - 1); // So ship doesnt go past half way(ish)
+		//ship1.setY(GAME_HEIGHT / 2 - 1); // So ship doesnt go past half way(ish)
 		if (input->isKeyDown(VK_UP))
 		{
 			mapY +=  frameTime * SCROLL_RATE;
@@ -192,6 +192,17 @@ void Spacewar::update()
 	{
 		//mapY -= ship1.getVelocity().y * frameTime * 3;
 	}
+	
+	// Horizontal "Scrolling"
+	float shipx = ship1.getX();
+	//if (shipx < GAME_WIDTH / 2)
+	{		
+		if (input->isKeyDown(VK_RIGHT))
+		{
+			mapX -= frameTime * SCROLL_RATE;
+		}
+	}
+
 
 	for (std::vector<Tile*>::iterator t = tileslist.begin(); t < tileslist.end(); ++t)
 	{
