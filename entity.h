@@ -60,6 +60,7 @@ class Entity : public Image
     int     direction;
     bool    grounded;
     float   terminalVel;
+    float   helditem;
 
     // --- The following functions are protected because they are not intended to be
     // --- called from outside the class.
@@ -145,6 +146,9 @@ class Entity : public Image
         return sqrt((2 * mass * GRAVITY) / (1200));
     }
 
+    // Return HeldItem
+    virtual float getHeldItem() const { return helditem; }
+
     ////////////////////////////////////////
     //           Set functions            //
     ////////////////////////////////////////
@@ -175,6 +179,9 @@ class Entity : public Image
 
     // Set Direction
     virtual void setDirection(float d) { direction = d; }
+
+    // Set HeldItem
+    virtual void setHeldItem(float h) { helditem = h; }
 
     ////////////////////////////////////////
     //         Other functions            //

@@ -257,27 +257,53 @@ void Spacewar::update()
 	//==================================================================================================================================================
 	// Player Control Related
 	//==================================================================================================================================================
-	// Shoot Bullet
-	if (input->isKeyDown(VK_SPACE) && shotdelaytime > 0.5 )
+	float wep=ship1.getHeldItem();
+	// Use Held Item(shooting)
+	if (input->isKeyDown(VK_SPACE))
 	{
-		Bullet* b = new Bullet();
-		bullet_collection.push_back(b);
-		b->initialize(this, BulletNS::WIDTH, BulletNS::HEIGHT, BulletNS::TEXTURE_COLS, &gameTextures);
-		b->setFrames(BulletNS::Bullet_START_FRAME, BulletNS::Bullet_END_FRAME);
-		b->setCurrentFrame(BulletNS::Bullet_START_FRAME);
-		b->setVelocity(VECTOR2(-BulletNS::SPEED, -BulletNS::SPEED)); // VECTOR2(X, Y)
-		if (ship1.getDirection()==1) // Set Location
+		if (wep == 0 && shotdelaytime > 0.5)
 		{
-			b->setX(ship1.getX() + (shipNS::WIDTH / 2));
-			b->setDirection(1);
+			Bullet* b = new Bullet();
+			bullet_collection.push_back(b);
+			b->initialize(this, BulletNS::WIDTH, BulletNS::HEIGHT, BulletNS::TEXTURE_COLS, &gameTextures);
+			b->setFrames(BulletNS::Bullet_START_FRAME, BulletNS::Bullet_END_FRAME);
+			b->setCurrentFrame(BulletNS::Bullet_START_FRAME);
+			b->setVelocity(VECTOR2(-BulletNS::SPEED, -BulletNS::SPEED)); // VECTOR2(X, Y)
+			if (ship1.getDirection() == 1) // Set Location
+			{
+				b->setX(ship1.getX() + (shipNS::WIDTH / 2));
+				b->setDirection(1);
+			}
+			else
+			{
+				b->setX(ship1.getX() - (shipNS::WIDTH / 2));
+				b->setDirection(-1);
+			}
+			b->setY(ship1.getY());
+			shotdelaytime = 0;
 		}
-		else
+		else if (wep == 1 && shotdelaytime > 1)
 		{
-			b->setX(ship1.getX() - (shipNS::WIDTH / 2));
-			b->setDirection(-1);
+			Arrow* a = new Arrow();
+			ArrowCollection.push_back(a);
+
+			a->initialize(this, ArrowNS::WIDTH, ArrowNS::HEIGHT, ArrowNS::TEXTURE_COLS, &gameTextures);
+			a->setFrames(ArrowNS::ARROW_START_FRAME, ArrowNS::ARROW_END_FRAME);
+			a->setCurrentFrame(ArrowNS::ARROW_START_FRAME);
+			a->setVelocity(VECTOR2(1.5 * ArrowNS::SPEED, ArrowNS::SPEED)); // VECTOR2(X, Y)
+			a->setY(ship1.getY() - (shipNS::HEIGHT / 2));
+			a->setX(ship1.getX() + (shipNS::WIDTH / 2) * ship1.getDirection());
+
+			if (ship1.getDirection() == 1) //Set Location
+			{
+				a->setDirection(1);
+			}
+			else
+			{
+				a->setDirection(-1);
+			}
+			shotdelaytime = 0;
 		}
-		b->setY(ship1.getY());
-		shotdelaytime = 0;
 	}
 
 	for (std::vector<Bullet*>::iterator ib = bullet_collection.begin(); ib < bullet_collection.end(); ++ib)
@@ -285,29 +311,6 @@ void Spacewar::update()
 			(*ib)->update(frameTime);
 	}
 
-	// Shoot Arrow
-	if (input->isKeyDown(VK_BACK) && shotdelaytime > 1 && WEAPON(BOW))
-	{
-		Arrow* a = new Arrow();
-		ArrowCollection.push_back(a);
-
-		a->initialize(this, ArrowNS::WIDTH, ArrowNS::HEIGHT, ArrowNS::TEXTURE_COLS, &gameTextures);
-		a->setFrames(ArrowNS::ARROW_START_FRAME, ArrowNS::ARROW_END_FRAME);
-		a->setCurrentFrame(ArrowNS::ARROW_START_FRAME);
-		a->setVelocity(VECTOR2(1.5*ArrowNS::SPEED, ArrowNS::SPEED)); // VECTOR2(X, Y)
-		a->setY(ship1.getY() - (shipNS::HEIGHT / 2));
-		a->setX(ship1.getX() + (shipNS::WIDTH / 2) * ship1.getDirection());
-		
-		if (ship1.getDirection() == 1) //Set Location
-		{
-			a->setDirection(1);
-		}
-		else
-		{
-			a->setDirection(-1);
-		}
-		shotdelaytime = 0;
-	}
 	for (std::vector<Arrow*>::iterator ar = ArrowCollection.begin(); ar < ArrowCollection.end(); ++ar)
 	{
 		(*ar)->update(frameTime);
@@ -384,6 +387,40 @@ void Spacewar::collisions()
 			(*ib)->setActive(false);
 			ib = bullet_collection.erase(ib);
 			enemy1.setHealth(hp-1);
+			break;
+		}
+		if ((*ib)->getX() < 0 || (*ib)->getX() > GAME_WIDTH)
+		{
+			ib = bullet_collection.erase(ib);
+			break;
+		}
+		else if ((*ib)->getY() < 0 || (*ib)->getY() > GAME_HEIGHT)
+		{
+			ib = bullet_collection.erase(ib);
+			break;
+		}
+	}
+
+	// ARROW COLLISION
+	for (std::vector<Arrow*>::iterator ar = ArrowCollection.begin(); ar < ArrowCollection.end(); ++ar)
+	{
+		if ((*ar)->collidesWith(enemy1, collisionVector))
+		{
+			float hp = enemy1.getHealth();
+			(*ar)->setVisible(false);
+			(*ar)->setActive(false);
+			ar = ArrowCollection.erase(ar);
+			enemy1.setHealth(hp - 2);
+			break;
+		}
+		if ((*ar)->getX() < 0 || (*ar)->getX() > GAME_WIDTH)
+		{
+			ar = ArrowCollection.erase(ar);
+			break;
+		}
+		else if ((*ar)->getY() < 0 || (*ar)->getY() > GAME_HEIGHT)
+		{
+			ar = ArrowCollection.erase(ar);
 			break;
 		}
 	}

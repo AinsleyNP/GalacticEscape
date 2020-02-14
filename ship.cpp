@@ -36,6 +36,7 @@ Ship::Ship() : Entity()
 	grounded = true;
 	direction = 1; // -1 <- Left | Right -> 1
 	terminalVel = getTerminalVel();
+	helditem = 0;
 }
 //=============================================================================
 // Initialize the Ship.
@@ -43,7 +44,6 @@ Ship::Ship() : Entity()
 //=============================================================================
 bool Ship::initialize(Game *gamePtr, int width, int height, int ncols,
     TextureManager *textureM)
-
 {
     shield.initialize(gamePtr->getGraphics(), width, height, ncols, textureM);
     shield.setFrames(shipNS::SHIELD_START_FRAME, shipNS::SHIELD_END_FRAME);
@@ -80,6 +80,18 @@ void Ship::update(float frameTime)
 		velocity.y = -rest;
 		deltaV.y = 0;
 		vely = 0;
+	}
+	// "Held Item" Control
+	if (input->wasKeyPressed(VK_BACK))
+	{
+		if (helditem == 0)
+		{
+			helditem = 1;
+		}
+		else if (helditem == 1)
+		{
+			helditem = 0;
+		}
 	}
 
 	// Screen movement restriction
@@ -167,4 +179,3 @@ void Ship::damage(WEAPON weapon)
 {
     shieldOn = true;
 }
-
