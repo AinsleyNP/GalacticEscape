@@ -75,6 +75,7 @@ private:
 	TextureManager tileTextures;
 	TextureManager mainMenuTexture;		// main menu texture
 	TextureManager gameOverTexture;
+	TextureManager playerTexture;
 	Image mainMenu;						// main menu image
 	Image tile;
 	Ship    ship1;    // spaceships (https://www.pnglot.com/downpng/hTxmTim_first-version-of-my-sprite-sheet-i-have/)

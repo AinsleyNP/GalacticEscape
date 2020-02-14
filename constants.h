@@ -62,6 +62,8 @@ const char TILE_TEXTURES[] = "pictures\\tiles.png";         // tiles
 const char MAINMENU_TEXTURE[] = "pictures\\MainMenu.png";
 const char GAMEOVER_TEXTURE[] = "pictures\\GameOver.jpg";
 
+const char PLAYER_TEXTURE[] = "pictures\\PlayerSpriteSheet.png"; // https://rvros.itch.io/animated-pixel-hero
+
 
 // key mappings
 // In this game simple constants are used for key mappings. If variables were used

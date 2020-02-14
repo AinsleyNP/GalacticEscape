@@ -112,8 +112,12 @@ void Spacewar::initialize(HWND hwnd)
 	if (!Gameover.initialize(graphics, 0, 0, 0, &gameOverTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error Initializing Game over menu"));
 
+	// Player textures
+	if (!playerTexture.initialize(graphics, PLAYER_TEXTURE))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing player textures"));
+
 	// ship
-	if (!ship1.initialize(this, shipNS::WIDTH, shipNS::HEIGHT, shipNS::TEXTURE_COLS, &gameTextures))
+	if (!ship1.initialize(this, shipNS::WIDTH, shipNS::HEIGHT, shipNS::TEXTURE_COLS, &playerTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing ship1"));
 	ship1.setFrames(shipNS::SHIP1_START_FRAME, shipNS::SHIP1_END_FRAME);
 	ship1.setCurrentFrame(shipNS::SHIP1_START_FRAME);
@@ -129,64 +133,6 @@ void Spacewar::initialize(HWND hwnd)
 	enemy1.setCurrentFrame(enemyNS::ENEMY_START_FRAME);
 	enemy1.setVelocity(VECTOR2(-enemyNS::SPEED, -enemyNS::SPEED)); // VECTOR2(X, Y)
 
-	// Enemy Spawning
-
-	//Enemy Coords
-	float enemyCoords[21][3] = {
-		{ 50,150,0 },{100,150,0},{ 200,100,0 },{ 300,150,0 },{ 400,100,0 },{ 500,150,0 },{600,125,0},
-		{ 50,200,0 },{100,225,0},{ 250,250,0 },{ 350,200,0 },{ 400,250,0 },{ 550,200,0 },{600,225,0},
-		{ 50,325,0 },{100,300,0},{ 200,350,0 },{ 300,300,0 },{ 400,350,0 },{ 500,300,0 },{600,350,0}
-	};
-
-	for (int i = 0; i < 15; i++)
-	{
-		Enemy * e = new Enemy(); // POINTER
-		enemyList.push_back(e); //Adds e into enemyList(vector)
-	}
-
-	srand(time(NULL)); // Set RANDOM seed info
-	for (std::vector<Enemy *>::iterator it = enemyList.begin(); it < enemyList.end(); ++it)
-	{
-		(*it)->initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &gameTextures);
-		(*it)->setFrames(enemyNS::ENEMY_START_FRAME, enemyNS::ENEMY_END_FRAME);
-		(*it)->setCurrentFrame(enemyNS::ENEMY_START_FRAME);
-		(*it)->setVelocity(VECTOR2(-enemyNS::SPEED, -enemyNS::SPEED)); // VECTOR2(X, Y)
-
-		//Randomizer Spawn
-		int cantspawn = 1;
-		int enemyPick = rand() % 21;
-		if (enemyCoords[enemyPick][2] == 0)
-		{
-			(*it)->setX(enemyCoords[enemyPick][0]);
-			(*it)->setY(enemyCoords[enemyPick][1]);
-			enemyCoords[enemyPick][2] = 1;
-		}
-		else
-		{
-			cantspawn = 0;
-			while (cantspawn == 0)
-			{
-				enemyPick = rand() % 15;
-				if (enemyCoords[enemyPick][2] == 0)
-				{
-					(*it)->setX(enemyCoords[enemyPick][0]);
-					(*it)->setY(enemyCoords[enemyPick][1]);
-					enemyCoords[enemyPick][2] = 1;
-					cantspawn = 1;
-				}
-			}
-		}
-
-		Gameover.setX(GAME_WIDTH * 0.5f - Gameover.getWidth() * 0.5f);
-		Gameover.setY(GAME_HEIGHT * 0.5f - Gameover.getHeight() * 0.5f);
-
-	}
-	
-	if (frameTime > 10)
-	{
-
-	}
-	
 	/*bullet.setFrames(BulletNS::Bullet_START_FRAME, BulletNS::Bullet_END_FRAME);
 	bullet.setCurrentFrame(BulletNS::Bullet_START_FRAME);
 	bullet.setVelocity(VECTOR2(BulletNS::SPEED, -BulletNS::SPEED));*/

@@ -45,11 +45,7 @@ Ship::Ship() : Entity()
 bool Ship::initialize(Game *gamePtr, int width, int height, int ncols,
     TextureManager *textureM)
 {
-    shield.initialize(gamePtr->getGraphics(), width, height, ncols, textureM);
-    shield.setFrames(shipNS::SHIELD_START_FRAME, shipNS::SHIELD_END_FRAME);
-    shield.setCurrentFrame(shipNS::SHIELD_START_FRAME);
-    shield.setFrameDelay(shipNS::SHIELD_ANIMATION_DELAY);
-    shield.setLoop(false);                  // do not loop animation
+
     return(Entity::initialize(gamePtr, width, height, ncols, textureM));
 }
 
@@ -77,6 +73,8 @@ void Ship::update(float frameTime)
 	//Fake state control
 	if (grounded)
 	{
+		startFrame = shipNS::SHIP1_START_FRAME;
+		endFrame = shipNS::SHIP1_END_FRAME;
 		velocity.y = -rest;
 		deltaV.y = 0;
 		vely = 0;
@@ -124,6 +122,8 @@ void Ship::update(float frameTime)
 
 	if (input->isKeyDown(VK_RIGHT)) // Move right
 	{
+		startFrame = shipNS::RUN_START_FRAME;
+		endFrame = shipNS::RUN_END_FRAME;
 		velx += 200;         // move player along x
 		flipHorizontal(false); // Sprite defaults "facing" right
 		direction = 1;
@@ -131,6 +131,8 @@ void Ship::update(float frameTime)
 
 	else if (input->isKeyDown(VK_LEFT)) // Move left
 	{
+		startFrame = shipNS::RUN_START_FRAME;
+		endFrame = shipNS::RUN_END_FRAME;
 		velx -= 200;         // move player along x
 		flipHorizontal(true); // Sprite flips default, "facing" left
 		direction = -1;
@@ -138,6 +140,8 @@ void Ship::update(float frameTime)
 
 	else
 	{
+		startFrame = shipNS::SHIP1_START_FRAME;
+		endFrame = shipNS::SHIP1_END_FRAME;
 		velx = 0;
 	}
 
@@ -146,7 +150,9 @@ void Ship::update(float frameTime)
 
 	if (grounded && input->wasKeyPressed(VK_UP)) // IF "GROUNDED" , can Jump
 	{
-		velocity.y = 1000; // Set Velocity to 1000, jumping highest vel = right when leave ground
+		velocity.y = 1500; // Set Velocity to 1000, jumping highest vel = right when leave ground
+		startFrame = shipNS::JUMP_START_FRAME;
+		endFrame = shipNS::JUMP_END_FRAME;
 		grounded = false;
 	}
 
