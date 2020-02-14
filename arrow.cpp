@@ -57,8 +57,14 @@ void Arrow::update(float frameTime)
 	Equation for Range:
 	(InitialVelocity)^2 * sin(2*angle) } /gravity
 	*/
+	float vely = velocity.y;
+	float velx = velocity.x;
+
+	deltaV.y -= 0.1; // Force of gravity
 
 
+	spriteData.x += frameTime * velx * direction;
+	spriteData.y -= frameTime * vely;
 	Entity::update(frameTime);
 }
 

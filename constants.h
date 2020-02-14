@@ -73,6 +73,7 @@ const UCHAR A_Key = VK_LEFT;
 
 
 // weapon types
-enum WEAPON {TORPEDO, SHIP, PLANET};
+enum WEAPON {GUN, BOW};
+enum PLAYERSTATE { STANDSTATE, AIRSTATE };
 
 #endif

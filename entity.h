@@ -142,9 +142,7 @@ class Entity : public Image
     // Return Terminal Velocity
     virtual float getTerminalVel() const
     {
-        sqrt((2 * mass * GRAVITY) / 1200);
-
-        return terminalVel;
+        return sqrt((2 * mass * GRAVITY) / (1200));
     }
 
     ////////////////////////////////////////

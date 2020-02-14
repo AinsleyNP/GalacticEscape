@@ -35,6 +35,7 @@ Ship::Ship() : Entity()
 	health = 100;
 	grounded = true;
 	direction = 1; // -1 <- Left | Right -> 1
+	terminalVel = getTerminalVel();
 }
 //=============================================================================
 // Initialize the Ship.
@@ -150,6 +151,7 @@ void Ship::update(float frameTime)
 			deltaV.y -= 10; // Force of gravity
 		}
 	}
+
 
 //Movement based on velocity
 spriteData.x += frameTime * velx;
