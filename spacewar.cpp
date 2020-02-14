@@ -193,16 +193,23 @@ void Spacewar::update()
 		//mapY -= ship1.getVelocity().y * frameTime * 3;
 	}
 	
-	// Horizontal "Scrolling"
+	//Right Horizontal "Scrolling"
 	float shipx = ship1.getX();
-	//if (shipx < GAME_WIDTH / 2)
+	if (shipx < GAME_WIDTH )
 	{		
 		if (input->isKeyDown(VK_RIGHT))
 		{
 			mapX -= frameTime * SCROLL_RATE;
 		}
 	}
-
+	
+	if (shipx < GAME_WIDTH)
+	{
+		if (input->isKeyDown(VK_LEFT))
+		{
+			mapX += frameTime * SCROLL_RATE;
+		}
+	}
 
 	for (std::vector<Tile*>::iterator t = tileslist.begin(); t < tileslist.end(); ++t)
 	{
@@ -416,7 +423,7 @@ void Spacewar::render()
 	// DRAW "TILES"
 	for (int col = 0; col < MAP_WIDTH; col++)       // for each column of map
 	{
-		tile.setX((float)(col * TEXTURE_SIZE));	// set tile X
+		tile.setX((float)(col * TEXTURE_SIZE) +mapX);	// set tile X
 		for (int row = 0; row < MAP_HEIGHT; row++)    // for each row of map
 		{
 			if (tileMap[row][col] >= 0)          // if tile present
