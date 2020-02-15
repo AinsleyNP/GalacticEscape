@@ -133,6 +133,72 @@ void Spacewar::initialize(HWND hwnd)
 	enemy1.setCurrentFrame(enemyNS::ENEMY_START_FRAME);
 	enemy1.setVelocity(VECTOR2(-enemyNS::SPEED, -enemyNS::SPEED)); // VECTOR2(X, Y)
 
+	// Enemy Goomba
+	if (!enemyGoomba.initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &gameTextures))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing enemy"));
+	enemyGoomba.setFrames(enemyNS::ENEMY_START_FRAME, enemyNS::ENEMY_END_FRAME);
+	enemyGoomba.setCurrentFrame(enemyNS::ENEMY_START_FRAME);
+	enemyGoomba.setVelocity(VECTOR2(-enemyNS::SPEED, -enemyNS::SPEED)); // VECTOR2(X, Y)
+	enemyGoomba.setX(100);
+	enemyGoomba.setY(100);
+
+	// Enemy Plant
+	if (!enemyPlant.initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &gameTextures))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing enemy"));
+	enemyPlant.setFrames(enemyNS::ENEMY_START_FRAME, enemyNS::ENEMY_END_FRAME);
+	enemyPlant.setCurrentFrame(enemyNS::ENEMY_START_FRAME);
+	enemyPlant.setVelocity(VECTOR2(-enemyNS::SPEED, -enemyNS::SPEED)); // VECTOR2(X, Y)
+	enemyPlant.setX(50);
+	enemyPlant.setY(50);
+
+	// Enemy Monster
+	if (!enemyMonster.initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &gameTextures))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing enemy"));
+	enemyMonster.setFrames(enemyNS::ENEMY_START_FRAME, enemyNS::ENEMY_END_FRAME);
+	enemyMonster.setCurrentFrame(enemyNS::ENEMY_START_FRAME);
+	enemyMonster.setVelocity(VECTOR2(-enemyNS::SPEED, -enemyNS::SPEED)); // VECTOR2(X, Y)
+	enemyMonster.setX(75);
+	enemyMonster.setY(75);
+
+	// Enemy Bomber
+	if (!enemyBomber.initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &gameTextures))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing enemy"));
+	enemyBomber.setFrames(enemyNS::ENEMY_START_FRAME, enemyNS::ENEMY_END_FRAME);
+	enemyBomber.setCurrentFrame(enemyNS::ENEMY_START_FRAME);
+	enemyBomber.setVelocity(VECTOR2(-enemyNS::SPEED, -enemyNS::SPEED)); // VECTOR2(X, Y)
+	enemyBomber.setX(25);
+	enemyBomber.setY(25);
+
+	////======================================================================================================
+	////Enemy Spawning (Fixed Locations)
+	//float enemyCoords[2][3] = {
+	//	{50,50,0},{100,100,0}
+	//};
+
+	////Choose <2 enemy to spawn and add to enemyList
+	//for (int i = 0; i < 2; i++)
+	//{
+	//	Enemy* e = new Enemy(); //Pointer
+	//	enemyList.push_back(e); //Adds e into the enemyList vector
+	//}
+
+	////For all the enemies in list spawn them at the locations set in enemycoords
+	//for (std::vector<Enemy*>::iterator it = enemyList.begin(); it < enemyList.end(); ++it)
+	//{
+	//	(*it)->initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &gameTextures);
+	//	(*it)->setFrames(enemyNS::ENEMY_START_FRAME, enemyNS::ENEMY_END_FRAME);
+	//	(*it)->setCurrentFrame(enemyNS::ENEMY_START_FRAME);
+	//	(*it)->setVelocity(VECTOR2(-enemyNS::SPEED, -enemyNS::SPEED)); // VECTOR2(X, Y)
+
+	//	int enemyPick = rand() % 21;
+	//	if (enemyCoords[enemyPick][2] == 0)
+	//	{
+	//		(*it)->setX(enemyCoords[enemyPick][0]);
+	//		(*it)->setY(enemyCoords[enemyPick][1]);
+	//	}
+	//}
+
+
 	/*bullet.setFrames(BulletNS::Bullet_START_FRAME, BulletNS::Bullet_END_FRAME);
 	bullet.setCurrentFrame(BulletNS::Bullet_START_FRAME);
 	bullet.setVelocity(VECTOR2(BulletNS::SPEED, -BulletNS::SPEED));*/
@@ -311,6 +377,7 @@ void Spacewar::update()
 	shotdelaytime += frameTime;
 	ship1.update(frameTime);
 	enemy1.update(frameTime);
+
 	laser.update(frameTime);
 	bullet.update(frameTime);
 	tile.update(frameTime);
@@ -461,7 +528,19 @@ void Spacewar::render()
 		ship1.draw();                           // add the spaceship to the scene
 	}
 
+
+	//Enemy
+
+	for (std::vector<Enemy*>::iterator it = enemyList.begin(); it < enemyList.end(); ++it)
+	{
+		(*it)->draw();
+	}
+
 	enemy1.draw(); // enemy spaceship draw
+	enemyGoomba.draw();
+	enemyPlant.draw();
+	enemyMonster.draw();
+	enemyBomber.draw();
 
 	
 
@@ -483,6 +562,9 @@ void Spacewar::render()
 	if (over = true) {
 		Gameover.draw();
 	}
+
+	
+
 	graphics->spriteEnd();                  // end drawing sprites
 }
 
