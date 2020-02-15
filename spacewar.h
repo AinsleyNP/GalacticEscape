@@ -76,15 +76,17 @@ private:
 	TextureManager mainMenuTexture;		// main menu texture
 	TextureManager gameOverTexture;
 	TextureManager playerTexture;
+	TextureManager healthTexture;
 	Image mainMenu;						// main menu image
 	Image tile;
 	Ship    ship1;    // spaceships (https://www.pnglot.com/downpng/hTxmTim_first-version-of-my-sprite-sheet-i-have/)
-	Enemy enemy1; //enemy spaceships
+	Enemy enemy1,enemyGoomba,enemyPlant,enemyMonster,enemyBomber; //enemy spaceships
 	Laser laser;
 	Bullet bullet;
 	Arrow arrow;
 	float mapX;
 	float mapY;
+	Image HealthBar;
 	Image Gameover;
 	Image   background;         // backdrop image
 	Menu menu_;

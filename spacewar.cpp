@@ -85,8 +85,6 @@ void Spacewar::initialize(HWND hwnd)
 	mainMenu.setX(GAME_WIDTH * 0.5f - mainMenu.getWidth() * 0.5f);
 	mainMenu.setY(GAME_HEIGHT * 0.5f - mainMenu.getHeight() * 0.5f);
 
-
-
 	// map textures
 	if (!tileTextures.initialize(graphics, TILE_TEXTURES))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing tile textures"));
@@ -105,12 +103,22 @@ void Spacewar::initialize(HWND hwnd)
 	tile.setFrames(0, 0);
 	tile.setCurrentFrame(0);
 
+	// Health Bar textures
+	if (!healthTexture.initialize(graphics, HEALTHBAR_TEXTURE))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing health bar textures"));
+
+	if(!HealthBar.initialize(graphics, 0 , 0 , 0 , &healthTexture))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing health bar"));
+
+
 	// Game over textures
 	if (!gameOverTexture.initialize(graphics, GAMEOVER_TEXTURE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing main menu textures"));
 
 	if (!Gameover.initialize(graphics, 0, 0, 0, &gameOverTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error Initializing Game over menu"));
+	Gameover.setX(GAME_WIDTH * 0.5f - Gameover.getWidth() * 0.5f);
+	Gameover.setY(GAME_HEIGHT * 0.5f - Gameover.getHeight() * 0.5f);
 
 	// Player textures
 	if (!playerTexture.initialize(graphics, PLAYER_TEXTURE))
@@ -133,6 +141,74 @@ void Spacewar::initialize(HWND hwnd)
 	enemy1.setCurrentFrame(enemyNS::ENEMY_START_FRAME);
 	enemy1.setVelocity(VECTOR2(-enemyNS::SPEED, -enemyNS::SPEED)); // VECTOR2(X, Y)
 
+	// Enemy Goomba
+	if (!enemyGoomba.initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &gameTextures))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing enemy"));
+	enemyGoomba.setFrames(enemyNS::ENEMY_START_FRAME, enemyNS::ENEMY_END_FRAME);
+	enemyGoomba.setCurrentFrame(enemyNS::ENEMY_START_FRAME);
+	enemyGoomba.setVelocity(VECTOR2(-enemyNS::SPEED, -enemyNS::SPEED)); // VECTOR2(X, Y)
+	enemyGoomba.setX(600);
+	enemyGoomba.setY(600);
+
+	// Enemy Plant
+	if (!enemyPlant.initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &gameTextures))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing enemy"));
+	enemyPlant.setFrames(enemyNS::ENEMY_START_FRAME, enemyNS::ENEMY_END_FRAME);
+	enemyPlant.setCurrentFrame(enemyNS::ENEMY_START_FRAME);
+	enemyPlant.setVelocity(VECTOR2(-enemyNS::SPEED, -enemyNS::SPEED)); // VECTOR2(X, Y)
+	enemyPlant.setX(50);
+	enemyPlant.setY(50);
+
+	// Enemy Monster
+	if (!enemyMonster.initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &gameTextures))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing enemy"));
+	enemyMonster.setFrames(enemyNS::ENEMY_START_FRAME, enemyNS::ENEMY_END_FRAME);
+	enemyMonster.setCurrentFrame(enemyNS::ENEMY_START_FRAME);
+	enemyMonster.setVelocity(VECTOR2(-enemyNS::SPEED, -enemyNS::SPEED)); // VECTOR2(X, Y)
+	enemyMonster.setX(75);
+	enemyMonster.setY(75);
+
+	// Enemy Bomber
+	if (!enemyBomber.initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &gameTextures))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing enemy"));
+	enemyBomber.setFrames(enemyNS::ENEMY_START_FRAME, enemyNS::ENEMY_END_FRAME);
+	enemyBomber.setCurrentFrame(enemyNS::ENEMY_START_FRAME);
+	enemyBomber.setVelocity(VECTOR2(-enemyNS::SPEED, -enemyNS::SPEED)); // VECTOR2(X, Y)
+	enemyBomber.setX(25);
+	enemyBomber.setY(25);
+
+	
+
+	////======================================================================================================
+	////Enemy Spawning (Fixed Locations)
+	//float enemyCoords[2][3] = {
+	//	{50,50,0},{100,100,0}
+	//};
+
+	////Choose <2 enemy to spawn and add to enemyList
+	//for (int i = 0; i < 2; i++)
+	//{
+	//	Enemy* e = new Enemy(); //Pointer
+	//	enemyList.push_back(e); //Adds e into the enemyList vector
+	//}
+
+	////For all the enemies in list spawn them at the locations set in enemycoords
+	//for (std::vector<Enemy*>::iterator it = enemyList.begin(); it < enemyList.end(); ++it)
+	//{
+	//	(*it)->initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &gameTextures);
+	//	(*it)->setFrames(enemyNS::ENEMY_START_FRAME, enemyNS::ENEMY_END_FRAME);
+	//	(*it)->setCurrentFrame(enemyNS::ENEMY_START_FRAME);
+	//	(*it)->setVelocity(VECTOR2(-enemyNS::SPEED, -enemyNS::SPEED)); // VECTOR2(X, Y)
+
+	//	int enemyPick = rand() % 21;
+	//	if (enemyCoords[enemyPick][2] == 0)
+	//	{
+	//		(*it)->setX(enemyCoords[enemyPick][0]);
+	//		(*it)->setY(enemyCoords[enemyPick][1]);
+	//	}
+	//}
+
+
 	/*bullet.setFrames(BulletNS::Bullet_START_FRAME, BulletNS::Bullet_END_FRAME);
 	bullet.setCurrentFrame(BulletNS::Bullet_START_FRAME);
 	bullet.setVelocity(VECTOR2(BulletNS::SPEED, -BulletNS::SPEED));*/
@@ -145,6 +221,8 @@ void Spacewar::initialize(HWND hwnd)
 //=============================================================================
 void Spacewar::update()
 {
+
+	menu_.update();
 
 	//==================================================================================================================================================
 	// HUD/MENU 
@@ -165,6 +243,12 @@ void Spacewar::update()
 	if (over == false) {
 		Gameover.setVisible(false);
 	}
+
+	if (heart == 0)
+	{
+		Gameover.setVisible(true);
+	}
+	
 	//==================================================================================================================================================
 	// ENVIRONMENT RELATED
 	//==================================================================================================================================================
@@ -324,6 +408,7 @@ void Spacewar::update()
 	shotdelaytime += frameTime;
 	ship1.update(frameTime);
 	enemy1.update(frameTime);
+
 	laser.update(frameTime);
 	bullet.update(frameTime);
 	tile.update(frameTime);
@@ -409,11 +494,20 @@ void Spacewar::collisions()
 		{
 			float y = (*it)->getY();
 			ship1.setGrounded(true);
-			ship1.setY(GAME_HEIGHT / 2);
+			ship1.setY((*it)->getX() + (*it)->getHeight()+1);
 		}
 		
 	}
 
+	//Enemy Goomba Collision
+	if (ship1.collidesWith(enemyGoomba, collisionVector))
+	{
+		heart = heart - 1;
+		ship1.setVisible(false);
+		ship1.setActive(false);
+		respawn = true;
+
+	}
 
 	// bounce off ship
 	//ship1.bounce(collisionVector, ship2);
@@ -474,7 +568,21 @@ void Spacewar::render()
 		ship1.draw();                           // add the spaceship to the scene
 	}
 
+
+	//Enemy
+
+	for (std::vector<Enemy*>::iterator it = enemyList.begin(); it < enemyList.end(); ++it)
+	{
+		(*it)->draw();
+	}
+
 	enemy1.draw(); // enemy spaceship draw
+
+	//Enemy Variants draw
+	enemyGoomba.draw();
+	enemyPlant.draw();
+	enemyMonster.draw();
+	enemyBomber.draw();
 
 	
 
@@ -496,6 +604,10 @@ void Spacewar::render()
 	if (over = true) {
 		Gameover.draw();
 	}
+
+	HealthBar.draw();
+	
+
 	graphics->spriteEnd();                  // end drawing sprites
 }
 
