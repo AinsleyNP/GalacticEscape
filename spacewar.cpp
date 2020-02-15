@@ -107,6 +107,7 @@ void Spacewar::initialize(HWND hwnd)
 	if (!healthTexture.initialize(graphics, HEALTHBAR_TEXTURE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing health bar textures"));
 
+	//Health Bar HUD
 	if(!HealthBar.initialize(this, HealthNS::WIDTH  , HealthNS::HEIGHT , HealthNS::TEXTURE_COLS , &healthTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing health bar"));
 	HealthBar.setFrames(HealthNS::Health_START_FRAME, HealthNS::Health_END_FRAME);

@@ -14,9 +14,9 @@ namespace HealthNS
 	const int Y = GAME_HEIGHT / 2 - HEIGHT / 2;
 	const float SPEED = 100;                // 100 pixels per second
 	const float MASS = 300.0f;              // mass
-	const int   TEXTURE_COLS = 8;           // texture has 8 columns
-	const int   Health_START_FRAME = 16;      // laser frames
-	const int   Health_END_FRAME = 16;        //
+	const int   TEXTURE_COLS = 1;           // texture has 8 columns
+	const int   Health_START_FRAME = 5;      // laser frames
+	const int   Health_END_FRAME = 0;        //
 	const float Health_ANIMATION_DELAY = 0.2f;    // time between frames
 }
 
