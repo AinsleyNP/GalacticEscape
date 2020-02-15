@@ -85,8 +85,6 @@ void Spacewar::initialize(HWND hwnd)
 	mainMenu.setX(GAME_WIDTH * 0.5f - mainMenu.getWidth() * 0.5f);
 	mainMenu.setY(GAME_HEIGHT * 0.5f - mainMenu.getHeight() * 0.5f);
 
-
-
 	// map textures
 	if (!tileTextures.initialize(graphics, TILE_TEXTURES))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing tile textures"));
@@ -105,12 +103,22 @@ void Spacewar::initialize(HWND hwnd)
 	tile.setFrames(0, 0);
 	tile.setCurrentFrame(0);
 
+	// Health Bar textures
+	if (!healthTexture.initialize(graphics, HEALTHBAR_TEXTURE))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing health bar textures"));
+
+	if(!HealthBar.initialize(graphics, 0 , 0 , 0 , &healthTexture))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing health bar"));
+
+
 	// Game over textures
 	if (!gameOverTexture.initialize(graphics, GAMEOVER_TEXTURE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing main menu textures"));
 
 	if (!Gameover.initialize(graphics, 0, 0, 0, &gameOverTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error Initializing Game over menu"));
+	Gameover.setX(GAME_WIDTH * 0.5f - Gameover.getWidth() * 0.5f);
+	Gameover.setY(GAME_HEIGHT * 0.5f - Gameover.getHeight() * 0.5f);
 
 	// Player textures
 	if (!playerTexture.initialize(graphics, PLAYER_TEXTURE))
@@ -139,8 +147,8 @@ void Spacewar::initialize(HWND hwnd)
 	enemyGoomba.setFrames(enemyNS::ENEMY_START_FRAME, enemyNS::ENEMY_END_FRAME);
 	enemyGoomba.setCurrentFrame(enemyNS::ENEMY_START_FRAME);
 	enemyGoomba.setVelocity(VECTOR2(-enemyNS::SPEED, -enemyNS::SPEED)); // VECTOR2(X, Y)
-	enemyGoomba.setX(100);
-	enemyGoomba.setY(100);
+	enemyGoomba.setX(600);
+	enemyGoomba.setY(600);
 
 	// Enemy Plant
 	if (!enemyPlant.initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &gameTextures))
@@ -168,6 +176,8 @@ void Spacewar::initialize(HWND hwnd)
 	enemyBomber.setVelocity(VECTOR2(-enemyNS::SPEED, -enemyNS::SPEED)); // VECTOR2(X, Y)
 	enemyBomber.setX(25);
 	enemyBomber.setY(25);
+
+	
 
 	////======================================================================================================
 	////Enemy Spawning (Fixed Locations)
@@ -231,6 +241,12 @@ void Spacewar::update()
 	if (over == false) {
 		Gameover.setVisible(false);
 	}
+
+	if (heart == 0)
+	{
+		Gameover.setVisible(true);
+	}
+	
 	//==================================================================================================================================================
 	// ENVIRONMENT RELATED
 	//==================================================================================================================================================
@@ -468,6 +484,15 @@ void Spacewar::collisions()
 		
 	}
 
+	//Enemy Goomba Collision
+	if (ship1.collidesWith(enemyGoomba, collisionVector))
+	{
+		heart = heart - 1;
+		ship1.setVisible(false);
+		ship1.setActive(false);
+		respawn = true;
+
+	}
 
 	// bounce off ship
 	//ship1.bounce(collisionVector, ship2);
@@ -537,6 +562,8 @@ void Spacewar::render()
 	}
 
 	enemy1.draw(); // enemy spaceship draw
+
+	//Enemy Variants draw
 	enemyGoomba.draw();
 	enemyPlant.draw();
 	enemyMonster.draw();
@@ -563,6 +590,7 @@ void Spacewar::render()
 		Gameover.draw();
 	}
 
+	HealthBar.draw();
 	
 
 	graphics->spriteEnd();                  // end drawing sprites
