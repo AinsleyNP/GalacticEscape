@@ -161,10 +161,10 @@ bool Entity::collideBox(Entity &ent, VECTOR2 &collisionVector)
         return false;
 
     // Check for collision using Axis Aligned Bounding Box.
-    if( (getCenterX() + edge.right*getScale() < ent.getCenterX() + ent.getEdge().left*ent.getScale()) || 
-        (getCenterX() + edge.left*getScale() > ent.getCenterX() + ent.getEdge().right*ent.getScale()) ||
-        (getCenterY() + edge.bottom*getScale() < ent.getCenterY() + ent.getEdge().top*ent.getScale()) || 
-        (getCenterY() + edge.top*getScale() > ent.getCenterY() + ent.getEdge().bottom*ent.getScale()) )
+    if( (getCenterX() + edge.right*getScale() < ent.getCenterX() - ent.getEdge().left*ent.getScale()) || 
+        (getCenterX() - edge.left*getScale() > ent.getCenterX() + ent.getEdge().right*ent.getScale()) ||
+        (getCenterY() + edge.bottom*getScale() < ent.getCenterY() - ent.getEdge().top*ent.getScale()) || 
+        (getCenterY() - edge.top*getScale() > ent.getCenterY() + ent.getEdge().bottom*ent.getScale()) )
     {
         
         return false;

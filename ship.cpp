@@ -31,7 +31,10 @@ Ship::Ship() : Entity()
     shieldOn = false;
     mass = shipNS::MASS;
     collisionType = entityNS::BOX;
-
+	edge.bottom = shipNS::WIDTH/2;
+	edge.left = shipNS::WIDTH / 2;
+	edge.right = shipNS::WIDTH / 2;
+	edge.top = shipNS::WIDTH / 2;
 	health = 100;
 	grounded = true;
 	direction = 1; // -1 <- Left | Right -> 1

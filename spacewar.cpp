@@ -107,13 +107,9 @@ void Spacewar::initialize(HWND hwnd)
 	if (!healthTexture.initialize(graphics, HEALTHBAR_TEXTURE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing health bar textures"));
 
-	if(!HealthBar.initialize(this, HealthNS::WIDTH  , HealthNS::HEIGHT , HealthNS::TEXTURE_COLS , &healthTexture))
+	if(!HealthBar.initialize(graphics, 0 , 0 , 0 , &healthTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing health bar"));
-	HealthBar.setFrames(HealthNS::Health_START_FRAME, HealthNS::Health_END_FRAME);
-	HealthBar.setCurrentFrame(HealthNS::Health_START_FRAME);
-	HealthBar.setX(GAME_WIDTH / 2);
-	HealthBar.setY(GAME_HEIGHT / 1.25);
-	HealthBar.setVelocity(VECTOR2(HealthNS::SPEED, -HealthNS::SPEED)); // VECTOR2(X, Y)
+
 
 	// Game over textures
 	if (!gameOverTexture.initialize(graphics, GAMEOVER_TEXTURE))
@@ -485,7 +481,7 @@ void Spacewar::collisions()
 		{
 			float y = (*it)->getY();
 			ship1.setGrounded(true);
-			//ship1.setY(GAME_HEIGHT / 2);
+			ship1.setY((*it)->getX() + (*it)->getHeight()+1);
 		}
 		
 	}
@@ -613,7 +609,6 @@ void Spacewar::releaseAll()
 	tileTextures.onLostDevice();
 	mainMenuTexture.onLostDevice();
 	gameOverTexture.onLostDevice();
-	healthTexture.onLostDevice();
 
 	Game::releaseAll();
 	return;
@@ -629,8 +624,7 @@ void Spacewar::resetAll()
 	backgroundTexture.onResetDevice();
 	tileTextures.onResetDevice();
 	mainMenuTexture.onResetDevice();
-	gameOverTexture.onResetDevice();
-	healthTexture.onResetDevice();
+	gameOverTexture.onLostDevice();
 
 	Game::resetAll();
 	return;
