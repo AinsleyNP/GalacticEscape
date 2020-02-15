@@ -19,7 +19,11 @@ Tile::Tile() : Entity()
 	radius = tilesNS::WIDTH / 2.0;
 	shieldOn = false;
 	mass = tilesNS::MASS;
-	collisionType = entityNS::CIRCLE;
+	collisionType = entityNS::BOX;
+	edge.bottom = tilesNS::WIDTH / 2;
+	edge.left = tilesNS::WIDTH / 2;
+	edge.right = tilesNS::WIDTH / 2;
+	edge.top = tilesNS::WIDTH / 2;
 
 }
 bool Tile::initialize(Game *gamePtr, int width, int height, int ncols,

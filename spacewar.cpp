@@ -481,7 +481,7 @@ void Spacewar::collisions()
 		{
 			float y = (*it)->getY();
 			ship1.setGrounded(true);
-			ship1.setY(GAME_HEIGHT / 2);
+			ship1.setY((*it)->getX() + (*it)->getHeight()+1);
 		}
 		
 	}
