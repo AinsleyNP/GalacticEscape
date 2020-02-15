@@ -281,19 +281,18 @@ void Spacewar::update()
 	}
 
 	// AN EXPERIMENT WITH FINDING ANGLES BETWEEN POINTS GONE WRONG BECAUSE HYPOT() DOESNT WORK
-	//if (input->isKeyDown(VK_DOWN))
-	//{
-	//	float mousex = input->getMouseX();
-	//	float mousey = input->getMouseY();
+	if (input->isKeyDown(VK_DOWN))
+	{
+		float mousex = input->getMouseX();
+		float mousey = input->getMouseY();
 
 	//	// FINDING ANGLE BETWEEN WHERE ITS SHOT FROM & MOUSE
-	//	float anglediff;
-	//	float xlength = mousex - ship1.getX();
-	//	float ylength = ship1.getY() - mousey;
-	//	float hyp = hypot(xlength, ylength);
-	//	anglediff = sinh(hyp / ylength);
-
-	//}
+		float anglediff;
+		float xlength = mousex - ship1.getX();
+		float ylength = ship1.getY() - mousey;
+		float hyp = hypot(xlength, ylength);
+		anglediff = sinh(hyp / ylength);
+	}
 
 	//==================================================================================================================================================
 	// ENEMY CONTROLS
