@@ -169,6 +169,14 @@ void Spacewar::initialize(HWND hwnd)
 	enemyBomber.setX(25);
 	enemyBomber.setY(25);
 
+	//Trap
+	if (!laser.initialize(this, LaserNS::WIDTH, LaserNS::HEIGHT, LaserNS::TEXTURE_COLS, &gameTextures))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing laser"));
+	laser.setFrames(LaserNS::Laser_START_FRAME, LaserNS::Laser_END_FRAME);
+	laser.setCurrentFrame(LaserNS::Laser_START_FRAME);
+	laser.setX(GAME_WIDTH / 2);
+	laser.setY(GAME_HEIGHT / 1.25);
+	
 	////======================================================================================================
 	////Enemy Spawning (Fixed Locations)
 	//float enemyCoords[2][3] = {
@@ -463,7 +471,7 @@ void Spacewar::collisions()
 		{
 			float y = (*it)->getY();
 			ship1.setGrounded(true);
-			ship1.setY(GAME_HEIGHT / 2);
+			//ship1.setY(GAME_HEIGHT / 2);
 		}
 		
 	}
@@ -542,6 +550,7 @@ void Spacewar::render()
 	enemyMonster.draw();
 	enemyBomber.draw();
 
+	laser.draw();
 	
 
 	// BULLETS
