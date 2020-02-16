@@ -555,7 +555,7 @@ void Spacewar::collisions()
 			ship1.setY((*it)->getX() + (*it)->getHeight() + 1);
 			ship1.setVelocityX(-ship1.getVelocity().x);
 			ship1.setVelocityY(-ship1.getVelocity().y);
-			
+
 		}
 		
 	}
