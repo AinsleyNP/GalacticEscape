@@ -20,7 +20,7 @@ Health::Health() : Image()
 // Initialize the healthbar.
 // Post: returns true if successful, false if failed
 //=============================================================================
-bool Image::initialize(Graphics *g, int width, int height, int ncols,
+bool Health::initialize(Graphics *g, int width, int height, int ncols,
 	TextureManager* textureM)
 {
 	return(Image::initialize(g, width, height, ncols, textureM));

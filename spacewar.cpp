@@ -346,6 +346,13 @@ void Spacewar::update()
 			a->setY(ship1.getY() - (shipNS::HEIGHT / 2));
 			a->setX(ship1.getX() + (shipNS::WIDTH / 2) * ship1.getDirection());
 
+			//MATH TO CALCULATE SHOT ANGLE
+			float opp = a->getVelocity().y;
+			float hyp = hypot(a->getVelocity().x, opp);
+			float rad = asin(opp / hyp);
+			a->setRadians(rad* ship1.getDirection());
+			a->setRotationRate(ArrowNS::ROTATION_RATE);
+
 			if (ship1.getDirection() == 1) //Set Location
 			{
 				a->setDirection(1);
@@ -368,18 +375,17 @@ void Spacewar::update()
 		(*ar)->update(frameTime);
 	}
 
-	// AN EXPERIMENT WITH FINDING ANGLES BETWEEN POINTS GONE WRONG BECAUSE HYPOT() DOESNT WORK
+	// AN EXPERIMENT WITH FINDING ANGLES BETWEEN POINTS GONE WRONG BECAUSE ASIN() DOESNT WORK
 	if (input->isKeyDown(VK_DOWN))
 	{
 		float mousex = input->getMouseX();
 		float mousey = input->getMouseY();
 
 	//	// FINDING ANGLE BETWEEN WHERE ITS SHOT FROM & MOUSE
-		float anglediff;
-		float xlength = mousex - ship1.getX();
-		float ylength = ship1.getY() - mousey;
-		float hyp = hypot(xlength, ylength);
-		anglediff = sinh(hyp / ylength);
+		float adj = mousex - ship1.getX();
+		float opp = ship1.getY() - mousey;
+		float hyp = hypot(adj, opp);
+		float anglediff = asin(opp/hyp);
 	}
 
 	//==================================================================================================================================================
