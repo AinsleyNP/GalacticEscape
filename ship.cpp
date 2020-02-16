@@ -82,6 +82,20 @@ void Ship::update(float frameTime)
 		deltaV.y = 0;
 		vely = 0;
 	}
+	// https://www.grc.nasa.gov/www/k-12/airplane/termv.html
+	else if (!grounded) // Not grounded
+	{
+		if (velocity.y <= -750)	// Terminal Velocity
+		{
+			velocity.y = -750; //Speed cap
+			deltaV.y = 0;
+		}
+		else
+		{
+			deltaV.y -= 10; // Force of gravity
+		}
+	}
+
 	// "Held Item" Control
 	if (input->wasKeyPressed(ITEM_SWITCH_KEY))
 	{
@@ -157,20 +171,6 @@ void Ship::update(float frameTime)
 		startFrame = shipNS::JUMP_START_FRAME;
 		endFrame = shipNS::JUMP_END_FRAME;
 		grounded = false;
-	}
-
-	// https://www.grc.nasa.gov/www/k-12/airplane/termv.html
-	else if (!grounded) // Not grounded
-	{
-		if (velocity.y <= -750)	// Terminal Velocity
-		{
-			velocity.y = -750; //Speed cap
-			deltaV.y = 0;
-		}
-		else
-		{
-			deltaV.y -= 10; // Force of gravity
-		}
 	}
 
 
