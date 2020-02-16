@@ -46,6 +46,9 @@ int game_height = GAME_HEIGHT;
 bool die = false;
 bool over = false;
 float shotdelaytime = 0;
+float playermeleetimer;
+float monstermeleetimer;
+float monstermeleelength;
 //=============================================================================
 // Constructor
 //=============================================================================
@@ -175,8 +178,15 @@ void Spacewar::initialize(HWND hwnd)
 	enemyMonster.setFrames(enemyNS::ENEMY_START_FRAME, enemyNS::ENEMY_END_FRAME);
 	enemyMonster.setCurrentFrame(enemyNS::ENEMY_START_FRAME);
 	enemyMonster.setVelocity(VECTOR2(-enemyNS::SPEED, -enemyNS::SPEED)); // VECTOR2(X, Y)
-	enemyMonster.setX(75);
-	enemyMonster.setY(75);
+	enemyMonster.setX(200);
+	enemyMonster.setY(200);
+
+	if (!enemyMelee.initialize(this, MeleeNS::WIDTH, MeleeNS::HEIGHT, MeleeNS::TEXTURE_COLS, &gameTextures))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing player Melee"));
+	enemyMelee.setFrames(MeleeNS::MELEE_START_FRAME, MeleeNS::MELEE_END_FRAME);
+	enemyMelee.setCurrentFrame(MeleeNS::MELEE_START_FRAME);
+	enemyMelee.setRadians(PI / 2);
+	enemyMelee.setActive(false);
 
 	// Enemy Bomber - Shoots bombs/bullets
 	if (!enemyBomber.initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &gameTextures))
@@ -375,6 +385,7 @@ void Spacewar::update()
 		}
 		else if (wep == 2 && shotdelaytime > 0.3)
 		{
+			playermeleetimer = 0;
 			if (shipdir == 1)
 			{
 				playerMelee.flipHorizontal(false);
@@ -385,6 +396,7 @@ void Spacewar::update()
 			}
 			playerMelee.setX(shipx+shipNS::WIDTH*shipdir);
 			playerMelee.setY(shipy);
+			playerMelee.setVisible(true);
 			playerMelee.setActive(true);
 			shotdelaytime = 0;
 		}
@@ -398,6 +410,16 @@ void Spacewar::update()
 	for (std::vector<Arrow*>::iterator ar = ArrowCollection.begin(); ar < ArrowCollection.end(); ++ar)
 	{
 		(*ar)->update(frameTime);
+	}
+
+	if (playermeleetimer > 1)
+	{
+		playerMelee.setVisible(false);
+		playerMelee.setActive(false);
+	}
+	if (playerMelee.getActive())
+	{
+		playermeleetimer += frameTime;
 	}
 
 	// AN EXPERIMENT WITH FINDING ANGLES BETWEEN POINTS GONE WRONG BECAUSE ASIN() DOESNT WORK
@@ -435,7 +457,23 @@ void Spacewar::update()
 		(*it)->setX(xloc += xvel * frameTime * direction);
 	}
 
-
+	if (monstermeleetimer > 5)
+	{
+		enemyMelee.setX(enemyMonster.getX() + enemyNS::WIDTH);
+		enemyMelee.setY(enemyMonster.getY());
+		enemyMelee.setVisible(true);
+		enemyMelee.setActive(true);
+		monstermeleetimer = 0;
+	}
+	if (enemyMelee.getActive())
+	{
+		monstermeleelength += frameTime;
+	}
+	if (monstermeleelength > 1)
+	{
+		enemyMelee.setVisible(false);
+		enemyMelee.setActive(false);
+	}
 	//==================================================================================================================================================
 	if (ship1.getHealth() <= 0)
 	{
@@ -443,10 +481,11 @@ void Spacewar::update()
 	}
 
 	//=========================================================================
+	monstermeleetimer += frameTime;
 	shotdelaytime += frameTime;
 	ship1.update(frameTime);
 	enemy1.update(frameTime);
-
+	playerMelee.update(frameTime);
 	laser.update(frameTime);
 	bullet.update(frameTime);
 	tile.update(frameTime);
@@ -616,8 +655,12 @@ void Spacewar::render()
 	enemyMonster.draw();
 	enemyBomber.draw();
 
+	if (enemyMelee.getActive())
+	{
+		enemyMelee.draw();
+	}
 	
-
+	// ATTACK-RELATED RENDERING
 	// BULLETS
 	for (std::vector<Bullet*>::iterator lb = bullet_collection.begin(); lb < bullet_collection.end(); ++lb)
 	{
@@ -628,11 +671,12 @@ void Spacewar::render()
 	{
 		(*a)->draw();
 	}
+	// PLAYER MELEE
 	if (playerMelee.getActive())
 	{
+		playermeleetimer = 0;
 		playerMelee.draw();
 	}
-
 
 	if (menu) {
 		mainMenu.draw(); // main menu draw
