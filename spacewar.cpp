@@ -264,23 +264,25 @@ void Spacewar::update()
 
 	// Vertical "Scrolling"
 	float shipy = ship1.getY();
-	if (shipy < GAME_HEIGHT / 2)
+	if (shipy < TEXTURE_SIZE * 2)
 	{
 		//ship1.setY(GAME_HEIGHT / 2 - 1); // So ship doesnt go past half way(ish)
 		if (input->isKeyDown(VK_UP))
 		{
-			mapY +=  frameTime * SCROLL_RATE;
+			mapY += frameTime * SCROLL_RATE;
 		}
-		else
-		{
-			//mapY += frameTime * SCROLL_RATE;
-		}
-	}
-	else
-	{
-		//mapY -= ship1.getVelocity().y * frameTime * 3;
 	}
 	
+	// Vertical "Scrolling"
+	if (ship1.getY() < GAME_HEIGHT + TEXTURE_SIZE * 2)
+	{
+		//ship1.setY(GAME_HEIGHT / 2 - 1); // So ship doesnt go past half way(ish)
+		if (input->isKeyDown(VK_DOWN))
+		{
+			mapY -= frameTime * SCROLL_RATE;
+		}
+	}
+
 	//Right Horizontal "Scrolling"
 	float shipx = ship1.getX();
 	if (shipx < GAME_WIDTH )
@@ -291,6 +293,7 @@ void Spacewar::update()
 		}
 	}
 	
+	//Left Horizontal "Scrolling"
 	if (shipx < GAME_WIDTH)
 	{
 		if (input->isKeyDown(VK_LEFT))
@@ -497,7 +500,7 @@ void Spacewar::collisions()
 			break;
 		}
 	}
-
+	//Tiles Collision
 	//==================================================================================================================================================
 	for (std::vector<Tile *>::iterator it = tileslist.begin(); it < tileslist.end(); ++it) 
 	{
@@ -505,7 +508,10 @@ void Spacewar::collisions()
 		{
 			float y = (*it)->getY();
 			ship1.setGrounded(true);
-			ship1.setY(GAME_HEIGHT / 2);
+			ship1.setY((*it)->getX() + (*it)->getHeight() + 1);
+			ship1.setVelocityX(-ship1.getVelocity().x);
+			ship1.setVelocityY(-ship1.getVelocity().y);
+			
 		}
 		
 	}
