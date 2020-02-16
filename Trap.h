@@ -10,7 +10,7 @@
 #include "entity.h"
 #include "constants.h"
 
-namespace LaserNS
+namespace TrapNS
 {
 	const int WIDTH = 32;                   // image width
 	const int HEIGHT = 32;                  // image height
@@ -19,19 +19,19 @@ namespace LaserNS
 	const float SPEED = 100;                // 100 pixels per second
 	const float MASS = 300.0f;              // mass
 	const int   TEXTURE_COLS = 8;           // texture has 8 columns
-	const int   Laser_START_FRAME = 45;      // laser frames
-	const int   Laser_END_FRAME = 45;        //
+	const int   Laser_START_FRAME = 46;      // laser frames
+	const int   Laser_END_FRAME = 46;        //
 	const float LASER_ANIMATION_DELAY = 0.2f;    // time between frames
 }
 
 // inherits from Entity class
-class Laser : public Entity
+class Trap : public Entity
 {
 private:
 
 public:
 	// constructor
-	Laser();
+	Trap();
 
 	// inherited member functions
 	virtual void draw();

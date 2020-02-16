@@ -28,7 +28,7 @@ using namespace spaceWarNS;
 
 typedef std::vector<Bullet*> BULLETLIST;
 typedef std::vector<Arrow*> ARROWLIST;
-typedef std::vector<Laser*> LASERLIST;
+typedef std::vector<Trap*> LASERLIST;
 typedef std::vector<Enemy*> ENEMYLIST;
 typedef std::vector<Bullet*> ENEMYBULLETLIST;
 typedef std::vector<Tile*> TILELIST;
@@ -36,7 +36,7 @@ typedef std::vector<Tile*> TILELIST;
 std::vector<Bullet*> bullet_collection;
 std::vector<Arrow*> ArrowCollection;
 std::vector<Enemy*> enemyList;
-std::vector<Laser*> laserList;
+std::vector<Trap*> laserList;
 std::vector<Bullet*> enemyBulletList;
 
 std::vector<Tile*> tileslist;
@@ -107,13 +107,13 @@ void Spacewar::initialize(HWND hwnd)
 		float scale = game_height / bgheight;
 		background.setScale(scale);
 
-		// ship
-		if (!laser.initialize(this, LaserNS::WIDTH, LaserNS::HEIGHT, LaserNS::TEXTURE_COLS, &gameTextures))
+		// trap
+		if (!trap.initialize(this, TrapNS::WIDTH, TrapNS::HEIGHT, TrapNS::TEXTURE_COLS, &gameTextures))
 			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing trap"));
-		laser.setFrames(LaserNS::Laser_START_FRAME, LaserNS::Laser_END_FRAME);
-		laser.setCurrentFrame(LaserNS::Laser_START_FRAME);
-		laser.setX(GAME_WIDTH / 2);
-		laser.setY(GAME_HEIGHT / 1.25);
+		trap.setFrames(TrapNS::Laser_START_FRAME, TrapNS::Laser_END_FRAME);
+		trap.setCurrentFrame(TrapNS::Laser_START_FRAME);
+		trap.setX(GAME_WIDTH / 3 );
+		trap.setY(GAME_HEIGHT / 1.2);
 
 
 	// tile image
@@ -476,7 +476,7 @@ void Spacewar::update()
 	enemy1.update(frameTime);
 	//enemyGoomba.update(frameTime);
 	attackdelaytime += (frameTime);
-	laser.update(frameTime);
+	trap.update(frameTime);
 	bullet.update(frameTime);
 	tile.update(frameTime);
 	enemyGoomba.update(frameTime);
@@ -616,6 +616,12 @@ void Spacewar::collisions()
 	{
 		ship1.setHealth(ship1.getHealth() - 20);
 	}
+
+	//Trap Collision
+	if (ship1.collidesWith(trap, collisionVector))
+	{
+		ship1.setHealth(ship1.getHealth() - 10);
+	}
 	// bounce off ship
 	//ship1.bounce(collisionVector, ship2);
 	//ship1.damage(SHIP);
@@ -685,7 +691,7 @@ void Spacewar::render()
 	enemyPlant.draw();
 	enemyMonster.draw();
 	enemyBomber.draw();
-	laser.draw();
+	trap.draw();
 
 	for (std::vector<Bullet*>::iterator ibe = enemyBulletList.begin(); ibe < enemyBulletList.end(); ++ibe)
 	{
