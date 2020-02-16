@@ -28,7 +28,7 @@
 //#include "planet.h"
 #include "ship.h"
 #include "enemy.h"
-#include "laser.h"
+#include "trap.h"
 #include "bullet.h"
 #include "Menu.h"
 #include "tiles.h"
@@ -84,7 +84,7 @@ private:
 	Ship    ship1;    // spaceships (https://www.pnglot.com/downpng/hTxmTim_first-version-of-my-sprite-sheet-i-have/)
 	Enemy enemy1,enemyGoomba,enemyPlant,enemyMonster,enemyBomber; //enemy spaceships
 	Melee playerMelee, enemyMelee;
-	Laser laser;
+	Trap trap;
 	Bullet bullet;
 	Arrow arrow;
 	float mapX;
