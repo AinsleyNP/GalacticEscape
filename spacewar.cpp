@@ -311,6 +311,7 @@ void Spacewar::update()
 	//==================================================================================================================================================
 	float wep=ship1.getHeldItem();
 	// Use Held Item(shooting)
+	// "wep" -> array of items, 0==gun, 1==bow
 	if (input->isKeyDown(VK_SPACE))
 	{
 		if (wep == 0 && shotdelaytime > 0.5)
@@ -346,7 +347,7 @@ void Spacewar::update()
 			a->setY(ship1.getY() - (shipNS::HEIGHT / 2));
 			a->setX(ship1.getX() + (shipNS::WIDTH / 2) * ship1.getDirection());
 
-			//MATH TO CALCULATE SHOT ANGLE
+			// MATH TO CALCULATE SHOT ANGLE
 			float opp = a->getVelocity().y;
 			float hyp = hypot(a->getVelocity().x, opp);
 			float rad = asin(opp / hyp);
@@ -381,9 +382,9 @@ void Spacewar::update()
 		float mousex = input->getMouseX();
 		float mousey = input->getMouseY();
 
-	//	// FINDING ANGLE BETWEEN WHERE ITS SHOT FROM & MOUSE
+	// FINDING ANGLE BETWEEN WHERE ITS SHOT FROM & MOUSE
 		float adj = mousex - ship1.getX();
-		float opp = ship1.getY() - mousey;
+		float opp = mousey - ship1.getY();
 		float hyp = hypot(adj, opp);
 		float anglediff = asin(opp/hyp);
 	}

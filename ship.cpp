@@ -83,7 +83,7 @@ void Ship::update(float frameTime)
 		vely = 0;
 	}
 	// "Held Item" Control
-	if (input->wasKeyPressed(VK_BACK))
+	if (input->wasKeyPressed(ITEM_SWITCH_KEY))
 	{
 		if (helditem == 0)
 		{
