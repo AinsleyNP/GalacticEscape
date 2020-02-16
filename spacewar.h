@@ -33,6 +33,7 @@
 #include "Menu.h"
 #include "tiles.h"
 #include "arrow.h"
+#include "health.h"
 
 namespace spaceWarNS
 {
@@ -86,7 +87,7 @@ private:
 	Arrow arrow;
 	float mapX;
 	float mapY;
-	Image HealthBar;
+	Health HealthBar;
 	Image Gameover;
 	Image   background;         // backdrop image
 	Menu menu_;
