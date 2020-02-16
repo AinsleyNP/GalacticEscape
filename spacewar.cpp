@@ -199,7 +199,7 @@ void Spacewar::initialize(HWND hwnd)
 	enemyPlant.setY(50);
 
 	// Enemy Monster - Walks around, Has Melee attack
-	if (!enemyMonster.initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &enemyTexture))
+	if (!enemyMonster.initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &gameTextures))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing enemy"));
 	enemyMonster.setFrames(enemyNS::ENEMY_START_FRAME, enemyNS::ENEMY_END_FRAME);
 	enemyMonster.setCurrentFrame(enemyNS::ENEMY_START_FRAME);
@@ -207,7 +207,7 @@ void Spacewar::initialize(HWND hwnd)
 	enemyMonster.setX(200);
 	enemyMonster.setY(200);
 
-	if (!enemyMelee.initialize(this, MeleeNS::WIDTH, MeleeNS::HEIGHT, MeleeNS::TEXTURE_COLS, &enemyTexture))
+	if (!enemyMelee.initialize(this, MeleeNS::WIDTH, MeleeNS::HEIGHT, MeleeNS::TEXTURE_COLS, &gameTextures))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing player Melee"));
 	enemyMelee.setFrames(MeleeNS::MELEE_START_FRAME, MeleeNS::MELEE_END_FRAME);
 	enemyMelee.setCurrentFrame(MeleeNS::MELEE_START_FRAME);
