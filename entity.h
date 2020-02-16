@@ -61,6 +61,7 @@ class Entity : public Image
     bool    grounded;
     float   terminalVel;
     float   helditem;
+    float   rotationrate;
 
     // --- The following functions are protected because they are not intended to be
     // --- called from outside the class.
@@ -84,6 +85,7 @@ class Entity : public Image
     void computeRotatedBox();
     bool projectionsOverlap(Entity &ent);
     bool collideCornerCircle(VECTOR2 corner, Entity &ent, VECTOR2 &collisionVector);
+
 
   public:
     // Constructor
@@ -134,6 +136,7 @@ class Entity : public Image
     // Return collision type (NONE, CIRCLE, BOX, ROTATED_BOX)
     virtual entityNS::COLLISION_TYPE getCollisionType() {return collisionType;}
 
+
 	// Return Grounded State
 	virtual float getGrounded() const { return grounded; }
 
@@ -148,6 +151,9 @@ class Entity : public Image
 
     // Return HeldItem
     virtual float getHeldItem() const { return helditem; }
+
+    // Return RotationRate
+    virtual float getRotationRate() const { return rotationrate; }
 
     ////////////////////////////////////////
     //           Set functions            //
@@ -174,6 +180,7 @@ class Entity : public Image
     // Set radius of collision circle.
     virtual void setCollisionRadius(float r)    {radius = r;}
 
+
 	// Set Grounded State
 	virtual void setGrounded(float g) { grounded = g; }
 
@@ -182,6 +189,9 @@ class Entity : public Image
 
     // Set HeldItem
     virtual void setHeldItem(float h) { helditem = h; }
+
+    // Set RotationRate
+    virtual void setRotationRate(float rr) { rotationrate = rr; }
 
     ////////////////////////////////////////
     //         Other functions            //
@@ -220,6 +230,8 @@ class Entity : public Image
 
     // Adds the gravitational force to the velocity vector of this entity
     void gravityForce(Entity *other, float frameTime);
+
+    virtual void angleDiff(Entity* ent);
 };
 
 #endif

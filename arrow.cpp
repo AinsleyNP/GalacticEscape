@@ -26,6 +26,11 @@ Arrow::Arrow() : Entity()
 	radius = ArrowNS::WIDTH / 2.0;
 	mass = ArrowNS::MASS;
 	collisionType = entityNS::BOX;
+	edge.bottom = ArrowNS::WIDTH / 2;
+	edge.left = ArrowNS::WIDTH / 2;
+	edge.right = ArrowNS::WIDTH / 2;
+	edge.top = ArrowNS::WIDTH / 2;
+	rotationrate = ArrowNS::ROTATION_RATE;
 }
 
 //=============================================================================
@@ -59,10 +64,13 @@ void Arrow::update(float frameTime)
 	*/
 	float vely = velocity.y;
 	float velx = velocity.x;
+	float rotrate = getRotationRate();
 
 	deltaV.y -= 0.1; // Force of gravity
+	rotrate +=frameTime;
+	setRotationRate(rotrate);
 
-
+	spriteData.angle += frameTime * direction * rotrate;
 	spriteData.x += frameTime * velx * direction;
 	spriteData.y -= frameTime * vely;
 	Entity::update(frameTime);

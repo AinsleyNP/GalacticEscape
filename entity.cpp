@@ -454,3 +454,9 @@ void Entity::gravityForce(Entity *ent, float frameTime)
     // Add gravity vector to moving velocity vector to change direction
     velocity += gravityV;
 }
+
+//Find angle between 2 points
+void Entity::angleDiff(Entity* ent)
+{
+    
+}

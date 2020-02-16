@@ -42,7 +42,6 @@ std::vector<Bullet*> enemyBulletList;
 std::vector<Tile*> tileslist;
 
 bool respawn = false;
-int heart = 5;
 int game_height = GAME_HEIGHT;
 bool die = false;
 bool over = false;
@@ -248,7 +247,7 @@ void Spacewar::update()
 		Gameover.setVisible(false);
 	}
 
-	if (heart == 0)
+	if (ship1.getHealth()<=0)
 	{
 		Gameover.setVisible(true);
 	}
@@ -264,23 +263,25 @@ void Spacewar::update()
 
 	// Vertical "Scrolling"
 	float shipy = ship1.getY();
-	if (shipy < GAME_HEIGHT / 2)
+	if (shipy < TEXTURE_SIZE * 2)
 	{
 		//ship1.setY(GAME_HEIGHT / 2 - 1); // So ship doesnt go past half way(ish)
 		if (input->isKeyDown(VK_UP))
 		{
-			mapY +=  frameTime * SCROLL_RATE;
+			mapY += frameTime * SCROLL_RATE;
 		}
-		else
-		{
-			//mapY += frameTime * SCROLL_RATE;
-		}
-	}
-	else
-	{
-		//mapY -= ship1.getVelocity().y * frameTime * 3;
 	}
 	
+	// Vertical "Scrolling"
+	if (ship1.getY() < GAME_HEIGHT + TEXTURE_SIZE * 2)
+	{
+		//ship1.setY(GAME_HEIGHT / 2 - 1); // So ship doesnt go past half way(ish)
+		if (input->isKeyDown(VK_DOWN))
+		{
+			mapY -= frameTime * SCROLL_RATE;
+		}
+	}
+
 	//Right Horizontal "Scrolling"
 	float shipx = ship1.getX();
 	if (shipx < GAME_WIDTH )
@@ -291,6 +292,7 @@ void Spacewar::update()
 		}
 	}
 	
+	//Left Horizontal "Scrolling"
 	if (shipx < GAME_WIDTH)
 	{
 		if (input->isKeyDown(VK_LEFT))
@@ -309,8 +311,9 @@ void Spacewar::update()
 	//==================================================================================================================================================
 	// Player Control Related
 	//==================================================================================================================================================
-	float wep=ship1.getHeldItem();
 	// Use Held Item(shooting)
+	float wep=ship1.getHeldItem();
+	// "wep" -> array of items, 0==gun, 1==bow
 	if (input->isKeyDown(VK_SPACE))
 	{
 		if (wep == 0 && shotdelaytime > 0.5)
@@ -331,7 +334,7 @@ void Spacewar::update()
 				b->setX(ship1.getX() - (shipNS::WIDTH / 2));
 				b->setDirection(-1);
 			}
-			b->setY(ship1.getY());
+			b->setY(ship1.getY()); 
 			shotdelaytime = 0;
 		}
 		else if (wep == 1 && shotdelaytime > 1)
@@ -345,6 +348,13 @@ void Spacewar::update()
 			a->setVelocity(VECTOR2(1.5 * ArrowNS::SPEED, ArrowNS::SPEED)); // VECTOR2(X, Y)
 			a->setY(ship1.getY() - (shipNS::HEIGHT / 2));
 			a->setX(ship1.getX() + (shipNS::WIDTH / 2) * ship1.getDirection());
+
+			// MATH TO CALCULATE SHOT ANGLE
+			float opp = a->getVelocity().y;
+			float hyp = hypot(a->getVelocity().x, opp);
+			float rad = asin(opp / hyp);
+			a->setRadians(rad* ship1.getDirection());
+			a->setRotationRate(ArrowNS::ROTATION_RATE);
 
 			if (ship1.getDirection() == 1) //Set Location
 			{
@@ -368,6 +378,21 @@ void Spacewar::update()
 		(*ar)->update(frameTime);
 	}
 
+	// AN EXPERIMENT WITH FINDING ANGLES BETWEEN POINTS GONE WRONG BECAUSE ASIN() DOESNT WORK
+	if (input->isKeyDown(VK_DOWN))
+	{
+		float mousex = input->getMouseX();
+		float mousey = input->getMouseY();
+
+	// FINDING ANGLE BETWEEN WHERE ITS SHOT FROM & MOUSE
+		float adj = mousex - ship1.getX();
+		float opp = mousey - ship1.getY();
+		float hyp = hypot(adj, opp);
+		float anglediff = asin(opp/hyp);
+
+		// sin(anglediff) * vel ->set velocity.y
+		// cos(anglediff) * vel ->set velocity.x
+	}
 
 	//==================================================================================================================================================
 	// ENEMY CONTROLS
@@ -390,7 +415,7 @@ void Spacewar::update()
 
 
 	//==================================================================================================================================================
-	if (heart == 0)
+	if (ship1.getHealth() <= 0)
 	{
 		Gameover.setVisible(true);
 	}
@@ -421,7 +446,7 @@ void Spacewar::collisions()
 	// if collision between ship and enemy
 	if (ship1.collidesWith(enemy1, collisionVector))
 	{
-		heart = heart - 1;
+		ship1.setHealth(ship1.getHealth() - 20);
 		ship1.setVisible(false);
 		ship1.setActive(false);
 		ship1.setX(GAME_WIDTH / 1.25);
@@ -477,7 +502,7 @@ void Spacewar::collisions()
 			break;
 		}
 	}
-
+	//Tiles Collision
 	//==================================================================================================================================================
 	for (std::vector<Tile *>::iterator it = tileslist.begin(); it < tileslist.end(); ++it) 
 	{
@@ -485,7 +510,10 @@ void Spacewar::collisions()
 		{
 			float y = (*it)->getY();
 			ship1.setGrounded(true);
-			ship1.setY(GAME_HEIGHT / 2);
+			ship1.setY((*it)->getX() + (*it)->getHeight() + 1);
+			ship1.setVelocityX(-ship1.getVelocity().x);
+			ship1.setVelocityY(-ship1.getVelocity().y);
+			
 		}
 		
 	}
@@ -493,11 +521,10 @@ void Spacewar::collisions()
 	//Enemy Goomba Collision
 	if (ship1.collidesWith(enemyGoomba, collisionVector))
 	{
-		heart = heart - 1;
+		ship1.setHealth(ship1.getHealth() - 20);
 		ship1.setVisible(false);
 		ship1.setActive(false);
 		respawn = true;
-
 	}
 
 	// bounce off ship
@@ -561,11 +588,6 @@ void Spacewar::render()
 
 
 	//Enemy
-
-	for (std::vector<Enemy*>::iterator it = enemyList.begin(); it < enemyList.end(); ++it)
-	{
-		(*it)->draw();
-	}
 
 	enemy1.draw(); // enemy spaceship draw
 

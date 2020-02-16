@@ -73,6 +73,7 @@ const UCHAR ESC_KEY      = VK_ESCAPE;       // escape key
 const UCHAR ALT_KEY      = VK_MENU;         // Alt key
 const UCHAR ENTER_KEY    = VK_RETURN;       // Enter key
 const UCHAR A_Key = VK_LEFT;
+const UCHAR ITEM_SWITCH_KEY = 'Q';
 
 
 // weapon types

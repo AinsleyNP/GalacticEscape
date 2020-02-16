@@ -19,9 +19,10 @@ namespace ArrowNS
 	const float SPEED = 150;                // 100 pixels per second
 	const float MASS = 50.0f;              // mass
 	const int   TEXTURE_COLS = 8;           // texture has 8 columns
-	const int   ARROW_START_FRAME = 41;      // laser frames
+	const int   ARROW_START_FRAME = 44;      // laser frames
 	const int   ARROW_END_FRAME = 44;        //
 	const float ARROW_ANIMATION_DELAY = 0.2f;    // time between frames
+	const float ROTATION_RATE = (float)PI / 8; // radians per second
 }
 
 // inherits from Entity class
