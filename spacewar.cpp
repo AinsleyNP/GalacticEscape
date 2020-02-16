@@ -107,6 +107,15 @@ void Spacewar::initialize(HWND hwnd)
 		float scale = game_height / bgheight;
 		background.setScale(scale);
 
+		// ship
+		if (!laser.initialize(this, LaserNS::WIDTH, LaserNS::HEIGHT, LaserNS::TEXTURE_COLS, &gameTextures))
+			throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing trap"));
+		laser.setFrames(LaserNS::Laser_START_FRAME, LaserNS::Laser_END_FRAME);
+		laser.setCurrentFrame(LaserNS::Laser_START_FRAME);
+		laser.setX(GAME_WIDTH / 2);
+		laser.setY(GAME_HEIGHT / 1.25);
+
+
 	// tile image
 	if (!tile.initialize(graphics, TEXTURE_SIZE, TEXTURE_SIZE, TEXTURE_COLS, &tileTextures))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing tile"));
@@ -469,6 +478,7 @@ void Spacewar::update()
 	laser.update(frameTime);
 	bullet.update(frameTime);
 	tile.update(frameTime);
+	enemyGoomba.update(frameTime);
 }
 
 //=============================================================================
@@ -648,6 +658,7 @@ void Spacewar::render()
 	enemyPlant.draw();
 	enemyMonster.draw();
 	enemyBomber.draw();
+	laser.draw();
 
 	for (std::vector<Bullet*>::iterator ibe = enemyBulletList.begin(); ibe < enemyBulletList.end(); ++ibe)
 	{

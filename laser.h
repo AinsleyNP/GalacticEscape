@@ -19,8 +19,8 @@ namespace LaserNS
 	const float SPEED = 100;                // 100 pixels per second
 	const float MASS = 300.0f;              // mass
 	const int   TEXTURE_COLS = 8;           // texture has 8 columns
-	const int   Laser_START_FRAME = 16;      // laser frames
-	const int   Laser_END_FRAME = 16;        //
+	const int   Laser_START_FRAME = 45;      // laser frames
+	const int   Laser_END_FRAME = 45;        //
 	const float LASER_ANIMATION_DELAY = 0.2f;    // time between frames
 }
 
