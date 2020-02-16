@@ -41,7 +41,7 @@ namespace spaceWarNS
 	const int TEXTURE_COLS = 4;
 	const int MAP_HEIGHT = 15;
 	const int MAP_WIDTH = 10;
-	const float SCROLL_RATE = 10;
+	const float SCROLL_RATE = 30;
 	const int __ = -1;                  // empty tile
 
 	const int tileMap[MAP_HEIGHT][MAP_WIDTH] = { // TILEMAP

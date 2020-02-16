@@ -101,9 +101,10 @@ void Spacewar::initialize(HWND hwnd)
 	// sky image
 	if (!background.initialize(graphics, 0, 0, 0, &backgroundTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing nebula"));
-		background.setScale(3.5);
-	//float a = GAME_HEIGHT / background.getHeight();
-	//background.setScale(a);
+		//background.setScale(3.5);
+		float bgheight = background.getHeight();
+		float scale = game_height / bgheight;
+		background.setScale(scale);
 
 	// tile image
 	if (!tile.initialize(graphics, TEXTURE_SIZE, TEXTURE_SIZE, TEXTURE_COLS, &tileTextures))
