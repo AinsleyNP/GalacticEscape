@@ -134,8 +134,8 @@ void Spacewar::initialize(HWND hwnd)
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing health bar"));
 	HealthBar.setFrames(HealthNS::Health_START_FRAME, HealthNS::Health_END_FRAME);
 	HealthBar.setCurrentFrame(HealthNS::Health_START_FRAME);
-	HealthBar.setX(GAME_WIDTH / 2);
-	HealthBar.setY(GAME_HEIGHT / 1.25);
+	HealthBar.setX(GAME_WIDTH / 16);
+	HealthBar.setY(GAME_HEIGHT / 20);
 
 	//Enemy Texture
 	if (!enemyTexture.initialize(graphics, ENEMY_TEXTURE))
@@ -571,6 +571,30 @@ void Spacewar::collisions()
 		respawn = true;
     }
 
+	if (ship1.getHealth() == 100)
+	{
+		HealthBar.setCurrentFrame(0);
+	}
+	else if (ship1.getHealth() == 80)
+	{
+		HealthBar.setCurrentFrame(1);
+	}
+	else if (ship1.getHealth() == 60)
+	{
+		HealthBar.setCurrentFrame(2);
+	}
+	else if (ship1.getHealth() == 40)
+	{
+		HealthBar.setCurrentFrame(3);
+	}
+	else if (ship1.getHealth() == 20)
+	{
+		HealthBar.setCurrentFrame(4);
+	}
+	else
+	{
+		HealthBar.setCurrentFrame(6);
+	}
 	// BULLET COLLISION
 	for (std::vector<Bullet *>::iterator ib = bullet_collection.begin(); ib < bullet_collection.end(); ++ib)
 	{
