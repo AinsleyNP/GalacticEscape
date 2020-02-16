@@ -20,9 +20,9 @@ namespace enemyNS
 	const float ROTATION_RATE = (float)PI / 4; // radians per second
 	const float SPEED = 100;                // 100 pixels per second
 	const float MASS = 300.0f;              // mass
-	const int   TEXTURE_COLS = 8;           // texture has 8 columns
-	const int   ENEMY_START_FRAME = 8;      // ship2 starts at frame 8
-	const int   ENEMY_END_FRAME = 11;       // ship2 animation frames 8,9,10,11
+	const int   TEXTURE_COLS = 31;           // texture has 8 columns
+	const int   ENEMY_START_FRAME = 0;      // ship2 starts at frame 8
+	const int   ENEMY_END_FRAME = 0;       // ship2 animation frames 8,9,10,11
 	const float ENEMY_ANIMATION_DELAY = 0.2f;    // time between frames
 }
 
