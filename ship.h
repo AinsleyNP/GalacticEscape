@@ -11,6 +11,10 @@
 #include "entity.h"
 #include "constants.h"
 
+#include "bullet.h"
+#include "arrow.h"
+#include "melee.h"
+
 namespace shipNS
 {
     const int WIDTH = 50;                   // image width

@@ -1,8 +1,5 @@
 
 #include "ship.h"
-#include "bullet.h"
-#include "arrow.h"
-
 
 //  Module:             Falling Paradise
 //  Assignment1:        Galactic Escape
@@ -104,6 +101,10 @@ void Ship::update(float frameTime)
 			helditem = 1;
 		}
 		else if (helditem == 1)
+		{
+			helditem = 2;
+		}
+		else if (helditem == 2)
 		{
 			helditem = 0;
 		}

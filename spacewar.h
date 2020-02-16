@@ -83,6 +83,7 @@ private:
 	Image tile;
 	Ship    ship1;    // spaceships (https://www.pnglot.com/downpng/hTxmTim_first-version-of-my-sprite-sheet-i-have/)
 	Enemy enemy1,enemyGoomba,enemyPlant,enemyMonster,enemyBomber; //enemy spaceships
+	Melee playerMelee, enemyMelee;
 	Laser laser;
 	Bullet bullet;
 	Arrow arrow;
