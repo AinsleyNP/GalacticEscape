@@ -1,32 +1,32 @@
-#ifndef _BULLET_H                 // Prevent multiple definitions if this 
-#define _BULLET_H                 // file is included in more than one place
+#ifndef _MELEE_H                 // Prevent multiple definitions if this 
+#define _MELEE_H                 // file is included in more than one place
 #define WIN32_LEAN_AND_MEAN
 
 #include "entity.h"
 #include "constants.h"
 
-namespace BulletNS
+namespace MeleeNS
 {
 	const int WIDTH = 32;                   // image width
 	const int HEIGHT = 32;                  // image height
 	const int X = GAME_WIDTH / 3 - WIDTH / 2;   // location on screen
 	const int Y = GAME_HEIGHT / 3 - HEIGHT / 2;
-	const float SPEED = 150;                // 100 pixels per second
+	const float SPEED = 0;                // 100 pixels per second
 	const float MASS = 2.0f;              // mass
 	const int   TEXTURE_COLS = 8;           // texture has 8 columns
-	const int   Bullet_START_FRAME = 41;      // laser frames
-	const int   Bullet_END_FRAME = 44;        //
-	const float Bullet_ANIMATION_DELAY = 0.2f;    // time between frames
+	const int   MELEE_START_FRAME = 45;      // laser frames
+	const int   MELEE_END_FRAME = 45;        //
+	const float MELEE_ANIMATION_DELAY = 0.2f;    // time between frames
 }
 
 // inherits from Entity class
-class Bullet : public Entity
+class Melee : public Entity
 {
 private:
 
 public:
 	// constructor
-	Bullet();
+	Melee();
 
 	// inherited member functions
 	virtual void draw();

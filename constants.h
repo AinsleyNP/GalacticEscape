@@ -78,7 +78,7 @@ const UCHAR ITEM_SWITCH_KEY = 'Q';
 
 
 // weapon types
-enum WEAPON {GUN, BOW};
+enum WEAPON {GUN, BOW , STAB};
 enum PLAYERSTATE { STANDSTATE, AIRSTATE };
 
 #endif
