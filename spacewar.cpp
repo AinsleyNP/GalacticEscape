@@ -42,7 +42,6 @@ std::vector<Bullet*> enemyBulletList;
 std::vector<Tile*> tileslist;
 
 bool respawn = false;
-int heart = 5;
 int game_height = GAME_HEIGHT;
 bool die = false;
 bool over = false;
@@ -248,7 +247,7 @@ void Spacewar::update()
 		Gameover.setVisible(false);
 	}
 
-	if (heart == 0)
+	if (ship1.getHealth()<=0)
 	{
 		Gameover.setVisible(true);
 	}
@@ -309,8 +308,8 @@ void Spacewar::update()
 	//==================================================================================================================================================
 	// Player Control Related
 	//==================================================================================================================================================
-	float wep=ship1.getHeldItem();
 	// Use Held Item(shooting)
+	float wep=ship1.getHeldItem();
 	// "wep" -> array of items, 0==gun, 1==bow
 	if (input->isKeyDown(VK_SPACE))
 	{
@@ -387,6 +386,9 @@ void Spacewar::update()
 		float opp = mousey - ship1.getY();
 		float hyp = hypot(adj, opp);
 		float anglediff = asin(opp/hyp);
+
+		// sin(anglediff) * vel ->set velocity.y
+		// cos(anglediff) * vel ->set velocity.x
 	}
 
 	//==================================================================================================================================================
@@ -410,7 +412,7 @@ void Spacewar::update()
 
 
 	//==================================================================================================================================================
-	if (heart == 0)
+	if (ship1.getHealth() <= 0)
 	{
 		Gameover.setVisible(true);
 	}
@@ -441,7 +443,7 @@ void Spacewar::collisions()
 	// if collision between ship and enemy
 	if (ship1.collidesWith(enemy1, collisionVector))
 	{
-		heart = heart - 1;
+		ship1.setHealth(ship1.getHealth() - 20);
 		ship1.setVisible(false);
 		ship1.setActive(false);
 		ship1.setX(GAME_WIDTH / 1.25);
@@ -513,11 +515,10 @@ void Spacewar::collisions()
 	//Enemy Goomba Collision
 	if (ship1.collidesWith(enemyGoomba, collisionVector))
 	{
-		heart = heart - 1;
+		ship1.setHealth(ship1.getHealth() - 20);
 		ship1.setVisible(false);
 		ship1.setActive(false);
 		respawn = true;
-
 	}
 
 	// bounce off ship
@@ -581,11 +582,6 @@ void Spacewar::render()
 
 
 	//Enemy
-
-	for (std::vector<Enemy*>::iterator it = enemyList.begin(); it < enemyList.end(); ++it)
-	{
-		(*it)->draw();
-	}
 
 	enemy1.draw(); // enemy spaceship draw
 

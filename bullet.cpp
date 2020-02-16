@@ -26,10 +26,10 @@ Bullet::Bullet() : Entity()
 	radius = BulletNS::WIDTH / 2.0;
 	mass = BulletNS::MASS;
 	collisionType = entityNS::BOX;
-	edge.bottom = BulletNS::WIDTH / 2;
-	edge.left = BulletNS::WIDTH / 2;
-	edge.right = BulletNS::WIDTH / 2;
-	edge.top = BulletNS::WIDTH / 2;
+	edge.bottom	= BulletNS::WIDTH / 4;
+	edge.left	= BulletNS::WIDTH / 4;
+	edge.right	= BulletNS::WIDTH / 4;
+	edge.top	= BulletNS::WIDTH / 4;
 }
 
 //=============================================================================
