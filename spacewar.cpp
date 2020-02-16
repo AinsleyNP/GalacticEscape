@@ -474,6 +474,7 @@ void Spacewar::update()
 	shotdelaytime += frameTime;
 	ship1.update(frameTime);
 	enemy1.update(frameTime);
+	//enemyGoomba.update(frameTime);
 	attackdelaytime += (frameTime);
 	laser.update(frameTime);
 	bullet.update(frameTime);
@@ -564,7 +565,7 @@ void Spacewar::collisions()
 			ship1.setY((*it)->getX() + (*it)->getHeight() + 1);
 			ship1.setVelocityX(-ship1.getVelocity().x);
 			ship1.setVelocityY(-ship1.getVelocity().y);
-			
+
 		}
 		
 	}
@@ -573,6 +574,8 @@ void Spacewar::collisions()
 	if (ship1.collidesWith(enemyGoomba, collisionVector))
 	{
 		ship1.setHealth(ship1.getHealth() - 20);
+			// bounce off ship
+			ship1.bounce(collisionVector, enemyGoomba);
 	}
 
 	if (ship1.collidesWith(enemyPlant, collisionVector))

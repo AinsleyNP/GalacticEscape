@@ -8,13 +8,13 @@
 
 namespace HealthNS
 {
-	const int WIDTH = 32;                   // image width
-	const int HEIGHT = 32;                  // image height
+	const int WIDTH = 220;                   // image width
+	const int HEIGHT = 50;                  // image height
 	const int X = GAME_WIDTH / 2 - WIDTH / 2;   // location on screen
 	const int Y = GAME_HEIGHT / 2 - HEIGHT / 2;
 	const int   TEXTURE_COLS = 1;           // texture has 8 columns
-	const int   Health_START_FRAME = 5;      // laser frames
-	const int   Health_END_FRAME = 0;        //
+	const int   Health_START_FRAME = 0;      // laser frames
+	const int   Health_END_FRAME = 1;        //
 	const float Health_ANIMATION_DELAY = 0.2f;    // time between frames
 }
 
