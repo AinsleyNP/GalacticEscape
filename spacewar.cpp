@@ -92,9 +92,18 @@ void Spacewar::initialize(HWND hwnd)
 	if (!gameTextures.initialize(graphics, TEXTURES_IMAGE))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing game textures"));
 
-	// nebula image
+	// background textures 
+	if (!backgroundTexture.initialize(graphics, BACKGROUND_IMAGE))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error intializing background textures"));
+
+	
+
+	// sky image
 	if (!background.initialize(graphics, 0, 0, 0, &backgroundTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing nebula"));
+		background.setScale(3.5);
+	//float a = GAME_HEIGHT / background.getHeight();
+	//background.setScale(a);
 
 	// tile image
 	if (!tile.initialize(graphics, TEXTURE_SIZE, TEXTURE_SIZE, TEXTURE_COLS, &tileTextures))
@@ -284,22 +293,19 @@ void Spacewar::update()
 
 	//Right Horizontal "Scrolling"
 	float shipx = ship1.getX();
-	if (shipx < GAME_WIDTH )
-	{		
-		if (input->isKeyDown(VK_RIGHT))
-		{
-			mapX -= frameTime * SCROLL_RATE;
-		}
+	if (input->isKeyDown(VK_RIGHT))
+	{
+		mapX -= frameTime * SCROLL_RATE;
 	}
+
 	
 	//Left Horizontal "Scrolling"
-	if (shipx < GAME_WIDTH)
+
+	if (input->isKeyDown(VK_LEFT))
 	{
-		if (input->isKeyDown(VK_LEFT))
-		{
-			mapX += frameTime * SCROLL_RATE;
-		}
+		mapX += frameTime * SCROLL_RATE;
 	}
+
 
 	for (std::vector<Tile*>::iterator t = tileslist.begin(); t < tileslist.end(); ++t)
 	{
@@ -543,7 +549,7 @@ void Spacewar::render()
 	graphics->spriteBegin();                // begin drawing sprites
 
 	menu_.draw();
-
+	background.draw();
 	//==================================================================================================================================================
 	// DRAW "TILES"
 	for (int col = 0; col < MAP_WIDTH; col++)       // for each column of map
