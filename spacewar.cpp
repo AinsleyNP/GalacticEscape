@@ -136,6 +136,13 @@ void Spacewar::initialize(HWND hwnd)
 	ship1.setY(GAME_HEIGHT / 1.25);
 	ship1.setVelocity(VECTOR2(shipNS::SPEED, -shipNS::SPEED)); // VECTOR2(X, Y)
 
+	if (!playerMelee.initialize(this, MeleeNS::WIDTH, MeleeNS::HEIGHT, MeleeNS::TEXTURE_COLS, &gameTextures))
+		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing player Melee"));
+	playerMelee.setFrames(MeleeNS::MELEE_START_FRAME, MeleeNS::MELEE_END_FRAME);
+	playerMelee.setCurrentFrame(MeleeNS::MELEE_START_FRAME);
+	playerMelee.setRadians(PI / 2);
+	playerMelee.setActive(false);
+
 	//=========================================================================
 	// enemy initialize
 	if (!enemy1.initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &gameTextures))
@@ -144,7 +151,7 @@ void Spacewar::initialize(HWND hwnd)
 	enemy1.setCurrentFrame(enemyNS::ENEMY_START_FRAME);
 	enemy1.setVelocity(VECTOR2(-enemyNS::SPEED, -enemyNS::SPEED)); // VECTOR2(X, Y)
 
-	// Enemy Goomba
+	// Enemy Goomba - No Attacks, walks around, dmgs player on collision
 	if (!enemyGoomba.initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &gameTextures))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing enemy"));
 	enemyGoomba.setFrames(enemyNS::ENEMY_START_FRAME, enemyNS::ENEMY_END_FRAME);
@@ -153,7 +160,7 @@ void Spacewar::initialize(HWND hwnd)
 	enemyGoomba.setX(600);
 	enemyGoomba.setY(600);
 
-	// Enemy Plant
+	// Enemy Plant - Mario piranha plant
 	if (!enemyPlant.initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &gameTextures))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing enemy"));
 	enemyPlant.setFrames(enemyNS::ENEMY_START_FRAME, enemyNS::ENEMY_END_FRAME);
@@ -162,7 +169,7 @@ void Spacewar::initialize(HWND hwnd)
 	enemyPlant.setX(50);
 	enemyPlant.setY(50);
 
-	// Enemy Monster
+	// Enemy Monster - Walks around, Has Melee attack
 	if (!enemyMonster.initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &gameTextures))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing enemy"));
 	enemyMonster.setFrames(enemyNS::ENEMY_START_FRAME, enemyNS::ENEMY_END_FRAME);
@@ -171,7 +178,7 @@ void Spacewar::initialize(HWND hwnd)
 	enemyMonster.setX(75);
 	enemyMonster.setY(75);
 
-	// Enemy Bomber
+	// Enemy Bomber - Shoots bombs/bullets
 	if (!enemyBomber.initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &gameTextures))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing enemy"));
 	enemyBomber.setFrames(enemyNS::ENEMY_START_FRAME, enemyNS::ENEMY_END_FRAME);
@@ -313,6 +320,9 @@ void Spacewar::update()
 	// "wep" -> array of items, 0==gun, 1==bow
 	if (input->isKeyDown(VK_SPACE))
 	{
+		float shipx = ship1.getX();
+		float shipy = ship1.getY();
+		float shipdir = ship1.getDirection();
 		if (wep == 0 && shotdelaytime > 0.5)
 		{
 			Bullet* b = new Bullet();
@@ -321,17 +331,17 @@ void Spacewar::update()
 			b->setFrames(BulletNS::Bullet_START_FRAME, BulletNS::Bullet_END_FRAME);
 			b->setCurrentFrame(BulletNS::Bullet_START_FRAME);
 			b->setVelocity(VECTOR2(-BulletNS::SPEED, -BulletNS::SPEED)); // VECTOR2(X, Y)
-			if (ship1.getDirection() == 1) // Set Location
+			if (shipdir == 1) // Set Location
 			{
-				b->setX(ship1.getX() + (shipNS::WIDTH / 2));
+				b->setX(shipx + (shipNS::WIDTH / 2));
 				b->setDirection(1);
 			}
 			else
 			{
-				b->setX(ship1.getX() - (shipNS::WIDTH / 2));
+				b->setX(shipx - (shipNS::WIDTH / 2));
 				b->setDirection(-1);
 			}
-			b->setY(ship1.getY()); 
+			b->setY(shipy); 
 			shotdelaytime = 0;
 		}
 		else if (wep == 1 && shotdelaytime > 1)
@@ -343,8 +353,8 @@ void Spacewar::update()
 			a->setFrames(ArrowNS::ARROW_START_FRAME, ArrowNS::ARROW_END_FRAME);
 			a->setCurrentFrame(ArrowNS::ARROW_START_FRAME);
 			a->setVelocity(VECTOR2(1.5 * ArrowNS::SPEED, ArrowNS::SPEED)); // VECTOR2(X, Y)
-			a->setY(ship1.getY() - (shipNS::HEIGHT / 2));
-			a->setX(ship1.getX() + (shipNS::WIDTH / 2) * ship1.getDirection());
+			a->setY(shipy - (shipNS::HEIGHT / 2));
+			a->setX(shipx + (shipNS::WIDTH / 2) * shipdir);
 
 			// MATH TO CALCULATE SHOT ANGLE
 			float opp = a->getVelocity().y;
@@ -353,7 +363,7 @@ void Spacewar::update()
 			a->setRadians(rad* ship1.getDirection());
 			a->setRotationRate(ArrowNS::ROTATION_RATE);
 
-			if (ship1.getDirection() == 1) //Set Location
+			if (shipdir == 1) //Set Location
 			{
 				a->setDirection(1);
 			}
@@ -361,6 +371,21 @@ void Spacewar::update()
 			{
 				a->setDirection(-1);
 			}
+			shotdelaytime = 0;
+		}
+		else if (wep == 2 && shotdelaytime > 0.3)
+		{
+			if (shipdir == 1)
+			{
+				playerMelee.flipHorizontal(false);
+			}
+			else if (shipdir == -1)
+			{
+				playerMelee.flipHorizontal(true);
+			}
+			playerMelee.setX(shipx+shipNS::WIDTH*shipdir);
+			playerMelee.setY(shipy);
+			playerMelee.setActive(true);
 			shotdelaytime = 0;
 		}
 	}
@@ -603,6 +628,11 @@ void Spacewar::render()
 	{
 		(*a)->draw();
 	}
+	if (playerMelee.getActive())
+	{
+		playerMelee.draw();
+	}
+
 
 	if (menu) {
 		mainMenu.draw(); // main menu draw

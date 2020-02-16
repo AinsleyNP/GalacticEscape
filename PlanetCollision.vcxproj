@@ -98,6 +98,7 @@
     <ClCompile Include="image.cpp" />
     <ClCompile Include="input.cpp" />
     <ClCompile Include="Laser.cpp" />
+    <ClCompile Include="melee.cpp" />
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="ship.cpp" />
     <ClCompile Include="spacewar.cpp" />
@@ -118,6 +119,7 @@
     <ClInclude Include="image.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="laser.h" />
+    <ClInclude Include="melee.h" />
     <ClInclude Include="Menu.h" />
     <ClInclude Include="ship.h" />
     <ClInclude Include="spacewar.h" />
