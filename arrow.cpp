@@ -67,7 +67,8 @@ void Arrow::update(float frameTime)
 	float rotrate = getRotationRate();
 
 	deltaV.y -= 0.1; // Force of gravity
-	rotrate = pow(rotrate, 5);
+	rotrate +=frameTime;
+	setRotationRate(rotrate);
 
 	spriteData.angle += frameTime * direction * rotrate;
 	spriteData.x += frameTime * velx * direction;
