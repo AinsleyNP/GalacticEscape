@@ -179,7 +179,7 @@ void Spacewar::initialize(HWND hwnd)
 	enemy1.setVelocity(VECTOR2(-enemyNS::SPEED, -enemyNS::SPEED)); // VECTOR2(X, Y)
 
 	// Enemy Goomba - No Attacks, walks around, dmgs player on collision
-	if (!enemyGoomba.initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &gameTextures))
+	if (!enemyGoomba.initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &enemyTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing enemy"));
 	enemyGoomba.setFrames(enemyNS::ENEMY_START_FRAME, enemyNS::ENEMY_END_FRAME);
 	enemyGoomba.setCurrentFrame(enemyNS::ENEMY_START_FRAME);
@@ -190,7 +190,7 @@ void Spacewar::initialize(HWND hwnd)
 	enemyGoomba.flipHorizontal(90);
 
 	// Enemy Plant - Mario piranha plant
-	if (!enemyPlant.initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &gameTextures))
+	if (!enemyPlant.initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &enemyTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing enemy"));
 	enemyPlant.setFrames(enemyNS::ENEMY_START_FRAME, enemyNS::ENEMY_END_FRAME);
 	enemyPlant.setCurrentFrame(enemyNS::ENEMY_START_FRAME);
@@ -199,7 +199,7 @@ void Spacewar::initialize(HWND hwnd)
 	enemyPlant.setY(50);
 
 	// Enemy Monster - Walks around, Has Melee attack
-	if (!enemyMonster.initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &gameTextures))
+	if (!enemyMonster.initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &enemyTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing enemy"));
 	enemyMonster.setFrames(enemyNS::ENEMY_START_FRAME, enemyNS::ENEMY_END_FRAME);
 	enemyMonster.setCurrentFrame(enemyNS::ENEMY_START_FRAME);
@@ -207,7 +207,7 @@ void Spacewar::initialize(HWND hwnd)
 	enemyMonster.setX(200);
 	enemyMonster.setY(200);
 
-	if (!enemyMelee.initialize(this, MeleeNS::WIDTH, MeleeNS::HEIGHT, MeleeNS::TEXTURE_COLS, &gameTextures))
+	if (!enemyMelee.initialize(this, MeleeNS::WIDTH, MeleeNS::HEIGHT, MeleeNS::TEXTURE_COLS, &enemyTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing player Melee"));
 	enemyMelee.setFrames(MeleeNS::MELEE_START_FRAME, MeleeNS::MELEE_END_FRAME);
 	enemyMelee.setCurrentFrame(MeleeNS::MELEE_START_FRAME);
@@ -215,7 +215,7 @@ void Spacewar::initialize(HWND hwnd)
 	enemyMelee.setActive(false);
 
 	// Enemy Bomber - Shoots bombs/bullets
-	if (!enemyBomber.initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &gameTextures))
+	if (!enemyBomber.initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &enemyTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing enemy"));
 	enemyBomber.setFrames(enemyNS::ENEMY_START_FRAME, enemyNS::ENEMY_END_FRAME);
 	enemyBomber.setCurrentFrame(enemyNS::ENEMY_START_FRAME);
@@ -538,12 +538,12 @@ void Spacewar::update()
 	ship1.update(frameTime);
 	enemy1.update(frameTime);
 	playerMelee.update(frameTime);
-	//enemyGoomba.update(frameTime);
 	attackdelaytime += (frameTime);
 	trap.update(frameTime);
 	bullet.update(frameTime);
 	tile.update(frameTime);
 	enemyGoomba.update(frameTime);
+	//enemyMonster.update(frameTime);
 }
 
 //=============================================================================
