@@ -21,6 +21,8 @@ public:
 	// constructor
 	Menu(Input* input);
 
+	bool menu1 = false;
+
 	void update();
 	//void draw();
 

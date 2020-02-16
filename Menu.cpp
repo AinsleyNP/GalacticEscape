@@ -31,7 +31,8 @@ void Menu::update()
 		if (mouse_y > menu_top_&& mouse_y < menu_bottom_ - 200.0f) {
 			if (input->getMouseLButton()) {
 				// do button 1 stuff
-				OutputDebugString("Button 1 Pressed\n");
+				//OutputDebugString("Button 1 Pressed\n");
+				menu1 = true;
 			}
 		}
 		// check second button
