@@ -153,7 +153,7 @@ void Spacewar::initialize(HWND hwnd)
 
 	//=========================================================================
 	// enemy initialize
-	if (!enemy1.initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &gameTextures))
+	if (!enemy1.initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &enemyTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing enemy"));
 	enemy1.setFrames(enemyNS::ENEMY_START_FRAME, enemyNS::ENEMY_END_FRAME);
 	enemy1.setCurrentFrame(enemyNS::ENEMY_START_FRAME);
@@ -167,9 +167,11 @@ void Spacewar::initialize(HWND hwnd)
 	enemyGoomba.setVelocity(VECTOR2(-enemyNS::SPEED, -enemyNS::SPEED)); // VECTOR2(X, Y)
 	enemyGoomba.setX(GAME_WIDTH / 1.5);
 	enemyGoomba.setY(GAME_HEIGHT / 1.25);
+	enemyGoomba.setRadians(2 * PI);
+	enemyGoomba.flipHorizontal(90);
 
 	// Enemy Plant
-	if (!enemyPlant.initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &gameTextures))
+	if (!enemyPlant.initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &enemyTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing enemy"));
 	enemyPlant.setFrames(enemyNS::ENEMY_START_FRAME, enemyNS::ENEMY_END_FRAME);
 	enemyPlant.setCurrentFrame(enemyNS::ENEMY_START_FRAME);
@@ -178,7 +180,7 @@ void Spacewar::initialize(HWND hwnd)
 	enemyPlant.setY(50);
 
 	// Enemy Monster
-	if (!enemyMonster.initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &gameTextures))
+	if (!enemyMonster.initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &enemyTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing enemy"));
 	enemyMonster.setFrames(enemyNS::ENEMY_START_FRAME, enemyNS::ENEMY_END_FRAME);
 	enemyMonster.setCurrentFrame(enemyNS::ENEMY_START_FRAME);
@@ -187,7 +189,7 @@ void Spacewar::initialize(HWND hwnd)
 	enemyMonster.setY(75);
 
 	// Enemy Bomber
-	if (!enemyBomber.initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &gameTextures))
+	if (!enemyBomber.initialize(this, enemyNS::WIDTH, enemyNS::HEIGHT, enemyNS::TEXTURE_COLS, &enemyTexture))
 		throw(GameError(gameErrorNS::FATAL_ERROR, "Error initializing enemy"));
 	enemyBomber.setFrames(enemyNS::ENEMY_START_FRAME, enemyNS::ENEMY_END_FRAME);
 	enemyBomber.setCurrentFrame(enemyNS::ENEMY_START_FRAME);
